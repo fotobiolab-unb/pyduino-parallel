@@ -19,7 +19,8 @@ Set parameters to all reactors:
 - `func("set(branco,100,brilho,100)")`
 
 Set parameters to reactor X:
-- `reactors[df[X]].set({"branco",100,"brilho",100})`
+- `reactors[df[X]].set({"branco":100,"brilho":100})`
+- `reactors[df[X]].send("set(branco,100,brilho,100)")`
 
 Get data from all reactors:
 - `func("dados")`
