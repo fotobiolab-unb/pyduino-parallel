@@ -4,8 +4,11 @@ from time import sleep, time
 import pandas as pd
 import serial.tools.list_ports
 import re
+from collections import OrderedDict
+from log import log
 
-STEP = 1 / 32
+STEP = 1 / 16
+COLN = 47 #Number of columns to parse from Arduino (used for sanity tests)
 
 class param(property):
     def __init__(self, typ=int, name=None):
@@ -58,8 +61,8 @@ class Reator:
         Inicia conexão.
         """
         self._recv(delay)
-        self._send("manual_connect")
-        self._recv(delay)
+        self._send("quiet_connect")
+        #self._recv(delay)
         self.connected = True
 
     def close(self):
@@ -123,18 +126,35 @@ class Reator:
         resp = self.send("get")
 
 class ReactorManager:
+    pinged = False
     def __init__(self,baudrate=9600):
         self.available_ports = serial.tools.list_ports.comports()
         self.ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
         self.reactors = {x.device:Reator(port=x.device,baudrate=baudrate,cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n[END]\n'))) for x in self.ports}
-        self._id = [0] + [float('nan')]*len(self.reactors)
+        self._id = {}
+
+        self.connect()
+        self.garbage()
+        self.ping()
+        self.log_init()
     
-    def send(self,command):
+    def send(self,command,await_response=True,**kwargs):
         out = {}
         for k,r in self.reactors.items():
             print(k)
-            out[k] = r.send(command)
+            if await_response:
+                out[k] = r.send(command,**kwargs)
+            else:
+                r._send(command)
         return out
+
+    def garbage(self):
+        """
+        Reads data from Arduino and discards it.
+        """
+        for k,r in self.reactors.items():
+            r._conn.reset_output_buffer()
+
     def set(self, data=None, **kwargs):
         for k,r in self.reactors.items():
             r.set(data=data, **kwargs)
@@ -143,11 +163,13 @@ class ReactorManager:
             r.get(key=key)
     
     def ping(self):
-        responses = self.send("ping")
+        responses = self.send("ping",delay=1)
         for name,res in responses.items():
             if isinstance(res,str):
                 i = int(re.findall(r"\d+?",res)[0])
                 self._id[i] = name
+        self._id_reverse = {v:k for k,v in self._id.items()}
+        self.pinged = True
 
     def connect(self):
         for k,r in self.reactors.items():
@@ -157,29 +179,60 @@ class ReactorManager:
         self.connect()
         self.ping()
 
+    #Logging
+
+    def log_init(self):
+        """
+        Creates log directories for each Arduino.
+        """
+        if not self.pinged:
+            self.ping()
+
+        self.log = log(subdir=list(self._id.keys()))
+    
+    def log_dados(self):
+        """
+        Logs output of `dados` in csv format.
+        """
+        self.garbage()
+        for port,reactor in self.reactors.items():
+            n = 0
+            r_len, h_len = float("nan"),float("nan")
+            while r_len != COLN or h_len != COLN:
+                print(f"[INFO]({n}) Reading reactor {self._id_reverse[port]} on port {port}")
+                response = reactor.send("dados",delay=1).split(" ")
+                header = reactor.send("cabecalho",delay=1).split(" ")
+                r_len, h_len = len(response),len(header)
+                n+=1
+                print("[INFO]","[SIZE]",len(response),len(header))
+            row = OrderedDict(zip(header,response))
+            self.log.log_rows(rows=[row],subdir=self._id_reverse[port],sep='\t',index=False)
 
 if __name__ == '__main__':
-    df = pd.read_csv("COM_order.txt",sep="\t",header=None)
-    N = df.iloc[:,1].tolist()
-    df = df.set_index(0)
-    df = [0] + df.iloc[:,0].tolist()
-    ports = [f"COM{n}" for n in N]
-    N = [8,40,42,41,21,39,38]
-    #reactors = {n:Reator(f"COM{n}",cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n\n'))) for n in N}
+    # df = pd.read_csv("COM_order.txt",sep="\t",header=None)
+    # N = df.iloc[:,1].tolist()
+    # df = df.set_index(0)
+    # df = [0] + df.iloc[:,0].tolist()
+    # ports = [f"COM{n}" for n in N]
+    # """N = [8,40,42,41,21,39,38]"""
+    # """N = [31,32,33,34,35,36,37]"""
+    # #reactors = {n:Reator(f"COM{n}",cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n\n'))) for n in N}
 
-    def func(command):
-        for i,r in enumerate(reactors.values()):
-            r.send(command+"\n")
+    # def func(command):
+    #     for r in reactors.values():
+    #         r.send(command+"\n")
 
-    def dual_func_delay(command1,command2,delay):
-        for r in reactors.values():
-             r.send(command1)
-             sleep(delay)
-             r.send(command2)
+    # def dual_func_delay(command1,command2,delay):
+    #     for r in reactors.values():
+    #          r.send(command1)
+    #          sleep(delay)
+    #          r.send(command2)
     
-    def xmas(params,delay,interval):
-        for c in params:
-            for b in interval:
-                func(f"set({c},{b})")
-                sleep(delay)
-        func(f"set({c},0)")
+    # def xmas(params,delay,interval):
+    #     for c in params:
+    #         for b in interval:
+    #             func(f"set({c},{b})")
+    #             sleep(delay)
+    #     func(f"set({c},0)")
+
+    r = ReactorManager()
