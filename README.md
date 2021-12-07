@@ -6,26 +6,29 @@ Run:
 - `run pyduino2`
 
 Check reactors:
-- `reactors`
+- `r._id`
 
-Manual connect to all reactors:
-- `func("manual_connect")`
+Manual connect to all reactors (unnecessary):
+- `r.send("manual_connect")`
 
 Manual connect to reactor number X:
-- `reactors[df[X]].connect()`
-- `reactors[df[X]].send("manual_connect")`
+- `r.reactors[r._id_reverse[X]].connect()`
+- `r.reactors[r._id_reverse[X]].send("manual_connect")`
 
 Set parameters to all reactors:
-- `func("set(branco,100,brilho,100)")`
+- `r.send("set(branco,100,brilho,100)")`
 
 Set parameters to reactor X:
-- `reactors[df[X]].set({"branco":100,"brilho":100})`
-- `reactors[df[X]].send("set(branco,100,brilho,100)")`
+- `r.reactors[r._id_reverse[X]].set({"branco":100,"brilho":100})`
+- `r.reactors[r._id_reverse[X]].send("set(branco,100,brilho,100)")`
 
 Get data from all reactors:
-- `func("dados")`
+- `r.send("dados")`
 
 Get data from reactor X:
-- `reactors[df[X]].send("dados")`
-- `reactors[df[X]].get()`
+- `r.reactors[r._id_reverse[X]].send("dados")`
+- `r.reactors[r._id_reverse[X]].get()`
+
+Log all data to disk:
+- `r.log_dados()`
 
