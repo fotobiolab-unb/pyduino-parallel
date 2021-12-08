@@ -8,7 +8,7 @@ from collections import OrderedDict
 from log import log
 
 STEP = 1 / 16
-COLN = 47 #Number of columns to parse from Arduino (used for sanity tests)
+COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 
 class param(property):
     def __init__(self, typ=int, name=None):
@@ -47,10 +47,7 @@ class Reator:
     def __init__(self, port, baudrate=9600, cb=None):
         self.connected = False
         self._conn = serial.Serial(port, baudrate=baudrate, timeout=STEP)
-        
-        self._send_cb, self._recv_cb = cb or (lambda inpt, out: None) 
-        self._send_cb = self._send_cb or (lambda _: None)
-        self._recv_cb = self._recv_cb or (lambda _: None)
+        self._port = port
 
     def __delete__(self, _):
         self.close()
@@ -84,7 +81,7 @@ class Reator:
 
     def _send(self, msg):
         self._conn.write(msg.encode('ascii') + b'\n\r')
-        self._send_cb(msg)
+        # self._send_cb(msg)
 
     def _recv(self,delay=STEP):
         out = []
@@ -93,13 +90,16 @@ class Reator:
             #new = self._conn.read_all()
             new = self._conn.read_until()
             if new:
-                new = new.decode('ascii').strip()
+                new = new.decode('ascii').strip("\n").strip("\r")
                 out.append(new)
             # print('new:', new, out)
             if out and not new:
                 resp = ''.join(out)
-                self._recv_cb(resp)
+                # self._recv_cb(resp)
                 return resp
+    
+    def __repr__(self):
+        return f"<Reactor at {self._port}>"
 
     def set(self, data=None, **kwargs):
         """
@@ -133,15 +133,18 @@ class ReactorManager:
         self.reactors = {x.device:Reator(port=x.device,baudrate=baudrate,cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n[END]\n'))) for x in self.ports}
         self._id = {}
 
+        #Init
         self.connect()
         self.garbage()
         self.ping()
         self.log_init()
+        #Info
+        print("\n".join(map(lambda x: f"Reactor {x[0]} at port {x[1]}",self._id.items())))
     
     def send(self,command,await_response=True,**kwargs):
         out = {}
         for k,r in self.reactors.items():
-            print(k)
+            #print(k)
             if await_response:
                 out[k] = r.send(command,**kwargs)
             else:
@@ -199,40 +202,14 @@ class ReactorManager:
             n = 0
             r_len, h_len = float("nan"),float("nan")
             while r_len != COLN or h_len != COLN:
-                print(f"[INFO]({n}) Reading reactor {self._id_reverse[port]} on port {port}")
-                response = reactor.send("dados",delay=1).split(" ")
-                header = reactor.send("cabecalho",delay=1).split(" ")
+                #print(f"[INFO]({n}) Reading reactor {self._id_reverse[port]} on port {port}")
+                response = reactor.send("dados",delay=0.5).split(" ")
+                header = reactor.send("cabecalho",delay=0.5).split(" ")
                 r_len, h_len = len(response),len(header)
                 n+=1
-                print("[INFO]","[SIZE]",len(response),len(header))
+                #print("[INFO]","[SIZE]",len(response),len(header))
             row = OrderedDict(zip(header,response))
             self.log.log_rows(rows=[row],subdir=self._id_reverse[port],sep='\t',index=False)
 
 if __name__ == '__main__':
-    # df = pd.read_csv("COM_order.txt",sep="\t",header=None)
-    # N = df.iloc[:,1].tolist()
-    # df = df.set_index(0)
-    # df = [0] + df.iloc[:,0].tolist()
-    # ports = [f"COM{n}" for n in N]
-    # """N = [8,40,42,41,21,39,38]"""
-    # """N = [31,32,33,34,35,36,37]"""
-    # #reactors = {n:Reator(f"COM{n}",cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n\n'))) for n in N}
-
-    # def func(command):
-    #     for r in reactors.values():
-    #         r.send(command+"\n")
-
-    # def dual_func_delay(command1,command2,delay):
-    #     for r in reactors.values():
-    #          r.send(command1)
-    #          sleep(delay)
-    #          r.send(command2)
-    
-    # def xmas(params,delay,interval):
-    #     for c in params:
-    #         for b in interval:
-    #             func(f"set({c},{b})")
-    #             sleep(delay)
-    #     func(f"set({c},0)")
-
     r = ReactorManager()
