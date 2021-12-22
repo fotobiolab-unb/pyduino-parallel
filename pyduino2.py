@@ -198,6 +198,7 @@ class ReactorManager:
         Logs output of `dados` in csv format.
         """
         self.garbage()
+        rows = {}
         for port,reactor in self.reactors.items():
             n = 0
             r_len, h_len = float("nan"),float("nan")
@@ -209,7 +210,9 @@ class ReactorManager:
                 n+=1
                 #print("[INFO]","[SIZE]",len(response),len(header))
             row = OrderedDict(zip(header,response))
+            rows[self._id_reverse[port]] = row
             self.log.log_rows(rows=[row],subdir=self._id_reverse[port],sep='\t',index=False)
+        return rows
 
 if __name__ == '__main__':
     r = ReactorManager()
