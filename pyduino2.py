@@ -6,6 +6,7 @@ import serial.tools.list_ports
 import re
 from collections import OrderedDict
 from log import log
+import pandas as pd
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
@@ -110,7 +111,7 @@ class Reator:
         """
         data = {**(data or {}), **kwargs}
         args = ', '.join(f'{k}, {v}' for k, v in data.items())
-        self.send(f'set({args})')
+        self._send(f'set({args})')
 
     def get(self, key=None):
         """
@@ -213,6 +214,16 @@ class ReactorManager:
             rows[self._id_reverse[port]] = row
             self.log.log_rows(rows=[row],subdir=self._id_reverse[port],sep='\t',index=False)
         return rows
+    
+    def set_preset_state(self,path="preset_state.csv",sep="\t",**kwargs):
+        """
+        Prepare Arduinos with preset parameters from a csv file.
+        Args:
+            path (str): Path to the csv file.
+        """
+        df = pd.read_csv(path,sep=sep,**kwargs)
+        for i,row in df.iterrows():
+            self.reactors[self._id[i]].set(row.to_dict())
 
 if __name__ == '__main__':
     r = ReactorManager()
