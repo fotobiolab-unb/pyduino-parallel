@@ -128,7 +128,7 @@ class Reator:
 
 class ReactorManager:
     pinged = False
-    def __init__(self,baudrate=9600):
+    def __init__(self,baudrate=9600,log_name=None):
         self.available_ports = serial.tools.list_ports.comports()
         self.ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
         self.reactors = {x.device:Reator(port=x.device,baudrate=baudrate,cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n[END]\n'))) for x in self.ports}
@@ -138,7 +138,6 @@ class ReactorManager:
         self.connect()
         self.garbage()
         self.ping()
-        self.log_init()
         #Info
         print("\n".join(map(lambda x: f"Reactor {x[0]} at port {x[1]}",self._id.items())))
     
@@ -185,18 +184,21 @@ class ReactorManager:
 
     #Logging
 
-    def log_init(self):
+    def log_init(self,**kwargs):
         """
         Creates log directories for each Arduino.
         """
         if not self.pinged:
             self.ping()
 
-        self.log = log(subdir=list(self._id.keys()))
+        self.log = log(subdir=list(self._id.keys()),**kwargs)
     
-    def log_dados(self):
+    def log_dados(self,save_cache=True):
         """
         Logs output of `dados` in csv format.
+
+        Args:
+            save_cache (bool): Whether or not so save a cache file with the last reading with `log.log.cache_data`.
         """
         self.garbage()
         rows = {}
@@ -204,15 +206,15 @@ class ReactorManager:
             n = 0
             r_len, h_len = float("nan"),float("nan")
             while r_len != COLN or h_len != COLN:
-                #print(f"[INFO]({n}) Reading reactor {self._id_reverse[port]} on port {port}")
                 response = reactor.send("dados",delay=0.5).split(" ")
                 header = reactor.send("cabecalho",delay=0.5).split(" ")
                 r_len, h_len = len(response),len(header)
                 n+=1
-                #print("[INFO]","[SIZE]",len(response),len(header))
             row = OrderedDict(zip(header,response))
             rows[self._id_reverse[port]] = row
             self.log.log_rows(rows=[row],subdir=self._id_reverse[port],sep='\t',index=False)
+        if save_cache:
+            self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
         return rows
     
     def set_preset_state(self,path="preset_state.csv",sep="\t",**kwargs):
