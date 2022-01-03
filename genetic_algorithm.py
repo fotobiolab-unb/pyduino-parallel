@@ -103,6 +103,20 @@ class GeneticAlgorithm(ReactorManager,GA):
             self.F_set(row_subset(self.data,self.parameters))
             time.sleep(2)
             self.send("quiet_connect",await_response=False)
+    def calibrate(self,deltaT=120,dir="calibrate"):
+        """
+        Runs `curva` and dumps the result into txts.
+        """
+        if not os.path.exists(dir):
+            os.mkdir(dir)
+        out = {}
+        self.send("curva",await_response=False)
+        time.sleep(deltaT)
+        for name,reactor in self.reactors.items():
+            out[name] = reactor._conn.read_until('*** fim da curva dos LEDs ***'.encode('ascii'))
+            with open(os.path.join(dir,f"reator_{self._id_reverse[name]}.txt"),"w") as f:
+                f.write(out[name].decode('ascii'))
+        return out
 
 if __name__ == "__main__":
     g = GeneticAlgorithm(log_name="20211229113606",f_param='DensidadeAtual',mutation_probability=0.01,generations=100,resolution=64,ranges=[[0,1]],elitism=False)
