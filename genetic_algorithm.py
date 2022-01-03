@@ -4,8 +4,9 @@ import numpy as np
 from functools import partial
 import json
 import os
-from threading import Timer
 import pandas as pd
+import time
+from datetime import datetime
 
 #Path to spectrum.json
 SPECTRUM_PATH = "spectrum.json"
@@ -31,7 +32,7 @@ def row_subset(rows,keys):
         rows (:obj:`dict` of :obj:`OrderedDict`): Data obtained from `ReactorManager.log_dados`.
         keys (:obj:list of :obj:str): A list of keys.
     """
-    return pd.DataFrame(rows).T.loc[:,keys].T.to_dict()
+    return pd.DataFrame(rows).T.loc[:,keys].T.astype(float).astype(int).astype(str).to_dict()
 
 def parse_dados(X,param):
     """
@@ -91,17 +92,17 @@ class GeneticAlgorithm(ReactorManager,GA):
             deltaT (int): Amount of time in seconds to wait in each iteration.
             run_ga (bool): Whether or not execute a step in the genetic algorithm.
         """
-        def loop():
-            print("loop")
+        while True:
+            print("[INFO]","GET",datetime.now().strftime("%c"))
             self.data = self.F_get()
             if run_ga:
                 pass
+            time.sleep(deltaT)
+            print("[INFO]","SET",datetime.now().strftime("%c"))
+            print(pd.DataFrame(row_subset(self.data,self.parameters)))
             self.F_set(row_subset(self.data,self.parameters))
-            self.timer = Timer(deltaT,loop)
-            self.timer.start()
-        
-        self.timer = Timer(deltaT,loop)
-        self.timer.start()
+            time.sleep(2)
+            self.send("quiet_connect",await_response=False)
 
 if __name__ == "__main__":
     g = GeneticAlgorithm(log_name="20211229113606",f_param='DensidadeAtual',mutation_probability=0.01,generations=100,resolution=64,ranges=[[0,1]],elitism=False)
