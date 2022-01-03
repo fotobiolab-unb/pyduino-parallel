@@ -1,5 +1,6 @@
 # Getting started
-## Basic usage
+## Reactor Manager
+### Basic usage
 
 Run:
 - `ipython3`
@@ -38,6 +39,13 @@ Log all data to disk:
 Create a new log folder:
 - `r.log_init()`
 
-## Run calibration
+### Run calibration
 
 - `r.calibrate()`
+
+## Genetic Algorithm
+
+# Basic Usage
+
+Run loop without genetic algorithm for 5 seconds:
+- `g.run(5,run_ga=False)`

@@ -237,6 +237,20 @@ class ReactorManager:
         df = pd.read_csv(path,sep=sep,**kwargs)
         for i,row in df.iterrows():
             self.reactors[self._id[i]].set(row.to_dict())
+    def calibrate(self,deltaT=120,dir="calibrate"):
+        """
+        Runs `curva` and dumps the result into txts.
+        """
+        if not os.path.exists(dir):
+            os.mkdir(dir)
+        out = {}
+        self.send("curva",await_response=False)
+        time.sleep(deltaT)
+        for name,reactor in self.reactors.items():
+            out[name] = reactor._conn.read_until('*** fim da curva dos LEDs ***'.encode('ascii'))
+            with open(os.path.join(dir,f"reator_{self._id_reverse[name]}.txt"),"w") as f:
+                f.write(out[name].decode('ascii'))
+        return out
 
 if __name__ == '__main__':
     r = ReactorManager()
