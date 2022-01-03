@@ -38,3 +38,6 @@ Log all data to disk:
 Create a new log folder:
 - `r.log_init()`
 
+## Run calibration
+
+- `r.calibrate()`
