@@ -187,6 +187,7 @@ class ReactorManager:
                 i = int(re.findall(r"\d+?",res)[0])
                 self._id[i] = name
         self._id_reverse = {v:k for k,v in self._id.items()}
+        self._id = OrderedDict(self._id)
         self.pinged = True
 
     def connect(self):
