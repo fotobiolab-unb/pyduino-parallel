@@ -7,12 +7,18 @@ import os
 import pandas as pd
 import time
 from datetime import datetime
+from data_parser import yaml_genetic_algorithm, RangeParser
+from collections import OrderedDict
+from scipy.special import softmax
 
 #Path to spectrum.json
 SPECTRUM_PATH = "spectrum.json"
 
 #Path to relevant parameters file
 PARAM_PATH = "relevant_parameters.txt"
+
+#Path to hyperparameters for the genetic algorithm
+HYPER_PARAM = "hyperparameters.yaml"
 
 def dict_subset(D,keys):
     """
@@ -44,16 +50,14 @@ def parse_dados(X,param):
     """
     return np.array(list(map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))).astype(float)
 
-class GeneticAlgorithm(ReactorManager,GA):
-    def __init__(self,f_param,log_name=None,**kwargs):
+class GeneticAlgorithm(RangeParser,ReactorManager,GA):
+    def __init__(self,f_param,ranges,log_name=None,**kwargs):
         """
         Args:
             f_param (str): Parameter name to be extracted from `ReactorManager.log_dados`.
+            ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
+                its minimum and maximum attainable values respectively.
         """
-        ReactorManager.__init__(self)
-        GA.__init__(self,population_size=len(self.reactors),**kwargs)
-        self.log_init(name=log_name)
-        self.f_get = partial(parse_dados,param=f_param)
 
         assert os.path.exists(SPECTRUM_PATH)
         with open(SPECTRUM_PATH) as jfile:
@@ -62,8 +66,33 @@ class GeneticAlgorithm(ReactorManager,GA):
         assert os.path.exists(PARAM_PATH)
         with open(PARAM_PATH) as txt:
             self.parameters = list(map(lambda x: x.strip(),txt.readlines()))
+
+        RangeParser.__init__(self,ranges,self.parameters)
+        ReactorManager.__init__(self)
+        GA.__init__(
+            self,
+            population_size=len(self.reactors),
+            ranges=self.ranges_as_list(),
+            generations=0,
+            **kwargs
+            )
+        self.log_init(name=log_name)
+        self.f_get = partial(parse_dados,param=f_param)
         
-        self.payload = None
+        self.payload = self.G_as_keyed()
+    def G_as_keyed(self):
+        """
+        Converts genome matrix into an appropriate format to send to the reactors.
+        """
+        return OrderedDict(
+            zip(
+                self._id.keys(),
+                map(
+                    lambda u: self.ranges_as_keyed(u),
+                    list(self.view(self.G,self.linmap).astype(int))
+                )
+            )
+        )
     def F_get(self):
         """
         Extracts relevant data from Arduinos.
@@ -93,30 +122,24 @@ class GeneticAlgorithm(ReactorManager,GA):
             run_ga (bool): Whether or not execute a step in the genetic algorithm.
         """
         while True:
+            print("[INFO]","SET",datetime.now().strftime("%c"))
+            self.F_set(self.payload)
+            time.sleep(2)
+            time.sleep(deltaT)
+            self.send("quiet_connect",await_response=False)
             print("[INFO]","GET",datetime.now().strftime("%c"))
             self.data = self.F_get()
             if run_ga:
-                pass
-            time.sleep(deltaT)
-            print("[INFO]","SET",datetime.now().strftime("%c"))
-            print(pd.DataFrame(row_subset(self.data,self.parameters)))
-            self.F_set(row_subset(self.data,self.parameters))
-            time.sleep(2)
-            self.send("quiet_connect",await_response=False)
-    def calibrate(self,deltaT=120,dir="calibrate"):
-        """
-        Runs `curva` and dumps the result into txts.
-        """
-        if not os.path.exists(dir):
-            os.mkdir(dir)
-        out = {}
-        self.send("curva",await_response=False)
-        time.sleep(deltaT)
-        for name,reactor in self.reactors.items():
-            out[name] = reactor._conn.read_until('*** fim da curva dos LEDs ***'.encode('ascii'))
-            with open(os.path.join(dir,f"reator_{self._id_reverse[name]}.txt"),"w") as f:
-                f.write(out[name].decode('ascii'))
-        return out
+                self.fitness = self.f_get(self.data)
+                self.p = softmax(self.fitness)
+                self.crossover()
+                self.mutation()
+                self.payload = self.G_as_keyed()
+            else:
+                df = pd.DataFrame(self.data).T
+                df.columns = df.columns.str.lower()
+                self.payload = df[self.parameters].T.to_dict()
 
 if __name__ == "__main__":
-    g = GeneticAlgorithm(log_name="20211229113606",f_param='DensidadeAtual',mutation_probability=0.01,generations=100,resolution=64,ranges=[[0,1]],elitism=False)
+    hyperparameters = yaml_genetic_algorithm(HYPER_PARAM)
+    g = GeneticAlgorithm(**hyperparameters)
