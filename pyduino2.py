@@ -210,6 +210,22 @@ class ReactorManager:
 
         self.log = log(subdir=list(self._id.keys()),**kwargs)
     
+    def dados(self,save_cache=True):
+        """
+        Get data from Arduinos.
+
+        Args:
+            save_cache (bool): Whether or not so save a cache file with the last reading with `log.log.cache_data`.
+        """
+        self.garbage()
+        header = list(self.reactors.values())[0].send("cabecalho").split(" ")
+
+        rows = self.send_parallel("dados",delay=13)
+        rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(header,x[1].split(" ")))),rows))
+        if save_cache:
+            self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
+        return rows
+
     def log_dados(self,save_cache=True):
         """
         Logs output of `dados` in csv format.

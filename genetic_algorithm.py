@@ -21,6 +21,19 @@ PARAM_PATH = "relevant_parameters.txt"
 #Path to hyperparameters for the genetic algorithm
 HYPER_PARAM = "hyperparameters.yaml"
 
+def update_dict(D,A,key):
+    """
+    Updates dictionary `D` with values in `A` with key name `key`.
+    
+    Args:
+        D (:obj:dict of :obj:dict): Input dictionary.
+        A (dict): Dict of values to be added with the same keys as in `D`.
+        key (str): Key name to assign to values of `A`.
+    """
+    for k,v in A.items():
+        D[k].update({key:v})
+
+
 def dict_subset(D,keys):
     """
     Extracts a subdictionary from a given dictionary.
@@ -113,7 +126,7 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
         """
         Extracts relevant data from Arduinos.
         """
-        return self.log_dados()
+        return self.dados()
     def F_set(self,data):
         """
         Sets parameters to Arduinos.
@@ -152,10 +165,13 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
                 self.crossover()
                 self.mutation()
                 self.payload = self.G_as_keyed()
+                #Preparing log
+                update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
             else:
                 df = pd.DataFrame(self.data).T
                 df.columns = df.columns.str.lower()
                 self.payload = df[self.parameters].T.to_dict()
+            self.log.log_many_rows(self.data)
 
 if __name__ == "__main__":
     hyperparameters = yaml_genetic_algorithm(HYPER_PARAM)
