@@ -5,6 +5,7 @@ from functools import partial
 import json
 import os
 import pandas as pd
+import numpy as np
 import time
 from datetime import datetime
 from data_parser import yaml_genetic_algorithm, RangeParser
@@ -76,10 +77,10 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
             generations=0,
             **kwargs
             )
-        self.log_init(name=log_name)
-        self.f_get = partial(parse_dados,param=f_param)
-        
+        self.log_init(name=log_name)        
         self.payload = self.G_as_keyed()
+        self.data = None
+        self.fparam = f_param
     def G_as_keyed(self):
         """
         Converts genome matrix into an appropriate format to send to the reactors.
@@ -93,6 +94,21 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
                 )
             )
         )
+    def f_map(self,x_1,x_0):
+        """
+        Computation for the fitness function.
+        """
+        f_1 = partial(parse_dados,param=self.fparam)(x_1)
+        if x_0 is not None:
+            f_0 = partial(parse_dados,param=self.fparam)(x_0)
+            power = self.view(self.G,self.linmap).sum(axis=1)
+            F = (f_1 - f_0)/power
+            F[F == np.inf] == 0
+            F = np.nan_to_num(F)
+            return F
+        else:
+            return np.zeros_like(f_1)
+
     def F_get(self):
         """
         Extracts relevant data from Arduinos.
@@ -128,9 +144,10 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
             time.sleep(deltaT)
             self.send("quiet_connect",await_response=False)
             print("[INFO]","GET",datetime.now().strftime("%c"))
+            self.past_data = self.data.copy() if self.data is not None else None
             self.data = self.F_get()
             if run_ga:
-                self.fitness = self.f_get(self.data)
+                self.fitness = self.f_map(self.data,self.past_data)
                 self.p = softmax(self.fitness)
                 self.crossover()
                 self.mutation()

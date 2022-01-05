@@ -9,6 +9,7 @@ from log import log
 import pandas as pd
 from multiprocessing import Pool
 from functools import partial
+import os
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
@@ -246,7 +247,7 @@ class ReactorManager:
             os.mkdir(dir)
         out = {}
         self.send("curva",await_response=False)
-        time.sleep(deltaT)
+        sleep(deltaT)
         for name,reactor in self.reactors.items():
             out[name] = reactor._conn.read_until('*** fim da curva dos LEDs ***'.encode('ascii'))
             with open(os.path.join(dir,f"reator_{self._id_reverse[name]}.txt"),"w") as f:
