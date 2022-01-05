@@ -55,6 +55,16 @@ class log:
             header=not os.path.exists(path),
             **kwargs
             )
+    def log_many_rows(self,data,**kwargs):
+        """
+        Logs rows into csv format.
+
+        Args:
+            data (:obj:`dict` of :obj:`dict`): Dictionary encoded data frame.
+            **kwargs: Additional arguments passed to `self.log_rows`.
+        """
+        for _id,row in data.items():
+            self.log_rows(rows=[row],subdir=_id,sep='\t',index=False,**kwargs)
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """
         Dumps rows into a single csv.
