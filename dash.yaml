@@ -1,13 +1,15 @@
-glob: "/home/icaro/Downloads/test.csv"
+glob: "./log/test/*.csv"
 cols:
-  - chromogram_0_0
-  - chromogram_0_1
-  - chromogram_0_10
-  - chromogram_0_11
-  - chromogram_0_12
-  - chromogram_0_2
-sep: ","
+  - Branco
+  - Full
+  - "440"
+  - "470"
+  - "495"
+  - "530"
+sep: "\t"
 tail: 128
 display_cols: 2
 theme: plotly_dark
-subplot_height: 600
+subplot_height: 400
+cumulative: true
+update_time: 60000 #In miliseconds

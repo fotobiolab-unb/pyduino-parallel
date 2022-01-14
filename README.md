@@ -21,7 +21,7 @@ Set parameters to all reactors:
 
 Set parameters to reactor X:
 - `r.reactors[r._id[X]].set({"branco":100,"brilho":100})`
-- `r.reactors[r._id[X]].send("set(branco,100,brilho,100)")`
+- `r.reactors[r._id[X]]._send("set(branco,100,brilho,100)")`
 
 Set parameters to all reactors:
 - `r.send("set(branco,100,full,0)",False)`
