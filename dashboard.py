@@ -69,24 +69,28 @@ app.layout = html.Div(
         dcc.Graph(id='live-update-graph',style={'height': y['subplot_height']*len(USE_COLS)}),
         dcc.Interval(
             id='interval-component',
-            interval=60*1000, # in milliseconds
+            interval=y['update_time'], # in milliseconds
             n_intervals=0
         )
     ])
 )
 
+df = {}
 @app.callback(Output('live-update-graph', 'figure'),
               Input('interval-component', 'n_intervals'))
 def update_graph_live(n):
-    df = {}
+    global df
+    if not y['cumulative']:
+        df = {}
     for gpath in LOG_PATH:
-        df[os.path.basename(gpath)] = tail(gpath,NROWSDF,sep=SEP)
-        df[os.path.basename(gpath)].columns = HEAD
+        gbase = os.path.basename(gpath)
+        if gbase in df.keys():
+            df[gbase] = pd.merge(df[gbase],tail(gpath,NROWSDF,sep=SEP),'outer')
+        else:
+            df[gbase] = tail(gpath,NROWSDF,sep=SEP)
+            df[gbase].columns = HEAD
 
     fig = plotly.tools.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS)
-    # fig['layout']['margin'] = {
-    #     'l': 30, 'r': 10, 'b': 30, 't': 10
-    # }
     fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
     fig['layout']['template'] = THEME
 
