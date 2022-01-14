@@ -1,5 +1,7 @@
 import yaml
 from collections import OrderedDict
+from datetime import datetime
+import numpy as np
 
 def yaml_genetic_algorithm(filename):
     """
@@ -9,6 +11,20 @@ def yaml_genetic_algorithm(filename):
     with open(filename) as f:
         y = yaml.load(f.read(),yaml.Loader)
     return y
+
+def datetime_parser(h,d):
+    return datetime.strptime(f"{h}_{d}","%H:%M:%S_%d.%m.%Y")
+
+def get_datetimes(X,h_name,d_name):
+    """
+    Parses timestamp from `ReactorManager.log_dados` into an array.
+
+    Args:
+        X (:obj:`dict` of :obj:`OrderedDict`): Data obtained from `ReactorManager.log_dados`.
+        h_name (str): Parameter name for time.
+        d_name (str): Parameter name for date.
+    """
+    return np.array(list(map(lambda x: datetime_parser(x[1][h_name],x[1][d_name]),sorted(X.items(),key=lambda x: x[0]))))
 
 class RangeParser:
     def __init__(self,ranges,parameter_list):

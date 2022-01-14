@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 import time
 from datetime import datetime
-from data_parser import yaml_genetic_algorithm, RangeParser
+from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
 
@@ -115,7 +115,8 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
         if x_0 is not None:
             f_0 = partial(parse_dados,param=self.fparam)(x_0)
             self.power = self.view(self.G,self.linmap).sum(axis=1)
-            self.density = f_1 - f_0
+            print("[DEBUG]","f_1-f_0",f_1-f_0)
+            self.density = (f_1 - f_0)/self.dt
             F = self.density/self.power
             F[F == np.inf] == 0
             F = np.nan_to_num(F)
@@ -153,8 +154,10 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
             deltaT (int): Amount of time in seconds to wait in each iteration.
             run_ga (bool): Whether or not execute a step in the genetic algorithm.
         """
+        self.deltaT = deltaT
         while True:
-            print("[INFO]","SET",datetime.now().strftime("%c"))
+            self.t1 = datetime.now()
+            print("[INFO]","SET",self.t1.strftime("%c"))
             self.F_set(self.payload)
             time.sleep(2)
             time.sleep(deltaT)
@@ -162,6 +165,9 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
             print("[INFO]","GET",datetime.now().strftime("%c"))
             self.past_data = self.data.copy() if self.data is not None else None
             self.data = self.F_get()
+            self.t2 = datetime.now()
+            self.dt = (self.t2-self.t1).total_seconds()
+            print("[INFO]","DT",self.dt)
             if run_ga:
                 self.fitness = self.f_map(self.data,self.past_data)
                 self.p = softmax(self.fitness)

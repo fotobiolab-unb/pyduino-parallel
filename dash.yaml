@@ -1,8 +1,8 @@
 glob: "./log/test/*.csv"
 cols:
-  - Branco
+  - DensidadeAtual
   - Full
-  - "440"
+  - Temp
   - "470"
   - "495"
   - "530"
@@ -13,3 +13,4 @@ theme: plotly_dark
 subplot_height: 400
 cumulative: true
 update_time: 60000 #In miliseconds
+vspace: 0.1
