@@ -90,7 +90,7 @@ def update_graph_live(n):
             df[gbase] = tail(gpath,NROWSDF,sep=SEP)
             df[gbase].columns = HEAD
 
-    fig = plotly.tools.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS)
+    fig = plotly.tools.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
     fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
     fig['layout']['template'] = THEME
 
