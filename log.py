@@ -3,12 +3,19 @@ import os
 import path
 from pathlib import Path
 from datetime import datetime
+import io
+
+def datetime_from_str(x):
+    return datetime.strptime(str(x),"%Y%m%d%H%M%S")
+
+def datetime_to_str(x):
+    return x.strftime("%Y%m%d%H%M%S")
 
 class log:
     @property
     def timestamp(self):
         """str: Current date."""
-        return datetime.now().strftime("%Y%m%d%H%M%S")
+        return datetime.now()
 
     def __init__(self,subdir,path="./log",name=None):
         """
@@ -31,6 +38,7 @@ class log:
         self.log_name = name
         self.subdir = subdir
         self.path = path
+        self.first_timestamp = None
 
         for sbd in subdir:
             Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
@@ -45,10 +53,19 @@ class log:
             add_timestamp (bool,optional): Whether or not to include a timestamp column.
             **kwargs: Additional arguments passed to `pandas.to_csv`.
         """
+        t = self.timestamp
         path = os.path.join(self.path,self.start_timestamp,f"{subdir}.csv")
         df = pd.DataFrame(rows)
         if add_timestamp:
-            df.loc[:,"log_timestamp"] = self.timestamp
+            df.loc[:,"log_timestamp"] = datetime_to_str(t)
+        if os.path.exists(path):
+            if self.first_timestamp is None:
+                with open(path) as file:
+                    head = pd.read_csv(io.StringIO(file.readline()+file.readline()),**kwargs)
+                    self.first_timestamp = datetime_from_str(head.log_timestamp[0])
+        else:
+            self.first_timestamp = t
+        df.loc[:,"elapsed_time_hours"] = (t - self.first_timestamp).total_seconds()/3600.0
         df.to_csv(
             path,
             mode="a",

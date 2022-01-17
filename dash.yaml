@@ -1,9 +1,7 @@
 glob: "./log/test/*.csv"
 cols:
   - Temp
-  - power
-  - density
-  - fitness
+  - pH
 sep: "\t"
 tail: 128
 display_cols: 2
