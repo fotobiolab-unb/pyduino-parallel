@@ -14,6 +14,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly
 from dash.dependencies import Input, Output
+import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import load_figure_template
 
 def yaml_get(filename):
     """
@@ -28,6 +30,7 @@ y = yaml_get("dash.yaml")
 COLOR = plotly.colors.qualitative.Alphabet
 USE_COLS = y['cols']
 THEME = y['theme']
+load_figure_template(THEME)
 SEP = y['sep']
 #Glob path to csv logs
 LOG_PATH = glob(y["glob"])
@@ -60,7 +63,7 @@ def tail(fname,n,**kwargs):
 
 color_dict = {os.path.basename(_name): COLOR[i] for i,_name in enumerate(LOG_PATH)}
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [dbc.themes.CYBORG]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.layout = html.Div(
