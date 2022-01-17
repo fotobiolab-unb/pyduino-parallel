@@ -1,16 +1,14 @@
 glob: "./log/test/*.csv"
 cols:
-  - DensidadeAtual
-  - Full
   - Temp
-  - "470"
-  - "495"
-  - "530"
+  - power
+  - density
+  - fitness
 sep: "\t"
 tail: 128
 display_cols: 2
-theme: plotly_dark
+theme: cyborg
 subplot_height: 400
 cumulative: true
-update_time: 60000 #In miliseconds
+update_time: 20000 #In miliseconds
 vspace: 0.1

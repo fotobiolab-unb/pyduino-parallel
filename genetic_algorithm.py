@@ -122,8 +122,8 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
             F = np.nan_to_num(F)
             return F
         else:
-            self.density = np.nan
-            self.power = np.nan
+            self.density = np.nan * np.ones(len(self.reactors))
+            self.power = np.nan * np.ones(len(self.reactors))
             return np.zeros_like(f_1)
 
     def F_get(self):
@@ -176,9 +176,8 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
                 self.payload = self.G_as_keyed()
                 #Preparing log
                 update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
-                if (self.power is not np.nan) and (self.density is not np.nan):
-                    update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
-                    update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
+                update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
+                update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
             else:
                 df = pd.DataFrame(self.data).T
                 df.columns = df.columns.str.lower()
