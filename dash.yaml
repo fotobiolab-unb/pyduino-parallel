@@ -1,10 +1,11 @@
-glob: "./log/test/*.csv"
+glob: "./log/teste0/*.csv"
 cols:
   - Temp
   - pH
+  - DensidadeAtual
 sep: "\t"
 tail: 128
-display_cols: 2
+display_cols: 4
 theme: cyborg
 subplot_height: 400
 cumulative: true
