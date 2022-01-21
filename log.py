@@ -34,7 +34,7 @@ class log:
             path (str): Save path for the logs.
             name (str): Name given for this particular instance. If none will name it with the current timestamp.
         """
-        self.start_timestamp = self.timestamp if name is None else name
+        self.start_timestamp = datetime_to_str(self.timestamp) if name is None else name
         self.log_name = name
         self.subdir = subdir
         self.path = path
