@@ -61,7 +61,7 @@ class log:
         if os.path.exists(path):
             if self.first_timestamp is None:
                 with open(path) as file:
-                    head = pd.read_csv(io.StringIO(file.readline()+file.readline()),**kwargs)
+                    head = pd.read_csv(io.StringIO(file.readline()+file.readline()),index_col=False,**kwargs)
                     self.first_timestamp = datetime_from_str(head.log_timestamp[0])
         else:
             self.first_timestamp = t
@@ -70,6 +70,7 @@ class log:
             path,
             mode="a",
             header=not os.path.exists(path),
+            index=False,
             **kwargs
             )
     def log_many_rows(self,data,**kwargs):
@@ -81,7 +82,7 @@ class log:
             **kwargs: Additional arguments passed to `self.log_rows`.
         """
         for _id,row in data.items():
-            self.log_rows(rows=[row],subdir=_id,sep='\t',index_col=False,**kwargs)
+            self.log_rows(rows=[row],subdir=_id,sep='\t',**kwargs)
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """
         Dumps rows into a single csv.

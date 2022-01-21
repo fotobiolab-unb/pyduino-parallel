@@ -3,12 +3,13 @@ cols:
   Temp: [23,30]
   pH: [1,10] # min,max (must have two)
   DensidadeAtual: #No range
+  CO2: #No range
 x_col: 'elapsed_time_hours'
 sep: "\t"
 tail: 128
-display_cols: 3
+display_cols: 2
 theme: cyborg
-subplot_height: 400
+subplot_height: 200
 cumulative: true
 update_time: 20000 #In miliseconds
 vspace: 0.1

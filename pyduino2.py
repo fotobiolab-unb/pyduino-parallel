@@ -153,6 +153,7 @@ class ReactorManager:
         self.ping()
         #Info
         print("\n".join(map(lambda x: f"Reactor {x[0]} at port {x[1]}",self._id.items())))
+        self.header = None
     
     def send(self,command,await_response=True,**kwargs):
         out = {}
@@ -220,10 +221,12 @@ class ReactorManager:
             save_cache (bool): Whether or not so save a cache file with the last reading with `log.log.cache_data`.
         """
         self.garbage()
-        header = list(self.reactors.values())[0].send("cabecalho").split(" ")
+
+        if self.header is None:
+            self.header = list(self.reactors.values())[0].send("cabecalho").split(" ")
 
         rows = self.send_parallel("dados",delay=13)
-        rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(header,x[1].split(" ")))),rows))
+        rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
         return rows
