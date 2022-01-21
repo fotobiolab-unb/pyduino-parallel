@@ -94,6 +94,7 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
         self.payload = self.G_as_keyed()
         self.data = None
         self.fparam = f_param
+        self.fitness = np.nan * np.ones(len(self.reactors))
     def G_as_keyed(self):
         """
         Converts genome matrix into an appropriate format to send to the reactors.
@@ -168,20 +169,19 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
             self.t2 = datetime.now()
             self.dt = (self.t2-self.t1).total_seconds()
             print("[INFO]","DT",self.dt)
+            self.fitness = self.f_map(self.data,self.past_data)
             if run_ga:
-                self.fitness = self.f_map(self.data,self.past_data)
                 self.p = softmax(self.fitness)
                 self.crossover()
                 self.mutation()
                 self.payload = self.G_as_keyed()
-                #Preparing log
-                update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
-                update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
-                update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
             else:
                 df = pd.DataFrame(self.data).T
                 df.columns = df.columns.str.lower()
                 self.payload = df[self.parameters].T.to_dict()
+            update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
+            update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
+            update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
             self.log.log_many_rows(self.data)
 
 if __name__ == "__main__":
