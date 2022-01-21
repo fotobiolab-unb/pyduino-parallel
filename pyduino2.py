@@ -118,8 +118,10 @@ class Reator:
             >>> reator.set({"440": 50, "brilho": 100})
         """
         data = {**(data or {}), **kwargs}
-        args = ', '.join(f'{k}, {v}' for k, v in data.items())
-        self._send(f'set({args})')
+        args = ",".join(f'{k},{v}' for k, v in data.items())
+        cmd = f"set({args})"
+        #print("[INFO]","SEND",cmd)
+        self._send(cmd)
 
     def get(self, key=None):
         """
@@ -254,7 +256,13 @@ class ReactorManager:
         """
         df = pd.read_csv(path,sep=sep,**kwargs)
         for i,row in df.iterrows():
-            self.reactors[self._id[i]].set(row.to_dict())
+            row = row[~row.isna()].astype(int)
+            _id = int(row["ID"])
+            row = row.drop("ID")
+            self.reactors[self._id[_id]].set(row.to_dict())
+            # for param,val in row.to_dict().items():
+            #     cmd = f"set({param},{val})"
+            #     self.reactors[self._id[i+1]]._send(cmd)
     def calibrate(self,deltaT=120,dir="calibrate"):
         """
         Runs `curva` and dumps the result into txts.

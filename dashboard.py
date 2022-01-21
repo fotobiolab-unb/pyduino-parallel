@@ -29,7 +29,8 @@ def yaml_get(filename):
 y = yaml_get("dash.yaml")
 
 COLOR = plotly.colors.qualitative.Alphabet
-USE_COLS = y['cols']
+USE_COLS = list(y['cols'].keys())
+X_COL = y['x_col']
 THEME = y['theme']
 load_figure_template(THEME)
 SEP = y['sep']
@@ -95,7 +96,7 @@ def update_graph_live(n):
             df[gbase] = tail(gpath,NROWSDF,sep=SEP)
             df[gbase].columns = HEAD
 
-    fig = plotly.tools.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
+    fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
     fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
     fig['layout']['template'] = THEME
 
@@ -103,8 +104,8 @@ def update_graph_live(n):
         row, col = RCGEN[i]
         for _name,data in df.items():
             fig.append_trace({
-                #'x': data['time'],
                 'y': data[colname],
+                'x':data[X_COL],
                 'name': _name,
                 'mode': 'lines+markers',
                 'type': 'scatter',
@@ -112,6 +113,8 @@ def update_graph_live(n):
                 'showlegend': i == 0,
                 'line_color': color_dict[_name]
             }, row, col)
+            fig.update_xaxes(title_text=X_COL,row=row,col=col)
+            fig.update_yaxes(range=y['cols'][colname],row=row,col=col)
     return fig
 
 

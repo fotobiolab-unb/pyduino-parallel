@@ -49,3 +49,6 @@ Create a new log folder:
 
 Run loop without genetic algorithm for 5 seconds:
 - `g.run(5,run_ga=False)`
+
+Run a command repeatedly:
+- `for i in range(4): g.send("drenar",False)`
