@@ -1,8 +1,9 @@
 glob: "./log/teste1/*.csv"
 cols:
-  - Temp
-  - pH
-  - DensidadeAtual
+  Temp: [23,30]
+  pH: [1,10] # min,max (must have two)
+  DensidadeAtual: #No range
+x_col: 'elapsed_time_hours'
 sep: "\t"
 tail: 128
 display_cols: 3

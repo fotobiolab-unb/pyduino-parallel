@@ -81,7 +81,7 @@ class log:
             **kwargs: Additional arguments passed to `self.log_rows`.
         """
         for _id,row in data.items():
-            self.log_rows(rows=[row],subdir=_id,sep='\t',index=False,**kwargs)
+            self.log_rows(rows=[row],subdir=_id,sep='\t',index_col=False,**kwargs)
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """
         Dumps rows into a single csv.
