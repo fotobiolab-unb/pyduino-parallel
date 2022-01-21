@@ -64,7 +64,7 @@ def parse_dados(X,param):
     """
     return np.array(list(map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))).astype(float)
 
-class GeneticAlgorithm(RangeParser,ReactorManager,GA):
+class Spectra(RangeParser,ReactorManager,GA):
     def __init__(self,f_param,ranges,log_name=None,**kwargs):
         """
         Args:
@@ -116,7 +116,7 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
         if x_0 is not None:
             f_0 = partial(parse_dados,param=self.fparam)(x_0)
             self.power = self.view(self.G,self.linmap).sum(axis=1)
-            print("[DEBUG]","f_1-f_0",f_1-f_0)
+            #print("[DEBUG]","f_1-f_0",f_1-f_0)
             self.density = (f_1 - f_0)/self.dt
             F = self.density/self.power
             F[F == np.inf] == 0
@@ -186,4 +186,4 @@ class GeneticAlgorithm(RangeParser,ReactorManager,GA):
 
 if __name__ == "__main__":
     hyperparameters = yaml_genetic_algorithm(HYPER_PARAM)
-    g = GeneticAlgorithm(**hyperparameters)
+    g = Spectra(**hyperparameters)
