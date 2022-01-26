@@ -11,5 +11,5 @@ display_cols: 2
 theme: cyborg
 subplot_height: 200
 cumulative: true
-update_time: 20000 #In miliseconds
+update_time: 180000 #In miliseconds
 vspace: 0.1

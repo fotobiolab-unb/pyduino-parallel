@@ -159,7 +159,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         while True:
             self.t1 = datetime.now()
             print("[INFO]","SET",self.t1.strftime("%c"))
-            self.F_set(self.payload)
+            self.F_set(self.payload) if run_ga else None
             time.sleep(2)
             time.sleep(deltaT)
             self.send("quiet_connect",await_response=False)
