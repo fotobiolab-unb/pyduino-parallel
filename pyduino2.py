@@ -10,6 +10,7 @@ import pandas as pd
 from multiprocessing import Pool
 from functools import partial
 import os
+from bcolors import bcolors
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
@@ -225,7 +226,18 @@ class ReactorManager:
         if self.header is None:
             self.header = list(self.reactors.values())[0].send("cabecalho").split(" ")
 
-        rows = self.send_parallel("dados",delay=13)
+        len_empty = None
+        while len_empty!=0:
+            rows = self.send_parallel("dados",delay=20)
+            #Checking if any reactor didn't respond.
+            empty = list(filter(lambda x: x[1] is None,rows))
+            len_empty = len(empty)
+            if len_empty!=0:
+                empty = list(map(lambda x: x[0]),empty)
+                print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n"+"\n\t".join(empty))
+                print("Trying again in 2 seconds.")
+                sleep(2)
+
         rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
