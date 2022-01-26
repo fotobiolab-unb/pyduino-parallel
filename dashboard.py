@@ -107,7 +107,7 @@ def update_graph_live(n):
                 'y': data[colname],
                 'x':data[X_COL],
                 'name': _name,
-                'mode': 'lines+markers',
+                'mode': 'lines',
                 'type': 'scatter',
                 'legendgroup': _name,
                 'showlegend': i == 0,
