@@ -8,8 +8,9 @@ authors:
 cff-version: "1.1.0"
 keywords: 
   - "distributed computing"
+  - experiment automation
   - optimization
 message: "If you use this software, please cite it using these metadata."
-title: "HTTP Based Experiment Manager"
-url: "https://github.com/icarosadero/raspi_network"
+title: "Pyduino Parallel"
+url: "https://github.com/fotobiolab-unb/pyduino-parallel"
 ...
