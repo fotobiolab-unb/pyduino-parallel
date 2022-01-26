@@ -1,0 +1,15 @@
+# YAML 1.2
+---
+authors: 
+  -
+    affiliation: "Instituto de Física - Universidade de Brasília"
+    family-names: 
+    given-names: "Ícaro Lorran Lopes Costa"
+cff-version: "1.1.0"
+keywords: 
+  - "distributed computing"
+  - optimization
+message: "If you use this software, please cite it using these metadata."
+title: "HTTP Based Experiment Manager"
+url: "https://github.com/icarosadero/raspi_network"
+...
