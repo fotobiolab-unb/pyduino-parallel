@@ -233,7 +233,7 @@ class ReactorManager:
             empty = list(filter(lambda x: x[1] is None,rows))
             len_empty = len(empty)
             if len_empty!=0:
-                empty = list(map(lambda x: x[0]),empty)
+                empty = list(map(lambda x: x[0],empty))
                 print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n"+"\n\t".join(empty))
                 print("Trying again in 2 seconds.")
                 sleep(2)
