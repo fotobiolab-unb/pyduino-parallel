@@ -18,6 +18,8 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
 def yaml_get(filename):
     """
     Loads hyperparameters from a YAML file.
@@ -26,7 +28,7 @@ def yaml_get(filename):
     with open(filename) as f:
         y = yaml.load(f.read(),yaml.Loader)
     return y
-y = yaml_get("dash.yaml")
+y = yaml_get(os.path.join(__location__,"dash.yaml"))
 
 COLOR = plotly.colors.qualitative.Alphabet
 USE_COLS = list(y['cols'].keys())
@@ -40,10 +42,14 @@ LOG_PATH = glob(y["glob"])
 NCOLSDF = None
 #Number of last rows to read
 NROWSDF = y["tail"]
-with open(LOG_PATH[0]) as file:
-    HEAD = pd.read_csv(io.StringIO(''.join([file.readline() for _ in range(2)])),sep=SEP)
-    print(HEAD)
-    HEAD = HEAD.columns
+if len(LOG_PATH)!=0:
+    with open(LOG_PATH[0]) as file:
+        HEAD = pd.read_csv(io.StringIO(''.join([file.readline() for _ in range(2)])),sep=SEP)
+        print(HEAD)
+        HEAD = HEAD.columns
+else:
+    print(f"Glob {y['glob']} doesn't exist.")
+    exit()
 NCOLSDF = len(USE_COLS)
 #Number of columns for the layout
 NCOLS = y["display_cols"]

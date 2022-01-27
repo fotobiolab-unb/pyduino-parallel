@@ -1,0 +1,13 @@
+pyduino\_parallel.docs.source namespace
+=======================================
+
+Submodules
+----------
+
+pyduino\_parallel.docs.source.conf module
+-----------------------------------------
+
+.. automodule:: pyduino_parallel.docs.source.conf
+   :members:
+   :undoc-members:
+   :show-inheritance:
