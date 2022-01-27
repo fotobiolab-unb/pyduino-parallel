@@ -1,0 +1,10 @@
+pyduino\_parallel.docs namespace
+================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   pyduino_parallel.docs.source

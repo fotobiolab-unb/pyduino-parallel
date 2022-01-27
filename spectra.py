@@ -12,14 +12,16 @@ from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
 
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
 #Path to spectrum.json
-SPECTRUM_PATH = "spectrum.json"
+SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
 
 #Path to relevant parameters file
-PARAM_PATH = "relevant_parameters.txt"
+PARAM_PATH = os.path.join(__location__,"relevant_parameters.txt")
 
 #Path to hyperparameters for the genetic algorithm
-HYPER_PARAM = "hyperparameters.yaml"
+HYPER_PARAM = os.path.join(__location__,"hyperparameters.yaml")
 
 def update_dict(D,A,key):
     """
