@@ -14,6 +14,7 @@ from bcolors import bcolors
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
+CACHEFILE = "cache.csv"
 REACTOR_PARAMETERS = None
 if os.path.exists("parameters.txt"):
     with open("parameters.txt") as file:
@@ -69,6 +70,14 @@ class Reator:
         self._recv(delay)
         self._send("quiet_connect")
         #self._recv(delay)
+        self.connected = True
+
+    def reset(self):
+        """
+        Resets connection.
+        """
+        self._conn.close()
+        self._conn.open()
         self.connected = True
 
     def close(self):
@@ -237,10 +246,16 @@ class ReactorManager:
             empty = list(filter(lambda x: x[1] is None,rows))
             len_empty = len(empty)
             if len_empty!=0:
+                #Error treatment in case some reactor fails to respond.
                 empty = list(map(lambda x: x[0],empty))
                 print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n"+"\n\t".join(empty))
-                print("Trying again in 2 seconds.")
+                print("Resetting serial")
+                for port in empty:
+                    self.reactors[port].reset()
                 sleep(2)
+                print("Recovering last state")
+                self.set_preset_state(path=CACHEFILE)
+                print("Done")
 
         rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:
