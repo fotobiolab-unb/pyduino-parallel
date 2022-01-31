@@ -11,4 +11,3 @@ jobs:
       with:
         docs-folder: "docs/"
         pre-build-command: "sphinx-apidoc -o source ../"
-        build-command: "make html"
