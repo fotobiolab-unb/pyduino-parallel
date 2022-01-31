@@ -10,6 +10,7 @@ Welcome to Pyduino's documentation!
    :maxdepth: 3
    :caption: Contents:
 
+   logging
    modules
    
 

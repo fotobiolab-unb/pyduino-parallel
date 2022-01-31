@@ -2,9 +2,11 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="#" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="pyduino_parallel" href="modules.html" /><link rel="prev" title="Welcome to Pyduino’s documentation!" href="index.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/><title>Search - Pyduino  documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>Logging - Pyduino documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
     
@@ -131,7 +133,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -145,15 +147,15 @@
   
   <span class="sidebar-brand-text">Pyduino  documentation</span>
   
-</a><form class="sidebar-search-container" method="get" action="#" role="search">
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Logging</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">pyduino_parallel</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="bcolors.html">bcolors module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">dashboard module</a></li>
@@ -183,43 +185,93 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          
-<noscript>
-<div class="admonition error">
-  <p class="admonition-title">Error</p>
-  <p>
-    Please activate JavaScript to enable the search functionality.
-  </p>
+          <div class="section" id="logging">
+<h1>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h1>
+<p>The submodule <cite>log</cite> is responsible to backup row-formatted data into the disk. By default, it is implemented as a subclass of <cite>ReactorManager</cite> and can be accessed as an attribute like in the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">ReactorManager</span><span class="p">()</span>
+<span class="n">r</span><span class="o">.</span><span class="n">log</span>
+</pre></div>
 </div>
-</noscript>
-
-<div id="search-results"></div>
+<p>As a standalone class, <cite>log</cite> takes three parameters: <cite>subdir</cite>, <cite>path</cite>, and <cite>name</cite>. Only the parameter <cite>subdir</cite> must be specified with a list of strings, whose names are the file names for the CSV’s where the row data will be saved. Even though the parameter <cite>name</cite> expects a string to use as folder name, passing <cite>None</cite> to it will set the current timestamp instead.</p>
+<p>When instantiated from within the <cite>Spectra</cite> class, <cite>log</cite> automatically uses a list of the reactors’ ids as input for the <cite>subdir</cite> parameter.</p>
+<p>If a CSV file already exists, <cite>log</cite> will append the new data instead of overwriting the file.</p>
+<div class="section" id="caching">
+<h2>Caching<a class="headerlink" href="#caching" title="Permalink to this headline">¶</a></h2>
+<p>To quickly retrieve the last parameter values sent to the reactors in the past and also account for possible unforeseen interruptions, the <cite>log</cite> module possesses a caching mechanism implemented in the <cite>cache_data</cite> method. This method is triggered at every call of <cite>ReactorManager.dados</cite> by default and will store the output of all columns from all reactors as a single file.</p>
+<p>Regarding <cite>log</cite> as a subclass of <cite>ReactorManager</cite>, values from the cached file (or any other initialization file with the same schema) can be reapplied into the reactors through the <cite>set_preset_state</cite> method by setting the parameter <cite>path</cite> as the path to the cached file as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Restoring a previous state from a cache file</span>
+<span class="n">r</span><span class="o">.</span><span class="n">set_preset_state</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"path_to_cached_file.csv"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="modules.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">pyduino_parallel</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
               Copyright &#169;  |
           Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
           <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/logging.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
         </div>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Logging</a><ul>
+<li><a class="reference internal" href="#caching">Caching</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -229,8 +281,5 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
-    
-<script src="_static/searchtools.js"></script>
-<script src="_static/language_data.js"></script>
-<script src="searchindex.js"></script></body>
+    </body>
 </html>
