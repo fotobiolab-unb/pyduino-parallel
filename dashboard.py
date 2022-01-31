@@ -1,5 +1,3 @@
-import datetime
-import enum
 import pandas as pd
 from glob import glob
 import os
@@ -105,17 +103,20 @@ def update_graph_live(n):
             df[gbase].columns = HEAD
 
     fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
-    fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
+    #fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
+    fig['layout']['legend'] = {'y':0.5,'orientation':'h'}
     fig['layout']['template'] = THEME
 
     for i,colname in enumerate(USE_COLS):
         row, col = RCGEN[i]
         for _name,data in df.items():
-            plot_data = data.copy().loc[::len(data)//MAXPOINTS if MAXPOINTS else 1,:]
+            cap = len(data)//MAXPOINTS if MAXPOINTS else 1
+            cap = cap if cap!=0 else 1
+            plot_data = data.copy().loc[::cap,:]
             fig.append_trace({
                 'y': plot_data[colname],
                 'x':plot_data[X_COL],
-                'name': _name,
+                'name': f"{_name}({cap})",
                 'mode': 'lines',
                 'type': 'scatter',
                 'legendgroup': _name,

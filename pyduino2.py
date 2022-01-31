@@ -150,8 +150,13 @@ class Reator:
     def _get_all(self):
         resp = self.send("get")
 
-def send_wrapper(reactor_item,command,delay):
-    return (reactor_item[0],reactor_item[1].send(command,delay=delay))
+def send_wrapper(reactor_item,command,delay,await_response=True):
+    if await_response:
+        return (reactor_item[0],reactor_item[1].send(command,delay=delay))
+    else:
+        reactor_item[0],reactor_item[1]._send(command)
+        sleep(delay)
+        return True
 
 class ReactorManager:
     pinged = False
@@ -178,10 +183,10 @@ class ReactorManager:
                 r._send(command)
         return out
     
-    def send_parallel(self,command,delay):
+    def send_parallel(self,command,delay,await_response=True):
         out = []
         with Pool(7) as p:
-            out = p.map(partial(send_wrapper,command=command,delay=delay),list(self.reactors.items()))
+            out = p.map(partial(send_wrapper,command=command,delay=delay,await_response=await_response),list(self.reactors.items()))
         return out
 
     def garbage(self):
@@ -288,16 +293,20 @@ class ReactorManager:
         Args:
             path (str): Path to the csv file.
         """
-        df = pd.read_csv(path,sep=sep,**kwargs)
+        df = pd.read_csv(path,sep=sep,index_col='ID',**kwargs)
         df.columns = df.columns.str.lower() #Commands must be sent in lowercase
         if REACTOR_PARAMETERS:
-            cols = list((df.columns)&(REACTOR_PARAMETERS))
+            cols = list(set(df.columns)&(REACTOR_PARAMETERS))
             df = df.loc[:,cols]
         for i,row in df.iterrows():
             row = row[~row.isna()].astype(int)
-            _id = int(row["ID"])
-            row = row.drop("ID")
-            self.reactors[self._id[_id]].set(row.to_dict())
+            i = int(i)
+            print('Reactor', i)
+            for param,val in row.items():
+                print('\t',param,val)
+                self.reactors[self._id[i]].set({param:val})
+                sleep(0.2)
+        return df
     def calibrate(self,deltaT=120,dir="calibrate"):
         """
         Runs `curva` and dumps the result into txts.

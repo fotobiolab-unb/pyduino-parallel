@@ -12,5 +12,5 @@ theme: cyborg
 subplot_height: 300
 cumulative: true
 update_time: 10000 #In miliseconds
-max_points: 500 #Maximum number of points to display at once
+max_points: 100 #Maximum number of points to display at once
 vspace: 0.1
