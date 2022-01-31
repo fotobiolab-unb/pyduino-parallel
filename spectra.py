@@ -163,7 +163,6 @@ class Spectra(RangeParser,ReactorManager,GA):
             print("[INFO]","GET",datetime.now().strftime("%c"))
             self.past_data = self.data.copy() if self.data is not None else None
             self.data = self.F_get()
-            print("[INFO]","DT",self.dt)
             self.fitness = self.f_map(self.data,self.past_data)
             if run_ga:
                 self.p = softmax(self.fitness)
@@ -185,6 +184,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.send("quiet_connect",await_response=False)
             self.t2 = datetime.now()
             self.dt = (self.t2-self.t1).total_seconds()
+            print("[INFO]","DT",self.dt)
 
 if __name__ == "__main__":
     hyperparameters = yaml_genetic_algorithm(HYPER_PARAM)
