@@ -55,6 +55,8 @@ NCOLSDF = len(USE_COLS)
 NCOLS = y["display_cols"]
 #Number of rows for the layout
 NROWS = ceil(NCOLSDF/2)
+#Maximum number of points to display at once
+MAXPOINTS = y.get("max_points",None)
 
 RCGEN = list(product(range(1,NROWS+1),range(1,NCOLS+1)))
 
@@ -109,9 +111,10 @@ def update_graph_live(n):
     for i,colname in enumerate(USE_COLS):
         row, col = RCGEN[i]
         for _name,data in df.items():
+            plot_data = data.copy().loc[::len(data)//MAXPOINTS if MAXPOINTS else 1,:]
             fig.append_trace({
-                'y': data[colname],
-                'x':data[X_COL],
+                'y': plot_data[colname],
+                'x':plot_data[X_COL],
                 'name': _name,
                 'mode': 'lines',
                 'type': 'scatter',
