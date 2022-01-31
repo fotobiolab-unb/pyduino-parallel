@@ -160,16 +160,9 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.deltaT = deltaT
         while True:
             self.t1 = datetime.now()
-            print("[INFO]","SET",self.t1.strftime("%c"))
-            self.F_set(self.payload) if run_ga else None
-            time.sleep(2)
-            time.sleep(deltaT)
-            self.send("quiet_connect",await_response=False)
             print("[INFO]","GET",datetime.now().strftime("%c"))
             self.past_data = self.data.copy() if self.data is not None else None
             self.data = self.F_get()
-            self.t2 = datetime.now()
-            self.dt = (self.t2-self.t1).total_seconds()
             print("[INFO]","DT",self.dt)
             self.fitness = self.f_map(self.data,self.past_data)
             if run_ga:
@@ -185,6 +178,13 @@ class Spectra(RangeParser,ReactorManager,GA):
             update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
             update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
             self.log.log_many_rows(self.data)
+            print("[INFO]","SET",self.t1.strftime("%c"))
+            self.F_set(self.payload) if run_ga else None
+            time.sleep(2)
+            time.sleep(deltaT)
+            self.send("quiet_connect",await_response=False)
+            self.t2 = datetime.now()
+            self.dt = (self.t2-self.t1).total_seconds()
 
 if __name__ == "__main__":
     hyperparameters = yaml_genetic_algorithm(HYPER_PARAM)
