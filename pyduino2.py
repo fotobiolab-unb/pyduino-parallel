@@ -250,6 +250,9 @@ class ReactorManager:
     def log_init(self,**kwargs):
         """
         Creates log directories for each Arduino.
+
+        Args:
+            name (str): Name of the subdirectory in the log folder where the files will be saved.
         """
         if not self.pinged:
             self.ping()
@@ -305,7 +308,7 @@ class ReactorManager:
         rows = list(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(header,x[1].split(" ")))),rows))
 
         for _id,row in rows:
-            self.log.log_rows(rows=[row],subdir=_id,sep='\t',index=False)
+            self.log.log_rows(rows=[row],subdir=_id,sep='\t')
         rows = dict(rows)
         if save_cache:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
@@ -345,4 +348,3 @@ class ReactorManager:
 
 if __name__ == '__main__':
     r = ReactorManager()
-    r.set_preset_state()

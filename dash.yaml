@@ -1,4 +1,4 @@
-glob: "./log/teste0/*.csv"
+glob: "./log/preset/*.csv"
 cols:
   Temp: #[23,30]
   pH: #[1,10] # min,max (must have two)
