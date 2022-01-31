@@ -7,7 +7,7 @@ import re
 from collections import OrderedDict
 from log import log
 import pandas as pd
-from multiprocessing import Pool
+from multiprocessing import Pool, Process
 from functools import partial
 import os
 from bcolors import bcolors
@@ -19,6 +19,12 @@ REACTOR_PARAMETERS = None
 if os.path.exists("parameters.txt"):
     with open("parameters.txt") as file:
         REACTOR_PARAMETERS = set(map(lambda x : x.strip(),file.readlines()))
+
+#From https://stackoverflow.com/a/312464/6451772
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
 class param(property):
     def __init__(self, typ=int, name=None):
@@ -105,6 +111,13 @@ class Reator:
     def _send(self, msg):
         self._conn.write(msg.encode('ascii') + b'\n\r')
         # self._send_cb(msg)
+    
+    def set_in_chunks(self,params,chunksize=4):
+        """
+        Sets params into chunks in a different thread.
+        """
+        p = Process(target=set_chunk,args=(self,params,2,chunksize))
+        p.start()
 
     def _recv(self,delay=STEP):
         out = []
@@ -157,6 +170,17 @@ def send_wrapper(reactor_item,command,delay,await_response=True):
         reactor_item[0],reactor_item[1]._send(command)
         sleep(delay)
         return True
+
+def set_chunk(reactor,params,delay,chunksize):
+        """
+        Sets params into chunks in a different thread.
+        """
+        params = list(params)
+        for chunk in chunks(params,chunksize):
+            cmd = ",".join(list(map(lambda u: f"{u[0]},{u[1]}",chunk)))
+            cmd = f"set({cmd})"
+            reactor._send(cmd)
+            sleep(delay)
 
 class ReactorManager:
     pinged = False
@@ -287,11 +311,13 @@ class ReactorManager:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
         return rows
     
-    def set_preset_state(self,path="preset_state.csv",sep="\t",**kwargs):
+    def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4,**kwargs):
         """
         Prepare Arduinos with preset parameters from a csv file.
         Args:
             path (str): Path to the csv file.
+            chunksize (int): How many to commands to send in a single line. A large value can cause Serial errors.
+            sep (str): Column separator used in the csv.
         """
         df = pd.read_csv(path,sep=sep,index_col='ID',**kwargs)
         df.columns = df.columns.str.lower() #Commands must be sent in lowercase
@@ -299,14 +325,9 @@ class ReactorManager:
             cols = list(set(df.columns)&(REACTOR_PARAMETERS))
             df = df.loc[:,cols]
         for i,row in df.iterrows():
-            row = row[~row.isna()].astype(int)
+            row = list(row[~row.isna()].astype(int).items())
             i = int(i)
-            print('Reactor', i)
-            for param,val in row.items():
-                print('\t',param,val)
-                self.reactors[self._id[i]].set({param:val})
-                sleep(0.2)
-        return df
+            self.reactors[self._id[i]].set_in_chunks(row,chunksize)
     def calibrate(self,deltaT=120,dir="calibrate"):
         """
         Runs `curva` and dumps the result into txts.
@@ -324,3 +345,4 @@ class ReactorManager:
 
 if __name__ == '__main__':
     r = ReactorManager()
+    r.set_preset_state()
