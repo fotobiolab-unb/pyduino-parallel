@@ -14,6 +14,10 @@ from bcolors import bcolors
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
+REACTOR_PARAMETERS = None
+if os.path.exists("parameters.txt"):
+    with open("parameters.txt") as file:
+        REACTOR_PARAMETERS = set(map(lambda x : x.strip(),file.readlines()))
 
 class param(property):
     def __init__(self, typ=int, name=None):
@@ -270,14 +274,15 @@ class ReactorManager:
             path (str): Path to the csv file.
         """
         df = pd.read_csv(path,sep=sep,**kwargs)
+        df.columns = df.columns.str.lower() #Commands must be sent in lowercase
+        if REACTOR_PARAMETERS:
+            cols = list((df.columns)&(REACTOR_PARAMETERS))
+            df = df.loc[:,cols]
         for i,row in df.iterrows():
             row = row[~row.isna()].astype(int)
             _id = int(row["ID"])
             row = row.drop("ID")
             self.reactors[self._id[_id]].set(row.to_dict())
-            # for param,val in row.to_dict().items():
-            #     cmd = f"set({param},{val})"
-            #     self.reactors[self._id[i+1]]._send(cmd)
     def calibrate(self,deltaT=120,dir="calibrate"):
         """
         Runs `curva` and dumps the result into txts.
