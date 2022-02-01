@@ -11,3 +11,5 @@ pyserial==3.5
 PyYAML==6.0
 scipy==1.6.0
 tailer==0.4.1
+myst-parser
+furo

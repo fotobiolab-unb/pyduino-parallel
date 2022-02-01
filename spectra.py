@@ -56,15 +56,21 @@ def row_subset(rows,keys):
     """
     return pd.DataFrame(rows).T.loc[:,keys].T.astype(float).astype(int).astype(str).to_dict()
 
+def seval(x):
+    try:
+        return eval(x)
+    except:
+        return x
+
 def parse_dados(X,param):
     """
-    Parses data from `ReactorManager.log_dados` into an array.
+    Parses data from `ReactorManager.log_dados` into an array while attempting to convert the input string into an appropriate data type.
 
     Args:
         X (:obj:`dict` of :obj:`OrderedDict`): Data obtained from `ReactorManager.log_dados`.
         param (str): Parameter name to be extracted from `X`.
     """
-    return np.array(list(map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))).astype(float)
+    return np.array(list(map(seval,map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,GA):
     def __init__(self,f_param,ranges,log_name=None,**kwargs):
