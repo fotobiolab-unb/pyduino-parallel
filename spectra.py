@@ -11,6 +11,7 @@ from datetime import datetime
 from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
+from utils import yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -18,10 +19,13 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
 
 #Path to relevant parameters file
-PARAM_PATH = os.path.join(__location__,"relevant_parameters.txt")
+PARAM_PATH = os.path.join(__location__,"relevant_parameters.yaml")
 
 #Path to hyperparameters for the genetic algorithm
 HYPER_PARAM = os.path.join(__location__,"hyperparameters.yaml")
+
+#Path to irradiance values
+IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
 
 def update_dict(D,A,key):
     """
@@ -86,10 +90,14 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.spectrum = json.loads(jfile.read())
         
         assert os.path.exists(PARAM_PATH)
-        with open(PARAM_PATH) as txt:
-            self.parameters = list(map(lambda x: x.strip(),txt.readlines()))
+        self.parameters = yaml_get(PARAM_PATH)
 
         RangeParser.__init__(self,ranges,self.parameters)
+
+        assert os.path.exists(IRRADIANCE_PATH)
+        self.irradiance = yaml_get(IRRADIANCE_PATH)
+        self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
+
         ReactorManager.__init__(self)
         GA.__init__(
             self,
@@ -99,7 +107,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             **kwargs
             )
         self.log_init(name=log_name)        
-        self.payload = self.G_as_keyed()
+        self.payload = self.G_as_keyed() if self.payload is None else self.payload
         self.data = None
         self.fparam = f_param
         self.fitness = np.nan * np.ones(len(self.reactors))
@@ -120,11 +128,10 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         Computation for the fitness function.
         """
-        f_1 = partial(parse_dados,param=self.fparam)(x_1)
+        f_1 = partial(parse_dados,param=self.fparam)(x_1).astype(float)
         if x_0 is not None:
-            f_0 = partial(parse_dados,param=self.fparam)(x_0)
-            self.power = self.view(self.G,self.linmap).sum(axis=1)
-            #print("[DEBUG]","f_1-f_0",f_1-f_0)
+            f_0 = partial(parse_dados,param=self.fparam)(x_0).astype(float)
+            self.power = (self.view_g()*self.irradiance).sum(axis=1)/100.0
             self.density = (f_1 - f_0)/self.dt
             F = self.density/self.power
             F[F == np.inf] == 0
@@ -134,7 +141,12 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.density = np.nan * np.ones(len(self.reactors))
             self.power = np.nan * np.ones(len(self.reactors))
             return np.zeros_like(f_1)
-
+    def payload_to_matrix(self):
+        return np.nan_to_num(
+            np.array(
+                [[self.payload[i].get(u,np.nan) for u in self.keyed_ranges.keys()] for i in self._id.keys()]
+                ).astype(float)
+            )
     def F_get(self):
         """
         Extracts relevant data from Arduinos.
@@ -179,6 +191,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                 df = pd.DataFrame(self.data).T
                 df.columns = df.columns.str.lower()
                 self.payload = df[self.parameters].T.to_dict()
+                self.G = self.inverse_view(self.payload_to_matrix())
             update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
             update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
             update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')

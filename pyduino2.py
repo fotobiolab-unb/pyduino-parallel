@@ -10,15 +10,19 @@ import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial
 import os
-from bcolors import bcolors
+from utils import bcolors, yaml_get
+
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 CACHEFILE = "cache.csv"
 REACTOR_PARAMETERS = None
-if os.path.exists("parameters.txt"):
-    with open("parameters.txt") as file:
+if os.path.exists(os.path.join(__location__,"parameters.txt")):
+    with open(os.path.join(__location__,"parameters.txt")) as file:
         REACTOR_PARAMETERS = set(map(lambda x : x.strip(),file.readlines()))
+
+RELEVANT_PARAMETERS = set(yaml_get(os.path.join(__location__,"relevant_parameters.yaml")))
 
 #From https://stackoverflow.com/a/312464/6451772
 def chunks(lst, n):
@@ -197,6 +201,7 @@ class ReactorManager:
         #Info
         print("\n".join(map(lambda x: f"Reactor {x[0]} at port {x[1]}",self._id.items())))
         self.header = None
+        self.payload = None
     
     def send(self,command,await_response=True,**kwargs):
         out = {}
@@ -331,6 +336,11 @@ class ReactorManager:
             row = list(row[~row.isna()].astype(int).items())
             i = int(i)
             self.reactors[self._id[i]].set_in_chunks(row,chunksize)
+        
+        #Saving relevant parameters' values
+        cols = list(set(df.columns)&(RELEVANT_PARAMETERS))
+        self.payload = df.loc[:,cols].to_dict('index')
+
     def calibrate(self,deltaT=120,dir="calibrate"):
         """
         Runs `curva` and dumps the result into txts.
