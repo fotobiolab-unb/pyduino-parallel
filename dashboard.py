@@ -15,17 +15,10 @@ import plotly
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
+from utils import yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-def yaml_get(filename):
-    """
-    Loads hyperparameters from a YAML file.
-    """
-    y = None
-    with open(filename) as f:
-        y = yaml.load(f.read(),yaml.Loader)
-    return y
 y = yaml_get(os.path.join(__location__,"dash.yaml"))
 
 COLOR = plotly.colors.qualitative.Alphabet
@@ -129,4 +122,4 @@ def update_graph_live(n):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host='0.0.0.0')
