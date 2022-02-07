@@ -1,0 +1,17 @@
+digraph "classes" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{RangeParser|keyed_ranges : OrderedDict\l|ranges_as_keyed(x)\lranges_as_list(x)\l}", shape="record"];
+"1" [label="{ReactorManager|_id : OrderedDict, dict\l_id_reverse\lavailable_ports : list\lheader : NoneType\llog\lpayload : NoneType\lpinged : bool\lpinged : bool\lports : list\lreactors\l|calibrate(deltaT, dir)\lconnect()\ldados(save_cache)\lgarbage()\lget(key)\llog_dados(save_cache)\llog_init()\lping()\lsend(command, await_response)\lsend_parallel(command, delay, await_response)\lset(data)\lset_preset_state(path, sep, chunksize)\lstart()\l}", shape="record"];
+"2" [label="{Reator|_conn : Serial\l_port\lar\lbaudrate : property\lbrilho\lcolor_440\lcolor_branco\lconnected : bool\lima\lport : property\ltemp\l|_get_all()\l_recv(delay)\l_send(msg)\lclose()\lconnect(delay)\lget(key)\lreset()\lsend(msg, delay, recv_delay)\lset(data)\lset_in_chunks(params, chunksize)\l}", shape="record"];
+"3" [label="{Spectra|G : ndarray\ldata : NoneType\ldeltaT\ldensity\ldt\lfitness\lfparam\lirradiance : ndarray\lp\lparameters\lpast_data : NoneType\lpayload : OrderedDict\lpower\lspectrum\lt1 : datetime\lt2 : datetime\l|F_get()\lF_set(data)\lG_as_keyed()\lf_map(x_1, x_0)\lpayload_to_matrix()\lrun(deltaT, run_ga)\lset_spectrum(preset)\l}", shape="record"];
+"4" [label="{bcolors|BOLD : str\lENDC : str\lFAIL : str\lHEADER : str\lOKBLUE : str\lOKCYAN : str\lOKGREEN : str\lUNDERLINE : str\lWARNING : str\l|}", shape="record"];
+"5" [label="{log|first_timestamp : datetime, NoneType\llog_name : NoneType\lpath : str\lstart_timestamp : NoneType\lsubdir\ltimestamp\l|cache_data(rows, path)\llog_many_rows(data)\llog_rows(rows, subdir, add_timestamp)\l}", shape="record"];
+"6" [label="{param|name : NoneType\ltype : int\l|}", shape="record"];
+"6" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="temp", style="solid"];
+"6" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="brilho", style="solid"];
+"6" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="ar", style="solid"];
+"6" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="ima", style="solid"];
+"6" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="color_branco", style="solid"];
+"6" -> "2" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="color_440", style="solid"];
+}

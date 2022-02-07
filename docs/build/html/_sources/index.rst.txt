@@ -11,6 +11,7 @@ Welcome to Pyduino's documentation!
    :caption: Contents:
 
    logging
+   basic_structure
    modules
    
 
