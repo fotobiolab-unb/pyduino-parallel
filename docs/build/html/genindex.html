@@ -7,6 +7,7 @@
     <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/><title>Index - Pyduino documentation</title>
 <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
     
     
@@ -154,14 +155,14 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">pyduino_parallel</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="bcolors.html">bcolors module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic_structure.html">Basic Structure</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">pyduino-parallel</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">dashboard module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_parser.html">data_parser module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log.html">log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino2.html">pyduino2 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spectra.html">spectra module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils module</a></li>
 </ul>
 </li>
 </ul>
@@ -211,18 +212,11 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="pyduino2.html#pyduino2.Reator.baudrate">baudrate (pyduino2.Reator property)</a>
 </li>
-        <li>
-    bcolors
-
-        <ul>
-          <li><a href="bcolors.html#module-bcolors">module</a>
+        <li><a href="utils.html#utils.bcolors">bcolors (class in utils)</a>
 </li>
-        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors">bcolors (class in bcolors)</a>
-</li>
-        <li><a href="bcolors.html#bcolors.bcolors.BOLD">BOLD (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.BOLD">BOLD (utils.bcolors attribute)</a>
 </li>
         <li><a href="pyduino2.html#pyduino2.Reator.brilho">brilho (pyduino2.Reator property)</a>
 </li>
@@ -237,6 +231,8 @@
         <li><a href="log.html#log.log.cache_data">cache_data() (log.log method)</a>
 </li>
         <li><a href="pyduino2.html#pyduino2.ReactorManager.calibrate">calibrate() (pyduino2.ReactorManager method)</a>
+</li>
+        <li><a href="pyduino2.html#pyduino2.chunks">chunks() (in module pyduino2)</a>
 </li>
         <li><a href="pyduino2.html#pyduino2.Reator.close">close() (pyduino2.Reator method)</a>
 </li>
@@ -287,7 +283,7 @@
   <h2>E</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors.ENDC">ENDC (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.ENDC">ENDC (utils.bcolors attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -305,7 +301,7 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="spectra.html#spectra.Spectra.F_set">F_set() (spectra.Spectra method)</a>
 </li>
-        <li><a href="bcolors.html#bcolors.bcolors.FAIL">FAIL (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.FAIL">FAIL (utils.bcolors attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -337,7 +333,7 @@
   <h2>H</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors.HEADER">HEADER (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.HEADER">HEADER (utils.bcolors attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -388,8 +384,6 @@
     module
 
         <ul>
-          <li><a href="bcolors.html#module-bcolors">bcolors</a>
-</li>
           <li><a href="data_parser.html#module-data_parser">data_parser</a>
 </li>
           <li><a href="log.html#module-log">log</a>
@@ -397,6 +391,8 @@
           <li><a href="pyduino2.html#module-pyduino2">pyduino2</a>
 </li>
           <li><a href="spectra.html#module-spectra">spectra</a>
+</li>
+          <li><a href="utils.html#module-utils">utils</a>
 </li>
         </ul></li>
     </ul></td>
@@ -407,13 +403,13 @@
   <h2>O</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors.OKBLUE">OKBLUE (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.OKBLUE">OKBLUE (utils.bcolors attribute)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors.OKCYAN">OKCYAN (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.OKCYAN">OKCYAN (utils.bcolors attribute)</a>
 </li>
-        <li><a href="bcolors.html#bcolors.bcolors.OKGREEN">OKGREEN (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.OKGREEN">OKGREEN (utils.bcolors attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -426,6 +422,8 @@
         <li><a href="pyduino2.html#pyduino2.param">param (class in pyduino2)</a>
 </li>
         <li><a href="spectra.html#spectra.parse_dados">parse_dados() (in module spectra)</a>
+</li>
+        <li><a href="spectra.html#spectra.Spectra.payload_to_matrix">payload_to_matrix() (spectra.Spectra method)</a>
 </li>
         <li><a href="pyduino2.html#pyduino2.ReactorManager.ping">ping() (pyduino2.ReactorManager method)</a>
 </li>
@@ -456,11 +454,13 @@
 </li>
         <li><a href="data_parser.html#data_parser.RangeParser.ranges_as_list">ranges_as_list() (data_parser.RangeParser method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="pyduino2.html#pyduino2.ReactorManager">ReactorManager (class in pyduino2)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="pyduino2.html#pyduino2.Reator">Reator (class in pyduino2)</a>
+</li>
+        <li><a href="pyduino2.html#pyduino2.Reator.reset">reset() (pyduino2.Reator method)</a>
 </li>
         <li><a href="spectra.html#spectra.row_subset">row_subset() (in module spectra)</a>
 </li>
@@ -490,11 +490,17 @@
           <li><a href="pyduino2.html#pyduino2.Reator.set">(pyduino2.Reator method)</a>
 </li>
         </ul></li>
+        <li><a href="pyduino2.html#pyduino2.set_chunk">set_chunk() (in module pyduino2)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="pyduino2.html#pyduino2.Reator.set_in_chunks">set_in_chunks() (pyduino2.Reator method)</a>
+</li>
         <li><a href="pyduino2.html#pyduino2.ReactorManager.set_preset_state">set_preset_state() (pyduino2.ReactorManager method)</a>
 </li>
         <li><a href="spectra.html#spectra.Spectra.set_spectrum">set_spectrum() (spectra.Spectra method)</a>
+</li>
+        <li><a href="spectra.html#spectra.seval">seval() (in module spectra)</a>
 </li>
         <li>
     spectra
@@ -529,12 +535,19 @@
   <h2>U</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors.UNDERLINE">UNDERLINE (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.UNDERLINE">UNDERLINE (utils.bcolors attribute)</a>
+</li>
+        <li><a href="spectra.html#spectra.update_dict">update_dict() (in module spectra)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="spectra.html#spectra.update_dict">update_dict() (in module spectra)</a>
+        <li>
+    utils
+
+        <ul>
+          <li><a href="utils.html#module-utils">module</a>
 </li>
+        </ul></li>
     </ul></td>
   </tr></table>
 </section>
@@ -543,7 +556,7 @@
   <h2>W</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="bcolors.html#bcolors.bcolors.WARNING">WARNING (bcolors.bcolors attribute)</a>
+        <li><a href="utils.html#utils.bcolors.WARNING">WARNING (utils.bcolors attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -554,6 +567,10 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="data_parser.html#data_parser.yaml_genetic_algorithm">yaml_genetic_algorithm() (in module data_parser)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="utils.html#utils.yaml_get">yaml_get() (in module utils)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -588,5 +605,8 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="_static/js/mermaid.js"></script>
     </body>
 </html>

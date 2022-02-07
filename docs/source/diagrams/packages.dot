@@ -1,0 +1,11 @@
+digraph "packages" {
+charset="utf-8"
+rankdir=BT
+"0" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/__init__.py", shape="box"];
+"1" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/dashboard.py", shape="box"];
+"2" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/data_parser.py", shape="box"];
+"3" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/log.py", shape="box"];
+"4" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/pyduino2.py", shape="box"];
+"5" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/spectra.py", shape="box"];
+"6" [label="/home/lz/Dropbox/adaptive_bioreactors/pyduino-parallel/utils.py", shape="box"];
+}

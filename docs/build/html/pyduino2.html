@@ -2,12 +2,14 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="spectra module" href="spectra.html" /><link rel="prev" title="log module" href="log.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="spectra module" href="spectra.html" /><link rel="prev" title="log module" href="log.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
         <title>pyduino2 module - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
     
     
@@ -155,14 +157,14 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">pyduino_parallel</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="bcolors.html">bcolors module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic_structure.html">Basic Structure</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">pyduino-parallel</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="dashboard.html">dashboard module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_parser.html">data_parser module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log.html">log module</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino2 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spectra.html">spectra module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils module</a></li>
 </ul>
 </li>
 </ul>
@@ -191,7 +193,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="module-pyduino2">
+          <section id="module-pyduino2">
 <span id="pyduino2-module"></span><h1>pyduino2 module<a class="headerlink" href="#module-pyduino2" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyduino2.ReactorManager">
@@ -239,6 +241,11 @@
 <dt class="sig sig-object py" id="pyduino2.ReactorManager.log_init">
 <span class="sig-name descname"><span class="pre">log_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.log_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates log directories for each Arduino.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the subdirectory in the log folder where the files will be saved.</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino2.ReactorManager.ping">
@@ -254,7 +261,7 @@
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino2.ReactorManager.send_parallel">
-<span class="sig-name descname"><span class="pre">send_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.send_parallel" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">send_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">await_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.send_parallel" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino2.ReactorManager.set">
@@ -262,10 +269,14 @@
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino2.ReactorManager.set_preset_state">
-<span class="sig-name descname"><span class="pre">set_preset_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'preset_state.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.set_preset_state" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_preset_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'preset_state.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.set_preset_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepare Arduinos with preset parameters from a csv file.
 :param path: Path to the csv file.
-:type path: str</p>
+:type path: str
+:param chunksize: How many to commands to send in a single line. A large value can cause Serial errors.
+:type chunksize: int
+:param sep: Column separator used in the csv.
+:type sep: str</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino2.ReactorManager.start">
@@ -333,6 +344,11 @@ After h = attrgetter(‘name.first’, ‘name.last’), the call h(r) returns
 (r.name.first, r.name.last).</p>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reator.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets connection.</p>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="pyduino2.Reator.send">
 <span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recv_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0625</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reator.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Envia mensagem para o reator e retorna resposta.</p>
@@ -356,10 +372,20 @@ After h = attrgetter(‘name.first’, ‘name.last’), the call h(r) returns
 </dd>
 </dl>
 </dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reator.set_in_chunks">
+<span class="sig-name descname"><span class="pre">set_in_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reator.set_in_chunks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets params into chunks in a different thread.</p>
+</dd></dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="pyduino2.Reator.temp">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temp</span></span><a class="headerlink" href="#pyduino2.Reator.temp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyduino2.chunks">
+<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.chunks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield successive n-sized chunks from lst.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyduino2.param">
@@ -368,9 +394,14 @@ After h = attrgetter(‘name.first’, ‘name.last’), the call h(r) returns
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyduino2.send_wrapper">
-<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">send_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactor_item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.send_wrapper" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">send_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactor_item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">await_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.send_wrapper" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyduino2.set_chunk">
+<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">set_chunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.set_chunk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets params into chunks in a different thread.</p>
+</dd></dl>
+</section>
 
         </article>
       </div>
@@ -422,5 +453,8 @@ After h = attrgetter(‘name.first’, ‘name.last’), the call h(r) returns
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="_static/js/mermaid.js"></script>
     </body>
 </html>

@@ -289,10 +289,11 @@ class ReactorManager:
                 print("Resetting serial")
                 for port in empty:
                     self.reactors[port].reset()
-                sleep(2)
+                    self.connect()
+                sleep(10)
                 print("Recovering last state")
                 self.set_preset_state(path=CACHEFILE)
-                print("Done")
+                print("Done"+bcolors.ENDC)
 
         rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:

@@ -30,7 +30,9 @@ author = 'Ícaro Lorran Lopes Costa; Dr. Luiz Fernando Roncaratti; Dr. Gabriela 
 extensions = [
     'sphinx.ext.napoleon',
     'myst_parser',
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc',
+    'sphinxcontrib.mermaid',
+    'sphinx.ext.graphviz'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -54,3 +56,9 @@ exclude_patterns = []
 html_static_path = ['_static']
 
 html_theme = 'furo'
+
+mermaid_version = "latest"
+
+html_js_files = [
+   'js/mermaid.js',
+]
