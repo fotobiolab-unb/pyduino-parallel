@@ -1,19 +1,19 @@
 hyperparameters:
-  log_name: "ga_enabled_2" #Log folder name (delete to use the default)
+  log_name: "ga_enabled_5" #Log folder name (delete to use the default)
   f_param: DensidadeAtual #Parameter to read as fitness from the reactors
   mutation_probability: 0.01
   resolution: 8 #Number of bits used for each parameter
-  elitism: true #Whether or not to use elitism
+  elitism: false #Whether or not to use elitism
   ranges:
     branco:
       - 0
-      - 10
+      - 100
     full:
       - 0
-      - 10
+      - 100
     others:
       - 0
-      - 10
+      - 100
 system:
   initial_state: "preset_state.csv"
   relevant_parameters:
@@ -39,29 +39,46 @@ system:
     "660": 5.1
     "684": 5.1
   standard_parameters:
-  - branco
-  - full
-  - "440"
-  - "470"
-  - "495"
-  - "530"
-  - "595"
-  - "634"
-  - "660"
-  - "684"
-  - cor
-  - modopainel
-  - brilho
-  - bomdia
-  - boanoite
-  - tau
-  - step
-  - modotemp
-  - temp
-  - densidade
-  - mododil
-  - ar
-  - ima
-  - modoco2
-  - co2
-  - dtco2
+    - branco
+    - full
+    - "440"
+    - "470"
+    - "495"
+    - "530"
+    - "595"
+    - "634"
+    - "660"
+    - "684"
+    - cor
+    - modopainel
+    - brilho
+    - bomdia
+    - boanoite
+    - tau
+    - step
+    - modotemp
+    - temp
+    - densidade
+    - mododil
+    - ar
+    - ima
+    - modoco2
+    - co2
+    - dtco2
+dash:
+  glob: "./log/ga_enabled_5/*.csv"
+  cols:
+    Temp: #[23,30]
+    pH: #[1,10] # min,max (must have two)
+    DensidadeAtual: #No range
+    power: #No range
+  x_col: 'elapsed_time_hours'
+  sep: "\t"
+  tail: 128
+  display_cols: 4
+  theme: cyborg
+  subplot_height: 300
+  cumulative: true
+  update_time: 10000 #In miliseconds
+  max_points: 50 #Maximum number of points to display at once
+  vspace: 0.1

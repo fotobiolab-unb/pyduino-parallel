@@ -16,7 +16,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
-CACHEFILE = "cache.csv"
+CACHEPATH = "cache.csv"
 SYS_PARAM = os.path.join(__location__,"config.yaml")
 system_parameters = yaml_get(SYS_PARAM)['system']
 RELEVANT_PARAMETERS = system_parameters['relevant_parameters']
@@ -138,7 +138,7 @@ class Reator:
                 return resp
     
     def __repr__(self):
-        return f"<Reactor at {self._port}>"
+        return f"{bcolors.OKCYAN}<Reactor at {self._port}>{bcolors.ENDC}"
 
     def set(self, data=None, **kwargs):
         """
@@ -198,7 +198,7 @@ class ReactorManager:
         self.garbage()
         self.ping()
         #Info
-        print("\n".join(map(lambda x: f"Reactor {x[0]} at port {x[1]}",self._id.items())))
+        print("\n".join(map(lambda x: f"Reactor {bcolors.OKCYAN}{x[0]}{bcolors.ENDC} at port {bcolors.OKCYAN}{x[1]}{bcolors.ENDC}",self._id.items())))
         self.header = None
         self.payload = None
     
@@ -284,15 +284,18 @@ class ReactorManager:
             if len_empty!=0:
                 #Error treatment in case some reactor fails to respond.
                 empty = list(map(lambda x: x[0],empty))
-                print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n"+"\n\t".join(empty))
+                print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n\t"+"\n\t".join(empty))
                 print("Resetting serial")
-                for port in empty:
-                    self.reactors[port].reset()
-                    self.connect()
                 sleep(10)
+                for port in empty:
+                    print('\t',port)
+                    self.reactors[port]._conn.setDTR(False)
+                    sleep(1)
+                    self.reactors[port]._conn.setDTR(True)
+                    self.connect()
                 print("Recovering last state")
                 self.set_preset_state(path=INITIAL_STATE_PATH)
-                self.set_preset_state(path=CACHEFILE,params=RELEVANT_PARAMETERS)
+                self.set_preset_state(path=CACHEPATH)
                 print("Done"+bcolors.ENDC)
 
         rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
@@ -334,7 +337,7 @@ class ReactorManager:
             cols = list(set(df.columns)&set(params))
             df = df.loc[:,cols]
         for i,row in df.iterrows():
-            row = list(row[~row.isna()].astype(int).items())
+            row = list(row[~row.isna()].astype(float).items())
             i = int(i)
             self.reactors[self._id[i]].set_in_chunks(row,chunksize)
         

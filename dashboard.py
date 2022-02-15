@@ -19,7 +19,7 @@ from utils import yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-y = yaml_get(os.path.join(__location__,"dash.yaml"))
+y = yaml_get(os.path.join(__location__,"config.yaml"))['dash']
 
 COLOR = plotly.colors.qualitative.Alphabet
 USE_COLS = list(y['cols'].keys())
