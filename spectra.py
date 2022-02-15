@@ -1,5 +1,5 @@
 from gapy.gapy2 import GA
-from pyduino2 import ReactorManager, system_parameters, INITIAL_STATE_PATH
+from pyduino2 import ReactorManager, chunks, system_parameters, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS
 import numpy as np
 from functools import partial
 import json
@@ -11,7 +11,7 @@ from datetime import datetime
 from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
-from utils import yaml_get
+from utils import yaml_get, bcolors
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -56,7 +56,7 @@ def row_subset(rows,keys):
         rows (:obj:`dict` of :obj:`OrderedDict`): Data obtained from `ReactorManager.log_dados`.
         keys (:obj:list of :obj:str): A list of keys.
     """
-    return pd.DataFrame(rows).T.loc[:,keys].T.astype(float).astype(int).astype(str).to_dict()
+    return pd.DataFrame(rows).T.loc[:,keys].T.astype(float).astype(str).to_dict()
 
 def seval(x):
     try:
@@ -118,7 +118,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                 self._id.keys(),
                 map(
                     lambda u: self.ranges_as_keyed(u),
-                    list(self.view(self.G,self.linmap).astype(int))
+                    list(np.round(self.view(self.G,self.linmap),2))
                 )
             )
         )
@@ -150,21 +150,28 @@ class Spectra(RangeParser,ReactorManager,GA):
         Extracts relevant data from Arduinos.
         """
         return self.dados()
-    def F_set(self,data):
+    def F_set(self,x):
         """
         Sets parameters to Arduinos.
         Args:
-            data (:obj:`dict` of :obj:`dict`): Dictionary having reactor id as keys
+            x (:obj:`dict` of :obj:`dict`): Dictionary having reactor id as keys
             and a dictionary of parameters and their values as values.
         """
-        for _id,params in data.items():
-            self.reactors[self._id[_id]].set(params)
+        for _id,params in x.items():
+            for chk in chunks(list(params.items()),3):
+                self.reactors[self._id[_id]].set(dict(chk))
+                time.sleep(1)
     def set_spectrum(self,preset):
         """
         Sets all reactors with a preset spectrum contained in `SPECTRUM_PATH`.
         """
         command = f"set({','.join(map(lambda x: f'{x[0]},{x[1]}',self.spectrum[preset].items()))})"
         self.send(command,await_response=False)
+
+    def set_preset_state_spectra(self,*args,**kwargs):
+        self.set_preset_state(*args,**kwargs)
+        self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+
     def run(self,deltaT,run_ga=True):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT`.
@@ -183,14 +190,15 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.fitness = self.f_map(self.data,self.past_data)
             if run_ga:
                 self.p = softmax(self.fitness)
-                self.crossover()
+                #self.crossover()
                 self.mutation()
                 self.payload = self.G_as_keyed()
+                print(f"{bcolors.BOLD}{pd.DataFrame(self.G_as_keyed())}{bcolors.ENDC}")
             else:
                 df = pd.DataFrame(self.data).T
                 df.columns = df.columns.str.lower()
                 self.payload = df[self.parameters].T.to_dict()
-                self.G = self.inverse_view(self.payload_to_matrix())
+                self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
             update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
             update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
             update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
@@ -206,4 +214,4 @@ class Spectra(RangeParser,ReactorManager,GA):
 
 if __name__ == "__main__":
     g = Spectra(**hyperparameters)
-    g.set_preset_state(path=INITIAL_STATE_PATH)
+    #g.set_preset_state(path=INITIAL_STATE_PATH)
