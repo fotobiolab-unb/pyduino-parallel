@@ -17,12 +17,11 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 STEP = 1 / 16
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 CACHEFILE = "cache.csv"
-REACTOR_PARAMETERS = None
-if os.path.exists(os.path.join(__location__,"parameters.txt")):
-    with open(os.path.join(__location__,"parameters.txt")) as file:
-        REACTOR_PARAMETERS = set(map(lambda x : x.strip(),file.readlines()))
-
-RELEVANT_PARAMETERS = set(yaml_get(os.path.join(__location__,"relevant_parameters.yaml")))
+SYS_PARAM = os.path.join(__location__,"config.yaml")
+system_parameters = yaml_get(SYS_PARAM)['system']
+RELEVANT_PARAMETERS = system_parameters['relevant_parameters']
+INITIAL_STATE_PATH = os.path.join(__location__,system_parameters['initial_state'])
+REACTOR_PARAMETERS = system_parameters['standard_parameters']
 
 #From https://stackoverflow.com/a/312464/6451772
 def chunks(lst, n):
@@ -292,7 +291,8 @@ class ReactorManager:
                     self.connect()
                 sleep(10)
                 print("Recovering last state")
-                self.set_preset_state(path=CACHEFILE)
+                self.set_preset_state(path=INITIAL_STATE_PATH)
+                self.set_preset_state(path=CACHEFILE,params=RELEVANT_PARAMETERS)
                 print("Done"+bcolors.ENDC)
 
         rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
@@ -320,7 +320,7 @@ class ReactorManager:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
         return rows
     
-    def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4,**kwargs):
+    def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4, params=REACTOR_PARAMETERS, **kwargs):
         """
         Prepare Arduinos with preset parameters from a csv file.
         Args:
@@ -330,8 +330,8 @@ class ReactorManager:
         """
         df = pd.read_csv(path,sep=sep,index_col='ID',**kwargs)
         df.columns = df.columns.str.lower() #Commands must be sent in lowercase
-        if REACTOR_PARAMETERS:
-            cols = list(set(df.columns)&(REACTOR_PARAMETERS))
+        if params:
+            cols = list(set(df.columns)&set(params))
             df = df.loc[:,cols]
         for i,row in df.iterrows():
             row = list(row[~row.isna()].astype(int).items())
@@ -339,7 +339,7 @@ class ReactorManager:
             self.reactors[self._id[i]].set_in_chunks(row,chunksize)
         
         #Saving relevant parameters' values
-        cols = list(set(df.columns)&(RELEVANT_PARAMETERS))
+        cols = list(set(df.columns)&set(RELEVANT_PARAMETERS))
         self.payload = df.loc[:,cols].to_dict('index')
 
     def calibrate(self,deltaT=120,dir="calibrate"):

@@ -1,5 +1,5 @@
 from gapy.gapy2 import GA
-from pyduino2 import ReactorManager
+from pyduino2 import ReactorManager, system_parameters, INITIAL_STATE_PATH
 import numpy as np
 from functools import partial
 import json
@@ -18,11 +18,9 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 #Path to spectrum.json
 SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
 
-#Path to relevant parameters file
-PARAM_PATH = os.path.join(__location__,"relevant_parameters.yaml")
-
 #Path to hyperparameters for the genetic algorithm
-HYPER_PARAM = os.path.join(__location__,"hyperparameters.yaml")
+SYS_PARAM = os.path.join(__location__,"config.yaml")
+hyperparameters = yaml_get(SYS_PARAM)['hyperparameters']
 
 #Path to irradiance values
 IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
@@ -89,13 +87,13 @@ class Spectra(RangeParser,ReactorManager,GA):
         with open(SPECTRUM_PATH) as jfile:
             self.spectrum = json.loads(jfile.read())
         
-        assert os.path.exists(PARAM_PATH)
-        self.parameters = yaml_get(PARAM_PATH)
+        #assert os.path.exists(PARAM_PATH)
+        self.parameters = system_parameters['relevant_parameters']#yaml_get(PARAM_PATH)
 
         RangeParser.__init__(self,ranges,self.parameters)
 
-        assert os.path.exists(IRRADIANCE_PATH)
-        self.irradiance = yaml_get(IRRADIANCE_PATH)
+        #assert os.path.exists(IRRADIANCE_PATH)
+        self.irradiance = system_parameters['irradiance']#yaml_get(IRRADIANCE_PATH)
         self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
 
         ReactorManager.__init__(self)
@@ -181,6 +179,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             print("[INFO]","GET",datetime.now().strftime("%c"))
             self.past_data = self.data.copy() if self.data is not None else None
             self.data = self.F_get()
+            #go to density
             self.fitness = self.f_map(self.data,self.past_data)
             if run_ga:
                 self.p = softmax(self.fitness)
@@ -206,5 +205,5 @@ class Spectra(RangeParser,ReactorManager,GA):
             print("[INFO]","DT",self.dt)
 
 if __name__ == "__main__":
-    hyperparameters = yaml_genetic_algorithm(HYPER_PARAM)
     g = Spectra(**hyperparameters)
+    g.set_preset_state(path=INITIAL_STATE_PATH)
