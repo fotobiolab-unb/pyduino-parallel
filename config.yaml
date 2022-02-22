@@ -1,9 +1,11 @@
 hyperparameters:
+  reset_density: true #Whether or not to use gotod
   log_name: "ga_enabled_5" #Log folder name (delete to use the default)
   f_param: DensidadeAtual #Parameter to read as fitness from the reactors
   mutation_probability: 0.01
   resolution: 8 #Number of bits used for each parameter
   elitism: false #Whether or not to use elitism
+  do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
   ranges:
     branco:
       - 0

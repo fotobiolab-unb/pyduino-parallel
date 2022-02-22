@@ -75,12 +75,13 @@ def parse_dados(X,param):
     return np.array(list(map(seval,map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,GA):
-    def __init__(self,f_param,ranges,log_name=None,**kwargs):
+    def __init__(self,f_param,ranges,do_crossover=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
             f_param (str): Parameter name to be extracted from `ReactorManager.log_dados`.
             ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
                 its minimum and maximum attainable values respectively.
+            reset_density (bool): Whether or not to reset density values on the reactors at each iteration.
         """
 
         assert os.path.exists(SPECTRUM_PATH)
@@ -107,8 +108,10 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.log_init(name=log_name)        
         self.payload = self.G_as_keyed() if self.payload is None else self.payload
         self.data = None
+        self.do_gotod = reset_density
         self.fparam = f_param
         self.fitness = np.nan * np.ones(len(self.reactors))
+        self.do_crossover = do_crossover
     def G_as_keyed(self):
         """
         Converts genome matrix into an appropriate format to send to the reactors.
@@ -186,11 +189,17 @@ class Spectra(RangeParser,ReactorManager,GA):
             print("[INFO]","GET",datetime.now().strftime("%c"))
             self.past_data = self.data.copy() if self.data is not None else None
             self.data = self.F_get()
-            #go to density
+            #gotod
+            if self.do_gotod:
+                gotod_response = self.send_parallel("gotod",2,True)
+                gotod_response = list(map(lambda x: json.loads(x[1]),gotod_response))
+                print("[INFO] gotod")
+                print(pd.DataFrame(gotod_response))
+            #---
             self.fitness = self.f_map(self.data,self.past_data)
             if run_ga:
                 self.p = softmax(self.fitness)
-                #self.crossover()
+                self.crossover() if self.do_crossover else None
                 self.mutation()
                 self.payload = self.G_as_keyed()
                 print(f"{bcolors.BOLD}{pd.DataFrame(self.G_as_keyed())}{bcolors.ENDC}")
