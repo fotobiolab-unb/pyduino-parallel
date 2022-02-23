@@ -1,8 +1,10 @@
 hyperparameters:
-  reset_density: true #Whether or not to use gotod
-  log_name: "ga_enabled_5" #Log folder name (delete to use the default)
-  f_param: DensidadeAtual #Parameter to read as fitness from the reactors
-  mutation_probability: 0.01
+  reset_density: false #Whether or not to use gotod
+  log_name: "ga_enabled_6" #Log folder name (delete to use the default)
+  f_param: power #Parameter to read as fitness from the reactors
+  density_param: DensidadeAtual #Parameter name for density counts
+  mutation_probability: 0.00001
+  maximize: false
   resolution: 8 #Number of bits used for each parameter
   elitism: false #Whether or not to use elitism
   do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
@@ -68,12 +70,14 @@ system:
     - co2
     - dtco2
 dash:
-  glob: "./log/ga_enabled_5/*.csv"
+  glob: "./log/ga_enabled_6/*.csv"
   cols:
     Temp: #[23,30]
     pH: #[1,10] # min,max (must have two)
     DensidadeAtual: #No range
     power: #No range
+    efficiency: #No range
+    growth_rate:
   x_col: 'elapsed_time_hours'
   sep: "\t"
   tail: 128

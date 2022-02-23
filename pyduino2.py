@@ -63,7 +63,7 @@ class Reator:
     color_branco = param(name="branco")
     color_440 = param(name="440")
 
-    def __init__(self, port, baudrate=9600, cb=None):
+    def __init__(self, port, baudrate=9600):
         self.connected = False
         self._conn = serial.Serial(port, baudrate=baudrate, timeout=STEP)
         self._port = port
@@ -190,7 +190,7 @@ class ReactorManager:
     def __init__(self,baudrate=9600,log_name=None):
         self.available_ports = serial.tools.list_ports.comports()
         self.ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
-        self.reactors = {x.device:Reator(port=x.device,baudrate=baudrate,cb=(lambda inpt: print(f'>>> {inpt}'), lambda out: print(out, end='\n[END]\n'))) for x in self.ports}
+        self.reactors = {x.device:Reator(port=x.device,baudrate=baudrate) for x in self.ports}
         self._id = {}
 
         #Init
@@ -201,6 +201,7 @@ class ReactorManager:
         print("\n".join(map(lambda x: f"Reactor {bcolors.OKCYAN}{x[0]}{bcolors.ENDC} at port {bcolors.OKCYAN}{x[1]}{bcolors.ENDC}",self._id.items())))
         self.header = None
         self.payload = None
+        self.baudrate = baudrate
     
     def send(self,command,await_response=True,**kwargs):
         out = {}
@@ -289,9 +290,9 @@ class ReactorManager:
                 sleep(10)
                 for port in empty:
                     print('\t',port)
-                    self.reactors[port]._conn.setDTR(False)
-                    sleep(1)
-                    self.reactors[port]._conn.setDTR(True)
+                    self.reactors[port]._conn.close()
+                    self.reactors[port]._conn.__del__()
+                    self.reactors[port] = Reator(port=port,baudrate=self.baudrate)
                     self.connect()
                 print("Recovering last state")
                 self.set_preset_state(path=INITIAL_STATE_PATH)
