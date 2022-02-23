@@ -11,15 +11,19 @@ import dash
 from dash import dcc
 from dash import html
 from dash import dash_table
+import plotly.graph_objects as go
 import plotly
+import plotly.express as px
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
+from pyduino2 import RELEVANT_PARAMETERS, CACHEPATH
 from utils import yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 y = yaml_get(os.path.join(__location__,"config.yaml"))['dash']
+RELEVANT_PARAMETERS = yaml_get(os.path.join(__location__,"config.yaml"))['system']['relevant_parameters']
 
 COLOR = plotly.colors.qualitative.Alphabet
 USE_COLS = list(y['cols'].keys())
@@ -71,6 +75,7 @@ app.layout = html.Div(
     html.Div([
         html.H1('DASH'),
         html.P("\t".join(LOG_PATH)),
+        dcc.Graph(id='matrix'),
         dcc.Graph(id='live-update-graph',style={'height': y['subplot_height']*len(USE_COLS)}),
         dcc.Interval(
             id='interval-component',
@@ -81,8 +86,21 @@ app.layout = html.Div(
 )
 
 df = {}
-@app.callback(Output('live-update-graph', 'figure'),
-              Input('interval-component', 'n_intervals'))
+@app.callback(Output('matrix','figure'),Input('interval-component','n_intervals'))
+def get_matrix(n):
+    cache_df = pd.read_csv(CACHEPATH,sep='\t',index_col='ID')
+    cache_df.columns = cache_df.columns.str.lower()
+    cache_df = cache_df.loc[:,RELEVANT_PARAMETERS]
+    fig = go.Figure(data=go.Heatmap(
+        z=cache_df.to_numpy(),
+        x=cache_df.columns,
+        y=cache_df.index.astype(str).to_list(),
+        colorscale='Viridis'
+    ))
+    fig['layout']['template'] = THEME
+    fig['layout']['title'] = "Computed Parameters"
+    return fig
+@app.callback(Output('live-update-graph', 'figure'),Input('interval-component', 'n_intervals'))
 def update_graph_live(n):
     global df
     if not y['cumulative']:
@@ -97,7 +115,7 @@ def update_graph_live(n):
 
     fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
     #fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
-    fig['layout']['legend'] = {'y':0.5,'orientation':'h'}
+    fig['layout']['legend'] = {'y':1.08,'orientation':'h'}
     fig['layout']['template'] = THEME
 
     for i,colname in enumerate(USE_COLS):

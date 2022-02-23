@@ -12,6 +12,8 @@ from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
 from utils import yaml_get, bcolors
+from log import datetime_to_str
+import traceback
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -75,13 +77,15 @@ def parse_dados(X,param):
     return np.array(list(map(seval,map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,GA):
-    def __init__(self,f_param,ranges,do_crossover=True,log_name=None,reset_density=False,**kwargs):
+    def __init__(self,f_param,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
             f_param (str): Parameter name to be extracted from `ReactorManager.log_dados`.
             ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
                 its minimum and maximum attainable values respectively.
             reset_density (bool): Whether or not to reset density values on the reactors at each iteration.
+            maximize (bool): Whether or not to maximize the fitness function.
+            density_param (str): Name of the parameter which will be used as density count.
         """
 
         assert os.path.exists(SPECTRUM_PATH)
@@ -110,8 +114,9 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.data = None
         self.do_gotod = reset_density
         self.fparam = f_param
+        self.density_param = density_param
         self.fitness = np.nan * np.ones(len(self.reactors))
-        self.do_crossover = do_crossover
+        self.maximize = maximize
     def G_as_keyed(self):
         """
         Converts genome matrix into an appropriate format to send to the reactors.
@@ -129,19 +134,25 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         Computation for the fitness function.
         """
-        f_1 = partial(parse_dados,param=self.fparam)(x_1).astype(float)
+        f_1 = partial(parse_dados,param=self.density_param)(x_1).astype(float)
+        self.power = (self.view_g()*self.irradiance).sum(axis=1)/100.0
         if x_0 is not None:
-            f_0 = partial(parse_dados,param=self.fparam)(x_0).astype(float)
-            self.power = (self.view_g()*self.irradiance).sum(axis=1)/100.0
-            self.density = (f_1 - f_0)/self.dt
-            F = self.density/self.power
-            F[F == np.inf] == 0
-            F = np.nan_to_num(F)
-            return F
+            f_0 = partial(parse_dados,param=self.density_param)(x_0).astype(float)
+            self.growth_rate = (f_1 - f_0)/self.dt
+            self.efficiency = self.growth_rate/self.power
+            self.efficiency[self.efficiency == np.inf] == 0
+            self.efficiency = np.nan_to_num(self.efficiency)
         else:
-            self.density = np.nan * np.ones(len(self.reactors))
-            self.power = np.nan * np.ones(len(self.reactors))
-            return np.zeros_like(f_1)
+            #Use default values if there's no past data
+            self.growth_rate = np.zeros(len(self.reactors))
+            self.efficiency = np.zeros_like(f_1)
+        #Added new columns to current data
+        update_dict(x_1,dict(zip(self._id.keys(),self.power)),'power')
+        update_dict(x_1,dict(zip(self._id.keys(),self.efficiency)),'efficiency')
+        update_dict(x_1,dict(zip(self._id.keys(),self.growth_rate)),'growth_rate')
+        #Get and return parameter chosen for fitness
+        self.fitness = ((-1)**(1+self.maximize))*partial(parse_dados,param=self.fparam)(x_1).astype(float)
+        return self.fitness
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -183,43 +194,47 @@ class Spectra(RangeParser,ReactorManager,GA):
             deltaT (int): Amount of time in seconds to wait in each iteration.
             run_ga (bool): Whether or not execute a step in the genetic algorithm.
         """
-        self.deltaT = deltaT
-        while True:
-            self.t1 = datetime.now()
-            print("[INFO]","GET",datetime.now().strftime("%c"))
-            self.past_data = self.data.copy() if self.data is not None else None
-            self.data = self.F_get()
-            #gotod
-            if self.do_gotod:
-                gotod_response = self.send_parallel("gotod",2,True)
-                gotod_response = list(map(lambda x: json.loads(x[1]),gotod_response))
-                print("[INFO] gotod")
-                print(pd.DataFrame(gotod_response))
-            #---
-            self.fitness = self.f_map(self.data,self.past_data)
-            if run_ga:
-                self.p = softmax(self.fitness)
-                self.crossover() if self.do_crossover else None
-                self.mutation()
-                self.payload = self.G_as_keyed()
-                print(f"{bcolors.BOLD}{pd.DataFrame(self.G_as_keyed())}{bcolors.ENDC}")
-            else:
-                df = pd.DataFrame(self.data).T
-                df.columns = df.columns.str.lower()
-                self.payload = df[self.parameters].T.to_dict()
-                self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
-            update_dict(self.data,dict(zip(self._id.keys(),self.fitness)),'fitness')
-            update_dict(self.data,dict(zip(self._id.keys(),self.power)),'power')
-            update_dict(self.data,dict(zip(self._id.keys(),self.density)),'density')
-            self.log.log_many_rows(self.data)
-            print("[INFO]","SET",self.t1.strftime("%c"))
-            self.F_set(self.payload) if run_ga else None
-            time.sleep(2)
-            time.sleep(deltaT)
-            self.send("quiet_connect",await_response=False)
-            self.t2 = datetime.now()
-            self.dt = (self.t2-self.t1).total_seconds()
-            print("[INFO]","DT",self.dt)
+        with open("error_traceback.log","w") as log_file:
+            log_file.write(datetime_to_str(self.log.timestamp)+'\n')
+            try:
+                self.deltaT = deltaT
+                while True:
+                    self.t1 = datetime.now()
+                    print("[INFO]","GET",datetime.now().strftime("%c"))
+                    self.past_data = self.data.copy() if self.data is not None else None
+                    self.data = self.F_get()
+                    #gotod
+                    if self.do_gotod:
+                        gotod_response = self.send_parallel("gotod",2,True)
+                        gotod_response = list(map(lambda x: json.loads(x[1]),gotod_response))
+                        print("[INFO] gotod")
+                        print(pd.DataFrame(gotod_response))
+                    #---
+                    self.fitness = self.f_map(self.data,self.past_data)
+                    if run_ga:
+                        self.p = softmax(self.fitness)
+                        self.crossover()
+                        self.mutation()
+                        self.payload = self.G_as_keyed()
+                        print(f"{bcolors.BOLD}{pd.DataFrame(self.G_as_keyed())}{bcolors.ENDC}")
+                    else:
+                        df = pd.DataFrame(self.data).T
+                        df.columns = df.columns.str.lower()
+                        self.payload = df[self.parameters].T.to_dict()
+                        self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+                    self.log.log_many_rows(self.data)
+                    print("[INFO]","SET",self.t1.strftime("%c"))
+                    self.F_set(self.payload) if run_ga else None
+                    time.sleep(2)
+                    time.sleep(deltaT)
+                    self.send("quiet_connect",await_response=False)
+                    self.t2 = datetime.now()
+                    self.dt = (self.t2-self.t1).total_seconds()
+                    print("[INFO]","DT",self.dt)
+            except Exception as e:
+                traceback.print_exc(file=log_file)
+                raise(e)
+
 
 if __name__ == "__main__":
     g = Spectra(**hyperparameters)
