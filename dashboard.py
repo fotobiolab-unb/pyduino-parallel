@@ -95,10 +95,11 @@ def get_matrix(n):
         z=cache_df.to_numpy(),
         x=cache_df.columns,
         y=cache_df.index.astype(str).to_list(),
-        colorscale='Viridis'
+        colorscale='Inferno'
     ))
     fig['layout']['template'] = THEME
     fig['layout']['title'] = "Computed Parameters"
+    fig.data[0].update(zmin=0,zmax=100)
     return fig
 @app.callback(Output('live-update-graph', 'figure'),Input('interval-component', 'n_intervals'))
 def update_graph_live(n):

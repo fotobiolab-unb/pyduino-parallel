@@ -4,6 +4,8 @@ import path
 from pathlib import Path
 from datetime import datetime
 import io
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+config_file = os.path.join(__location__,"config.yaml")
 
 def datetime_from_str(x):
     return datetime.strptime(str(x),"%Y%m%d%H%M%S")
@@ -39,9 +41,14 @@ class log:
         self.subdir = subdir
         self.path = path
         self.first_timestamp = None
+        self.data_frames = {}
 
         for sbd in subdir:
-            Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
+            Path(os.path.join(self.path,self.start_timestamp,str(sbd))).mkdir(parents=True,exist_ok=True)
+
+        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp}.yaml"),'w') as wfile:
+            wfile.write(cfile.read())
+
 
     def log_rows(self,rows,subdir,add_timestamp=True,**kwargs):
         """
@@ -73,6 +80,7 @@ class log:
             index=False,
             **kwargs
             )
+        return df
     def log_many_rows(self,data,**kwargs):
         """
         Logs rows into csv format.
@@ -81,8 +89,21 @@ class log:
             data (:obj:`dict` of :obj:`dict`): Dictionary encoded data frame.
             **kwargs: Additional arguments passed to `self.log_rows`.
         """
+        self.data_frames = {}
         for _id,row in data.items():
-            self.log_rows(rows=[row],subdir=_id,sep='\t',**kwargs)
+            df = self.log_rows(rows=[row],subdir=_id,sep='\t',**kwargs)
+            self.data_frames[_id] = df
+        self.data_frames = pd.concat(list(self.data_frames.values()))
+    
+    def log_optimal(self,column,maximum=True,**kwargs):
+        """
+        Logs optima of all rows into a single file.
+        """
+        i=self.data_frames.loc[:,column].argmax() if maximum else self.data_frames.loc[:,column].argmin()
+        self.df_opt = self.data_frames.iloc[i,:]
+        self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',sep='\t',**kwargs)
+
+
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """
         Dumps rows into a single csv.
