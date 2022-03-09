@@ -290,7 +290,6 @@ class ReactorManager:
                 sleep(10)
                 for port in empty:
                     print('\t',port)
-                    self.reactors[port]._conn.close()
                     self.reactors[port]._conn.__del__()
                     self.reactors[port] = Reator(port=port,baudrate=self.baudrate)
                     self.connect()

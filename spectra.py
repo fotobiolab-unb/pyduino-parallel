@@ -210,7 +210,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         print("[INFO] gotod")
                         print(pd.DataFrame(gotod_response))
                     #---
-                    self.fitness = self.f_map(self.data,self.past_data)
+                    self.f_map(self.data,self.past_data)
                     if run_ga:
                         self.p = softmax(self.fitness)
                         self.crossover()
@@ -223,6 +223,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.payload = df[self.parameters].T.to_dict()
                         self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
                     self.log.log_many_rows(self.data)
+                    self.log.log_optimal(column=self.fparam,maximum=self.maximize)
                     print("[INFO]","SET",self.t1.strftime("%c"))
                     self.F_set(self.payload) if run_ga else None
                     time.sleep(2)
