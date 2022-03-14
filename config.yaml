@@ -1,14 +1,14 @@
 hyperparameters:
   reset_density: false #Whether or not to use gotod
-  log_name: "ga_enabled_10" #Log folder name (delete to use the default)
+  log_name: "power_opt" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
-  mutation_probability: 0.001
+  mutation_probability: 0.01
   maximize: false
   resolution: 8 #Number of bits used for each parameter
-  elitism: false #Whether or not to use elitism
-  do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
-  rng_seed: 0 #Random seed for genetic algorithm
+  elitism: true #Whether or not to use elitism
+  do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
+  rng_seed: 4 #Random seed for genetic algorithm
   ranges:
     branco:
       - 0
@@ -71,7 +71,7 @@ system:
     - co2
     - dtco2
 dash:
-  glob: "./log/ga_enabled_10/*.csv"
+  glob: "./log/power_opt/*.csv"
   cols:
     Temp: #[23,30]
     pH: #[1,10] # min,max (must have two)
@@ -86,6 +86,6 @@ dash:
   theme: cyborg
   subplot_height: 300
   cumulative: true
-  update_time: 10000 #In miliseconds
+  update_time: 30000 #In miliseconds
   max_points: 50 #Maximum number of points to display at once
   vspace: 0.1

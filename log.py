@@ -43,8 +43,7 @@ class log:
         self.first_timestamp = None
         self.data_frames = {}
 
-        for sbd in subdir:
-            Path(os.path.join(self.path,self.start_timestamp,str(sbd))).mkdir(parents=True,exist_ok=True)
+        Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
 
         with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp}.yaml"),'w') as wfile:
             wfile.write(cfile.read())
