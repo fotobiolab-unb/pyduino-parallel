@@ -216,7 +216,10 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.crossover()
                         self.mutation()
                         self.payload = self.G_as_keyed()
-                        print(f"{bcolors.BOLD}{pd.DataFrame(self.G_as_keyed())}{bcolors.ENDC}")
+                        #DataFrame display of G and fitness
+                        display_df = pd.DataFrame(self.G_as_keyed())
+                        display_df.loc['fitness',:] = self.fitness
+                        print(f"{bcolors.BOLD}{pd.DataFrame(display_df)}{bcolors.ENDC}")
                     else:
                         df = pd.DataFrame(self.data).T
                         df.columns = df.columns.str.lower()
@@ -228,7 +231,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                     self.F_set(self.payload) if run_ga else None
                     time.sleep(2)
                     time.sleep(deltaT)
-                    self.send("quiet_connect",await_response=False)
+                    #self.send("quiet_connect",await_response=False)
                     self.t2 = datetime.now()
                     self.dt = (self.t2-self.t1).total_seconds()
                     print("[INFO]","DT",self.dt)

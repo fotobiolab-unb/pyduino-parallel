@@ -14,7 +14,8 @@ from utils import bcolors, yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-STEP = 1 / 16
+STEP = 1/8
+HEADER_DELAY = 5
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 CACHEPATH = "cache.csv"
 SYS_PARAM = os.path.join(__location__,"config.yaml")
@@ -76,6 +77,7 @@ class Reator:
         """
         Inicia conexão.
         """
+        sleep(HEADER_DELAY)
         self._recv(delay)
         self._send("quiet_connect")
         #self._recv(delay)
@@ -85,6 +87,7 @@ class Reator:
         """
         Resets connection.
         """
+        self._conn.flush()
         self._conn.close()
         self._conn.open()
         self.connected = True
@@ -245,7 +248,22 @@ class ReactorManager:
     def connect(self):
         for k,r in self.reactors.items():
             r.connect()
+        self.connected = True
     
+    def reconnect(self):
+        """
+        Destroys `reactor` objects and recreates them after closing their serial connections.
+        """
+        self.connected = False
+        for port in self.reactors.keys():
+            print('\t','[DEL]',port)
+            self.reactors[port]._conn.flush()
+            self.reactors[port]._conn.__del__()
+            self.reactors[port] = Reator(port=port,baudrate=self.baudrate)
+        print('[CON]','Reconnecting')
+        self.connect()
+        self.connected = True
+
     def start(self):
         self.connect()
         self.ping()
@@ -288,14 +306,11 @@ class ReactorManager:
                 print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n\t"+"\n\t".join(empty))
                 print("Resetting serial")
                 sleep(10)
-                for port in empty:
-                    print('\t',port)
-                    self.reactors[port]._conn.__del__()
-                    self.reactors[port] = Reator(port=port,baudrate=self.baudrate)
-                    self.connect()
+                self.reconnect()
                 print("Recovering last state")
                 self.set_preset_state(path=INITIAL_STATE_PATH)
                 self.set_preset_state(path=CACHEPATH)
+                sleep(10)
                 print("Done"+bcolors.ENDC)
 
         rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
