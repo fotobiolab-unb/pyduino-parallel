@@ -1,3 +1,5 @@
+from importlib.resources import path
+import logging
 import serial
 from operator import attrgetter
 from time import sleep, time
@@ -10,7 +12,12 @@ import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial
 import os
-from utils import bcolors, yaml_get
+from utils import bcolors, yaml_get, get_servers
+import requests
+from urllib.parse import urljoin
+import logging
+
+logging.basicConfig(filename='pyduino.log', filemode='w', level=logging.DEBUG)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -30,181 +37,116 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
-class param(property):
-    def __init__(self, typ=int, name=None):
-        self.name = name
-        self.type = typ
-        param = self
-            
-        def fget(self):
-            return param.type(self.get(param.name))
-
-        def fset(self, value):
-            self.set({param.name: value})
-
-        super().__init__(fget, fset)
-
-    def __set_name__(self, cls, name):
-        if self.name is None:
-            self.name = name
-
-
-class Reator:
+class Reactor:
     """
-    Controla o reator via protocolo LVP. 
+    Master of HTTP Server to Serial handler. 
     """
 
-    port = property(attrgetter('_conn.port'))
-    baudrate = property(attrgetter('_conn.baudrate'))
-
-    temp = param(float)
-    brilho = param()
-    ar = param()
-    ima = param()
-    color_branco = param(name="branco")
-    color_440 = param(name="440")
-
-    def __init__(self, port, baudrate=9600):
+    def __init__(self, url):
         self.connected = False
-        self._conn = serial.Serial(port, baudrate=baudrate, timeout=STEP)
-        self._port = port
+        self.url = url
+        #Ping
+        resp = requests.get(urljoin(self.url,"ping"))
+        if resp.ok:
+            self.meta = resp.json()
+        else:
+            logging.error(f"Unable to connect to {self.url}")
+            raise ConnectionRefusedError(self.url)
+        self.id = self.meta["id"]
 
-    def __delete__(self, _):
-        self.close()
+    def http_get(self,route):
+        return requests.get(urljoin(self.url,route))
+    
+    def http_post(self,route,command,await_response,delay):
+        return requests.post(urljoin(self.url,route),json={
+            "command": command,
+            "await_response": await_response,
+            "delay": delay
+        })
 
-
-    def connect(self,delay=STEP):
+    def connect(self):
         """
-        Inicia conexão.
+        Starts connection
         """
-        sleep(HEADER_DELAY)
-        self._recv(delay)
-        self._send("quiet_connect")
-        #self._recv(delay)
-        self.connected = True
+        resp = self.http_get("connect")
+        return resp.ok
 
     def reset(self):
         """
         Resets connection.
         """
-        self._conn.flush()
-        self._conn.close()
-        self._conn.open()
-        self.connected = True
+        resp = self.http_get("reset")
+        return resp.ok
 
     def close(self):
         """
-        Interrompe conexão.
+        Sends 'fim'.
         """
-        if self._conn.is_open:
-            self.send("fim")
-            self._conn.close()
+        self.http_post("send","fim",False,0)
 
-    def send(self, msg, delay=0, recv_delay=STEP):
+    def send(self, msg, delay=5):
         """
-        Envia mensagem para o reator e retorna resposta.
-
-        Args:
-            delay (int): Delay in seconds between sending and reading.
-            recv_delay (int): Delay in seconds sent to recv.
+        Sends command and awaits for a response
         """
-        if not self.connected:
-            self.connect()
-        self._send(msg)
-        sleep(delay)
-        return self._recv(recv_delay)
+        resp = self.http_post("send",msg,True,delay)
+        return resp.json()["response"]
 
     def _send(self, msg):
-        self._conn.write(msg.encode('ascii') + b'\n\r')
-        # self._send_cb(msg)
+        """
+        Sends command and doesn't await for a response
+        """
+        resp = self.http_post("send",msg,False,0)
+        return resp.ok
     
     def set_in_chunks(self,params,chunksize=4):
         """
-        Sets params into chunks in a different thread.
+        Sets params into chunks.
         """
-        p = Process(target=set_chunk,args=(self,params,2,chunksize))
-        p.start()
-
-    def _recv(self,delay=STEP):
-        out = []
-        for _ in range(256):
-            sleep(delay)
-            #new = self._conn.read_all()
-            new = self._conn.read_until()
-            if new:
-                new = new.decode('ascii').strip("\n").strip("\r")
-                out.append(new)
-            # print('new:', new, out)
-            if out and not new:
-                resp = ''.join(out)
-                # self._recv_cb(resp)
-                return resp
+        ch = chunks(params,chunksize)
+        for chunk in ch:
+            cmd = ",".join(list(map(lambda u: f"{u[0]},{u[1]}",chunk)))
+            cmd = f"set({cmd})"
+            self._send(cmd)
+            sleep(2)
     
     def __repr__(self):
-        return f"{bcolors.OKCYAN}<Reactor at {self._port}>{bcolors.ENDC}"
+        return f"{bcolors.OKCYAN}<Reactor {self.id} at {self.meta['hostname']}({self.url})>{bcolors.ENDC}"
 
     def set(self, data=None, **kwargs):
         """
-        Define o valor de todas as variáveis a partir de um dicionário.
-
-        Exemplo:
-            >>> reator.set({"440": 50, "brilho": 100})
+        Reactor.set({"440": 50, "brilho": 100})
         """
         data = {**(data or {}), **kwargs}
         args = ",".join(f'{k},{v}' for k, v in data.items())
         cmd = f"set({args})"
-        #print("[INFO]","SEND",cmd)
         self._send(cmd)
 
-    def get(self, key=None):
-        """
-        Retorna o valor de uma ou mais variáveis.
-        """
-        if key is None:
-            return self._get_all()
-        if isinstance(key, str):
-            key = [key]
-        return
-
-    def _get_all(self):
-        resp = self.send("get")
-
-def send_wrapper(reactor_item,command,delay,await_response=True):
+def send_wrapper(reactor,command,delay,await_response):
+    id, reactor = reactor
     if await_response:
-        return (reactor_item[0],reactor_item[1].send(command,delay=delay))
+        return (id,reactor.send(command,delay))
     else:
-        reactor_item[0],reactor_item[1]._send(command)
-        sleep(delay)
-        return True
-
-def set_chunk(reactor,params,delay,chunksize):
-        """
-        Sets params into chunks in a different thread.
-        """
-        params = list(params)
-        for chunk in chunks(params,chunksize):
-            cmd = ",".join(list(map(lambda u: f"{u[0]},{u[1]}",chunk)))
-            cmd = f"set({cmd})"
-            reactor._send(cmd)
-            sleep(delay)
+        return (id,reactor._send(command))
 
 class ReactorManager:
     pinged = False
-    def __init__(self,baudrate=9600,log_name=None):
-        self.available_ports = serial.tools.list_ports.comports()
-        self.ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
-        self.reactors = {x.device:Reator(port=x.device,baudrate=baudrate) for x in self.ports}
-        self._id = {}
+    def __init__(self,network="192.168.0.1/24",port="5000"):
+        logging.debug(f"Searching for devices on {network}")
+        servers = get_servers(network,port)
+        logging.debug(f"Found {len(servers)} devices")
+        self.reactors = {}
 
-        #Init
-        self.connect()
-        self.garbage()
-        self.ping()
+        for host in servers:
+            reactor = Reactor(host)
+            id = reactor.id
+            self.reactors[id] = reactor
+        
+        logging.info("Connection completed")
+
         #Info
-        print("\n".join(map(lambda x: f"Reactor {bcolors.OKCYAN}{x[0]}{bcolors.ENDC} at port {bcolors.OKCYAN}{x[1]}{bcolors.ENDC}",self._id.items())))
+        print("\n".join(map(lambda x: f"Reactor {bcolors.OKCYAN}{x.id}{bcolors.ENDC} at {bcolors.OKCYAN}{x.meta['hostname']}({x.url}){bcolors.ENDC}",self.reactors.values())))
         self.header = None
         self.payload = None
-        self.baudrate = baudrate
     
     def send(self,command,await_response=True,**kwargs):
         out = {}
@@ -221,52 +163,16 @@ class ReactorManager:
             out = p.map(partial(send_wrapper,command=command,delay=delay,await_response=await_response),list(self.reactors.items()))
         return out
 
-    def garbage(self):
-        """
-        Reads data from Arduino and discards it.
-        """
-        for k,r in self.reactors.items():
-            r._conn.reset_output_buffer()
-
     def set(self, data=None, **kwargs):
         for k,r in self.reactors.items():
             r.set(data=data, **kwargs)
     def get(self,key=None):
         for k,r in self.reactors.items():
             r.get(key=key)
-    
-    def ping(self):
-        responses = self.send("ping",delay=1)
-        for name,res in responses.items():
-            if isinstance(res,str):
-                i = int(re.findall(r"\d+?",res)[0])
-                self._id[i] = name
-        self._id_reverse = {v:k for k,v in self._id.items()}
-        self._id = OrderedDict(self._id)
-        self.pinged = True
-
     def connect(self):
         for k,r in self.reactors.items():
             r.connect()
         self.connected = True
-    
-    def reconnect(self):
-        """
-        Destroys `reactor` objects and recreates them after closing their serial connections.
-        """
-        self.connected = False
-        for port in self.reactors.keys():
-            print('\t','[DEL]',port)
-            self.reactors[port]._conn.flush()
-            self.reactors[port]._conn.__del__()
-            self.reactors[port] = Reator(port=port,baudrate=self.baudrate)
-        print('[CON]','Reconnecting')
-        self.connect()
-        self.connected = True
-
-    def start(self):
-        self.connect()
-        self.ping()
 
     #Logging
 
@@ -289,14 +195,13 @@ class ReactorManager:
         Args:
             save_cache (bool): Whether or not so save a cache file with the last reading with `log.log.cache_data`.
         """
-        self.garbage()
 
         if self.header is None:
             self.header = list(self.reactors.values())[0].send("cabecalho").split(" ")
 
         len_empty = None
         while len_empty!=0:
-            rows = self.send_parallel("dados",delay=20)
+            rows = self.send_parallel("dados",delay=20,await_response=True)
             #Checking if any reactor didn't respond.
             empty = list(filter(lambda x: x[1] is None,rows))
             len_empty = len(empty)
@@ -313,7 +218,7 @@ class ReactorManager:
                 sleep(10)
                 print("Done"+bcolors.ENDC)
 
-        rows = dict(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
+        rows = dict(map(lambda x: (x[0],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
         return rows
@@ -329,7 +234,7 @@ class ReactorManager:
         header = list(self.reactors.values())[0].send("cabecalho").split(" ")
 
         rows = self.send_parallel("dados",delay=13)
-        rows = list(map(lambda x: (self._id_reverse[x[0]],OrderedDict(zip(header,x[1].split(" ")))),rows))
+        rows = list(map(lambda x: (x[0],OrderedDict(zip(header,x[1].split(" ")))),rows))
 
         for _id,row in rows:
             self.log.log_rows(rows=[row],subdir=_id,sep='\t')
