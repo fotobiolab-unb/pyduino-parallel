@@ -1,5 +1,5 @@
 from gapy.gapy2 import GA
-from pyduino2 import ReactorManager, chunks, system_parameters, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS
+from pyduino2 import ReactorManager, chunks, SYSTEM_PARAMETERS, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS
 import numpy as np
 from functools import partial
 import json
@@ -93,12 +93,12 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.spectrum = json.loads(jfile.read())
         
         #assert os.path.exists(PARAM_PATH)
-        self.parameters = system_parameters['relevant_parameters']#yaml_get(PARAM_PATH)
+        self.parameters = SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
 
         RangeParser.__init__(self,ranges,self.parameters)
 
         #assert os.path.exists(IRRADIANCE_PATH)
-        self.irradiance = system_parameters['irradiance']#yaml_get(IRRADIANCE_PATH)
+        self.irradiance = SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
         self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
 
         ReactorManager.__init__(self)
@@ -123,7 +123,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         return OrderedDict(
             zip(
-                self._id.keys(),
+                self.reactors.keys(),
                 map(
                     lambda u: self.ranges_as_keyed(u),
                     list(np.round(self.view(self.G,self.linmap),2))
@@ -147,16 +147,16 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.growth_rate = np.zeros(len(self.reactors))
             self.efficiency = np.zeros_like(f_1)
         #Added new columns to current data
-        update_dict(x_1,dict(zip(self._id.keys(),self.power)),'power')
-        update_dict(x_1,dict(zip(self._id.keys(),self.efficiency)),'efficiency')
-        update_dict(x_1,dict(zip(self._id.keys(),self.growth_rate)),'growth_rate')
+        update_dict(x_1,dict(zip(self.reactors.keys(),self.power)),'power')
+        update_dict(x_1,dict(zip(self.reactors.keys(),self.efficiency)),'efficiency')
+        update_dict(x_1,dict(zip(self.reactors.keys(),self.growth_rate)),'growth_rate')
         #Get and return parameter chosen for fitness
         self.fitness = ((-1)**(1+self.maximize))*partial(parse_dados,param=self.fparam)(x_1).astype(float)
         return self.fitness
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
-                [[self.payload[i].get(u,np.nan) for u in self.keyed_ranges.keys()] for i in self._id.keys()]
+                [[self.payload[i].get(u,np.nan) for u in self.keyed_ranges.keys()] for i in self.reactors.keys()]
                 ).astype(float)
             )
     def F_get(self):
@@ -173,7 +173,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         for _id,params in x.items():
             for chk in chunks(list(params.items()),3):
-                self.reactors[self._id[_id]].set(dict(chk))
+                self.reactors[_id].set(dict(chk))
                 time.sleep(1)
     def set_spectrum(self,preset):
         """
