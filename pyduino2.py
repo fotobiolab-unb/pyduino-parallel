@@ -25,11 +25,12 @@ STEP = 1/8
 HEADER_DELAY = 5
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 CACHEPATH = "cache.csv"
-SYS_PARAM = os.path.join(__location__,"config.yaml")
-system_parameters = yaml_get(SYS_PARAM)['system']
-RELEVANT_PARAMETERS = system_parameters['relevant_parameters']
-INITIAL_STATE_PATH = os.path.join(__location__,system_parameters['initial_state'])
-REACTOR_PARAMETERS = system_parameters['standard_parameters']
+CONFIG_PATH = os.path.join(__location__,"config.yaml")
+SYSTEM_PARAMETERS = yaml_get(CONFIG_PATH)['system']
+SLAVE_PARAMETERS = yaml_get(CONFIG_PATH)['slave']
+RELEVANT_PARAMETERS = SYSTEM_PARAMETERS['relevant_parameters']
+INITIAL_STATE_PATH = os.path.join(__location__,SYSTEM_PARAMETERS['initial_state'])
+REACTOR_PARAMETERS = SYSTEM_PARAMETERS['standard_parameters']
 
 #From https://stackoverflow.com/a/312464/6451772
 def chunks(lst, n):
@@ -130,9 +131,11 @@ def send_wrapper(reactor,command,delay,await_response):
 
 class ReactorManager:
     pinged = False
-    def __init__(self,network="192.168.0.1/24",port="5000"):
-        logging.debug(f"Searching for devices on {network}")
-        servers = get_servers(network,port)
+    def __init__(self):
+        self.network = SLAVE_PARAMETERS["network"]
+        self.port = SLAVE_PARAMETERS["port"]
+        logging.debug(f"Searching for devices on {self.network}")
+        servers = get_servers(self.network,self.port)
         logging.debug(f"Found {len(servers)} devices")
         self.reactors = {}
 
@@ -183,10 +186,7 @@ class ReactorManager:
         Args:
             name (str): Name of the subdirectory in the log folder where the files will be saved.
         """
-        if not self.pinged:
-            self.ping()
-
-        self.log = log(subdir=list(self._id.keys()),**kwargs)
+        self.log = log(subdir=list(self.reactors.keys()),**kwargs)
     
     def dados(self,save_cache=True):
         """
@@ -259,7 +259,7 @@ class ReactorManager:
         for i,row in df.iterrows():
             row = list(row[~row.isna()].astype(float).items())
             i = int(i)
-            self.reactors[self._id[i]].set_in_chunks(row,chunksize)
+            self.reactors[i].set_in_chunks(row,chunksize)
         
         #Saving relevant parameters' values
         cols = list(set(df.columns)&set(RELEVANT_PARAMETERS))
@@ -276,7 +276,7 @@ class ReactorManager:
         sleep(deltaT)
         for name,reactor in self.reactors.items():
             out[name] = reactor._conn.read_until('*** fim da curva dos LEDs ***'.encode('ascii'))
-            with open(os.path.join(dir,f"reator_{self._id_reverse[name]}.txt"),"w") as f:
+            with open(os.path.join(dir,f"reator_{name}.txt"),"w") as f:
                 f.write(out[name].decode('ascii'))
         return out
 
