@@ -1,6 +1,6 @@
 hyperparameters:
   reset_density: false #Whether or not to use gotod
-  log_name: "power_opt" #Log folder name (delete to use the default)
+  log_name: "http" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
@@ -20,8 +20,8 @@ hyperparameters:
       - 0
       - 100
 slave:
-  port: "5002" #Must be a string
-  network: "192.168.0.1/24"
+  port: "5000" #Must be a string
+  network: "192.168.1.1/24"
 system:
   initial_state: "preset_state.csv"
   relevant_parameters:
@@ -74,7 +74,7 @@ system:
     - co2
     - dtco2
 dash:
-  glob: "./log/power_opt/*.csv"
+  glob: "./log/http/*.csv"
   cols:
     Temp: #[23,30]
     pH: #[1,10] # min,max (must have two)

@@ -105,7 +105,7 @@ class Reactor:
         """
         ch = chunks(params,chunksize)
         for chunk in ch:
-            cmd = ",".join(list(map(lambda u: f"{u[0]},{u[1]}",chunk)))
+            cmd = ",".join(list(map(lambda u: f"{u[0]},{int(u[1])}",chunk)))
             cmd = f"set({cmd})"
             self._send(cmd)
             sleep(2)
