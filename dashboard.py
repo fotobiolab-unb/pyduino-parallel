@@ -108,14 +108,15 @@ def update_graph_live(n):
         df = {}
     for gpath in LOG_PATH:
         gbase = os.path.basename(gpath)
+        df_tail = tail(gpath,NROWSDF,sep=SEP,header=None)
+        df_tail.columns = HEAD
         if gbase in df.keys():
-            df[gbase] = pd.merge(df[gbase],tail(gpath,NROWSDF,sep=SEP),'outer')
+            df[gbase] = pd.merge(df[gbase],df_tail,'outer').copy()
         else:
-            df[gbase] = tail(gpath,NROWSDF,sep=SEP)
+            df[gbase] = df_tail.copy()
             df[gbase].columns = HEAD
 
     fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
-    #fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
     fig['layout']['legend'] = {'y':1.08,'orientation':'h'}
     fig['layout']['template'] = THEME
 
