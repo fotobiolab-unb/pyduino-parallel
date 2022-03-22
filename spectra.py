@@ -74,10 +74,10 @@ def parse_dados(X,param):
         X (:obj:`dict` of :obj:`OrderedDict`): Data obtained from `ReactorManager.log_dados`.
         param (str): Parameter name to be extracted from `X`.
     """
-    return np.array(list(map(seval,map(lambda x: x[1][param],sorted(X.items(),key=lambda x: x[0])))))
+    return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,GA):
-    def __init__(self,f_param,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
+    def __init__(self,elitism,f_param,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
             f_param (str): Parameter name to be extracted from `ReactorManager.log_dados`.
@@ -109,6 +109,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             generations=0,
             **kwargs
             )
+        self.ids = list(self.reactors.keys())
         self.log_init(name=log_name)        
         self.payload = self.G_as_keyed() if self.payload is None else self.payload
         self.data = None
@@ -117,13 +118,15 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.density_param = density_param
         self.fitness = np.nan * np.ones(len(self.reactors))
         self.maximize = maximize
+        self.dt = np.nan
+        self.elitism = elitism
     def G_as_keyed(self):
         """
         Converts genome matrix into an appropriate format to send to the reactors.
         """
         return OrderedDict(
             zip(
-                self.reactors.keys(),
+                self.ids,
                 map(
                     lambda u: self.ranges_as_keyed(u),
                     list(np.round(self.view(self.G,self.linmap),2))
@@ -136,7 +139,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         f_1 = partial(parse_dados,param=self.density_param)(x_1).astype(float)
         self.power = (self.view_g()*self.irradiance).sum(axis=1)/100.0
-        if x_0 is not None:
+        if self.dt is not np.nan:
             f_0 = partial(parse_dados,param=self.density_param)(x_0).astype(float)
             self.growth_rate = (f_1 - f_0)/self.dt
             self.efficiency = self.growth_rate/self.power
@@ -151,7 +154,8 @@ class Spectra(RangeParser,ReactorManager,GA):
         update_dict(x_1,dict(zip(self.reactors.keys(),self.efficiency)),'efficiency')
         update_dict(x_1,dict(zip(self.reactors.keys(),self.growth_rate)),'growth_rate')
         #Get and return parameter chosen for fitness
-        self.fitness = ((-1)**(1+self.maximize))*partial(parse_dados,param=self.fparam)(x_1).astype(float)
+        self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(x_1).loc[self.fparam].astype(float).to_numpy()
+        #self.fitness = 61.1-partial(parse_dados,param=self.fparam)(x_1).astype(float)
         return self.fitness
     def payload_to_matrix(self):
         return np.nan_to_num(
@@ -159,6 +163,19 @@ class Spectra(RangeParser,ReactorManager,GA):
                 [[self.payload[i].get(u,np.nan) for u in self.keyed_ranges.keys()] for i in self.reactors.keys()]
                 ).astype(float)
             )
+    def data_dict_to_matrix(self,D):
+        return np.nan_to_num(
+            np.array(
+                [[self.D[i].get(u,np.nan) for u in self.parameters] for i in self.reactors.keys()]
+                ).astype(float)
+            )
+    def pretty_print_dict(self,D):
+        df = pd.DataFrame(D)
+        df.index = df.index.str.lower()
+        df = df.loc[self.parameters,:]
+        df.loc['fitness'] = self.fitness
+        df.loc['probs'] = 100*self.p
+        return df.round(decimals=2)
     def F_get(self):
         """
         Extracts relevant data from Arduinos.
@@ -201,7 +218,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                 while True:
                     self.t1 = datetime.now()
                     print("[INFO]","GET",datetime.now().strftime("%c"))
-                    self.past_data = self.data.copy() if self.data is not None else None
+                    self.past_data = self.data.copy() if self.data is not None else self.payload
                     self.data = self.F_get()
                     #gotod
                     if self.do_gotod:
@@ -213,13 +230,18 @@ class Spectra(RangeParser,ReactorManager,GA):
                     self.f_map(self.data,self.past_data)
                     if run_ga:
                         self.p = softmax(self.fitness)
+                        #Hotfix for elitism
+                        print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
+                        print(f"{bcolors.BOLD}{pd.DataFrame(self.pretty_print_dict(self.data))}{bcolors.ENDC}")
+                        if self.elitism:
+                            self.elite_ix = self.ids[self.p.argmax()]
+                            self.anti_elite_ix = self.ids[self.p.argmin()]
+                            self.elite = self.G[self.p.argmax()].copy()
                         self.crossover()
                         self.mutation()
+                        if self.elitism:
+                            self.G[self.p.argmin()] = self.elite.copy()
                         self.payload = self.G_as_keyed()
-                        #DataFrame display of G and fitness
-                        display_df = pd.DataFrame(self.G_as_keyed())
-                        display_df.loc['fitness',:] = self.fitness
-                        print(f"{bcolors.BOLD}{pd.DataFrame(display_df)}{bcolors.ENDC}")
                     else:
                         df = pd.DataFrame(self.data).T
                         df.columns = df.columns.str.lower()

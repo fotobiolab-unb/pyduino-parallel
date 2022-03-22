@@ -1,6 +1,6 @@
 hyperparameters:
   reset_density: false #Whether or not to use gotod
-  log_name: "http" #Log folder name (delete to use the default)
+  log_name: "http_3" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
@@ -8,17 +8,17 @@ hyperparameters:
   resolution: 8 #Number of bits used for each parameter
   elitism: true #Whether or not to use elitism
   do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
-  rng_seed: 4 #Random seed for genetic algorithm
+  rng_seed: 1 #Random seed for genetic algorithm
   ranges:
     branco:
       - 0
-      - 100
+      - 30
     full:
       - 0
-      - 100
+      - 30
     others:
       - 0
-      - 100
+      - 30
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"
@@ -74,7 +74,7 @@ system:
     - co2
     - dtco2
 dash:
-  glob: "./log/http/*.csv"
+  glob: "./log/http_3/*.csv"
   cols:
     Temp: #[23,30]
     pH: #[1,10] # min,max (must have two)
