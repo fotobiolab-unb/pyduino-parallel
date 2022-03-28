@@ -1,14 +1,14 @@
 hyperparameters:
   reset_density: false #Whether or not to use gotod
-  log_name: "http_3" #Log folder name (delete to use the default)
+  log_name: "http_6" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
   maximize: false
-  resolution: 8 #Number of bits used for each parameter
+  resolution: 4 #Number of bits used for each parameter
   elitism: true #Whether or not to use elitism
   do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
-  rng_seed: 1 #Random seed for genetic algorithm
+  rng_seed: 21 #Random seed for genetic algorithm
   ranges:
     branco:
       - 0
@@ -47,34 +47,34 @@ system:
     "660": 5.1
     "684": 5.1
   standard_parameters:
-    - branco
-    - full
-    - "440"
-    - "470"
-    - "495"
-    - "530"
-    - "595"
-    - "634"
-    - "660"
-    - "684"
-    - cor
-    - modopainel
-    - brilho
-    - bomdia
-    - boanoite
-    - tau
-    - step
-    - modotemp
-    - temp
-    - densidade
-    - mododil
-    - ar
-    - ima
-    - modoco2
-    - co2
-    - dtco2
+    branco: int
+    full: float
+    "440": float
+    "470": float
+    "495": float
+    "530": float
+    "595": float
+    "634": float
+    "660": float
+    "684": float
+    cor: int
+    modopainel: int
+    brilho: float
+    bomdia: int
+    boanoite: int
+    tau: int
+    step: int
+    modotemp: int
+    temp: int
+    densidade: float
+    mododil: int
+    ar: int
+    ima: int
+    modoco2: int
+    co2: int
+    dtco2: int
 dash:
-  glob: "./log/http_3/*.csv"
+  glob: "./log/http_6/*.csv"
   cols:
     Temp: #[23,30]
     pH: #[1,10] # min,max (must have two)

@@ -30,7 +30,8 @@ SYSTEM_PARAMETERS = yaml_get(CONFIG_PATH)['system']
 SLAVE_PARAMETERS = yaml_get(CONFIG_PATH)['slave']
 RELEVANT_PARAMETERS = SYSTEM_PARAMETERS['relevant_parameters']
 INITIAL_STATE_PATH = os.path.join(__location__,SYSTEM_PARAMETERS['initial_state'])
-REACTOR_PARAMETERS = SYSTEM_PARAMETERS['standard_parameters']
+SCHEMA = SYSTEM_PARAMETERS["standard_parameters"]
+REACTOR_PARAMETERS = list(SCHEMA.keys())
 
 #From https://stackoverflow.com/a/312464/6451772
 def chunks(lst, n):
@@ -105,10 +106,12 @@ class Reactor:
         """
         ch = chunks(params,chunksize)
         for chunk in ch:
-            cmd = ",".join(list(map(lambda u: f"{u[0]},{int(u[1])}",chunk)))
-            cmd = f"set({cmd})"
-            self._send(cmd)
+            self.set(dict(chunk))
             sleep(2)
+            #cmd = ",".join(list(map(lambda u: f"{u[0]},{int(u[1])}",chunk)))
+            #cmd = f"set({cmd})"
+            #self._send(cmd)
+            #sleep(2)
     
     def __repr__(self):
         return f"{bcolors.OKCYAN}<Reactor {self.id} at {self.meta['hostname']}({self.url})>{bcolors.ENDC}"
@@ -128,6 +131,10 @@ def send_wrapper(reactor,command,delay,await_response):
         return (id,reactor.send(command,delay))
     else:
         return (id,reactor._send(command))
+
+def set_in_chunks(X):
+    reactor,row,chunksize = X
+    reactor.set_in_chunks(list(row.items()),chunksize)
 
 class ReactorManager:
     pinged = False
@@ -253,14 +260,17 @@ class ReactorManager:
         """
         df = pd.read_csv(path,sep=sep,index_col='ID',**kwargs)
         df.columns = df.columns.str.lower() #Commands must be sent in lowercase
+        #Dropping empty columns
+        df.dropna(axis=1,inplace=True)
         if params:
             cols = list(set(df.columns)&set(params))
             df = df.loc[:,cols]
-        for i,row in df.iterrows():
-            row = list(row[~row.isna()].astype(float).items())
-            i = int(i)
-            self.reactors[i].set_in_chunks(row,chunksize)
-        
+        #Setting schema
+        schema = set(df.columns)&SCHEMA.keys()
+        schema = {k:SCHEMA[k] for k in schema}
+        df = df.astype(schema)
+        with Pool(7) as p:
+            p.map(set_in_chunks,map(lambda x: (self.reactors[x[0]],x[1],chunksize),df.to_dict(orient="index").items()))
         #Saving relevant parameters' values
         cols = list(set(df.columns)&set(RELEVANT_PARAMETERS))
         self.payload = df.loc[:,cols].to_dict('index')

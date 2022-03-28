@@ -1,5 +1,5 @@
 from gapy.gapy2 import GA
-from pyduino2 import ReactorManager, chunks, SYSTEM_PARAMETERS, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS
+from pyduino2 import ReactorManager, chunks, SYSTEM_PARAMETERS, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS, SCHEMA
 import numpy as np
 from functools import partial
 import json
