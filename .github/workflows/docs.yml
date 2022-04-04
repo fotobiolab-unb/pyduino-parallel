@@ -53,11 +53,9 @@ jobs:
         working-directory: ./docs
         run: make html
   #Making pages
-      - name: Build and Commit
-        uses: sphinx-notes/pages@v2
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.PAT }}
+          github_token: ${{secrets.TOKEN}}
           branch: gh-pages
-          documentation-path: '.docs/http'
+          documentation-path: './docs/http'
