@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: "${{secrets.TOKEN}}"
+      - uses: actions/setup-python@v2
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -47,15 +53,11 @@ jobs:
         working-directory: ./docs
         run: make html
   #Making pages
-      - uses: actions/setup-python@v2
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
       - name: Build and Commit
         uses: sphinx-notes/pages@v2
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.TOKEN }}
+          github_token: ${{ secrets.PAT }}
           branch: gh-pages
           documentation-path: '.docs/http'
