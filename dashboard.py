@@ -111,7 +111,7 @@ def update_graph_live(n):
         df_tail = tail(gpath,NROWSDF,sep=SEP,header=None)
         df_tail.columns = HEAD
         if gbase in df.keys():
-            df[gbase] = pd.merge(df[gbase],df_tail,'outer').copy()
+            df[gbase] = pd.concat([df[gbase],df_tail]).copy()
         else:
             df[gbase] = df_tail.copy()
             df[gbase].columns = HEAD
@@ -136,7 +136,7 @@ def update_graph_live(n):
                 'showlegend': i == 0,
                 'line_color': color_dict[_name]
             }, row, col)
-            fig.update_xaxes(title_text=X_COL,row=row,col=col)
+            fig.update_xaxes(title_text=X_COL,row=row,col=col,tickmode='linear',dtick=1)
             fig.update_yaxes(range=y['cols'][colname],row=row,col=col)
     return fig
 
