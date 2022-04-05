@@ -1,7 +1,0 @@
-digraph "Spectra" {
-rankdir=BT
-charset="utf-8"
-"gapy.gapy2.GA" [color="black", fontcolor="black", label="{gapy.gapy2.GA|G\ldo_crossover : bool\lf : NoneType\lfitness : ndarray\lfittest : ndarray\lgenerations : NoneType\llinmap : ndarray\lmp\ln_param : int\lp\lpop_size\lr\lrng\ltotal_bits\l|ask_oracle()\lcrossover()\linverse_view(x, linmap)\lmutation()\lrun()\lview(x, linmap)\lview_g()\l}", shape="record", style="solid"];
-"pyduino-parallel.spectra.Spectra" [color="black", fontcolor="black", label="{pyduino-parallel.spectra.Spectra|G : ndarray\lanti_elite_ix\ldata : NoneType\ldeltaT\ldensity_param\ldo_gotod : bool\ldt\lefficiency : ndarray\lelite\lelite_ix\lelitism\lfitness\lfparam\lgrowth_rate : ndarray\lids : list\lirradiance : ndarray\lmaximize : bool\lp\lparameters\lpast_data : OrderedDict\lpayload : OrderedDict\lpower\lspectrum\lt1 : datetime\lt2 : datetime\l|F_get()\lF_set(x)\lG_as_keyed()\ldata_dict_to_matrix(D)\lf_map(x_1, x_0)\lpayload_to_matrix()\lpretty_print_dict(D)\lrun(deltaT, run_ga)\lset_preset_state_spectra()\lset_spectrum(preset)\l}", shape="record", style="solid"];
-"pyduino-parallel.spectra.Spectra" -> "gapy.gapy2.GA" [arrowhead="empty", arrowtail="none"];
-}
