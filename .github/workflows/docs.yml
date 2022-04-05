@@ -37,12 +37,6 @@ jobs:
       - name: Run Autodoc
         working-directory: ./docs
         run: sphinx-apidoc -o source ../
-
-      - name: Make diagram
-        run: |
-          pyreverse -s 0 -c Spectra -f SPECIAL spectra.py
-          mkdir -p ./docs/build/diagrams
-          mv Spectra.dot ./docs/build/diagrams/Spectra.dot
       
       - name: Run make
         working-directory: ./docs
