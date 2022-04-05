@@ -5,7 +5,6 @@ from math import ceil
 from itertools import product
 import tailer
 import io
-import yaml
 
 import dash
 from dash import dcc
