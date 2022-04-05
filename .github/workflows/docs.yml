@@ -49,7 +49,7 @@ jobs:
         run: make html
       
       - name: Add .nojekyll
-        working-directory: docs/html
+        working-directory: ./docs/build/html
         run: touch .nojekyll
 
       - name: Deploy to gh-pages
