@@ -9,13 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-18.04
     steps:
+      - uses: actions/checkout@master
       - uses: actions/checkout@v2
         with:
           token: "${{secrets.TOKEN}}"
       - uses: actions/setup-python@v2
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -31,10 +29,7 @@ jobs:
         run: echo "::set-output name=dir::$(pip cache dir)"
 
       - name: Install Sphinx
-        run: python3 -m pip install -U sphinx myst-parser sphinxcontrib-mermaid furo
-
-      - name: Install PyLint
-        run: python3 -m pip install pylint
+        run: python3 -m pip install -U sphinx myst-parser sphinxcontrib-mermaid furo pylint
 
       - name: Install dependencies
         run: python3 -m pip install -r ./requirements.txt
@@ -53,10 +48,10 @@ jobs:
         working-directory: ./docs
         run: make html
 
-      - name: Deploy
+      - name: Deploy to gh-pages
         uses: s0/git-publish-subdir-action@develop
         env:
           REPO: self
           BRANCH: gh-pages
-          FOLDER: ./docs/build/http/
+          FOLDER: ./docs/build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
