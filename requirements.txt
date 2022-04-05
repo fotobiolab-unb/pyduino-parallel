@@ -11,3 +11,4 @@ pyserial
 PyYAML
 requests
 scipy
+tailer
