@@ -1,1 +1,1 @@
-sphinx-apidoc -o source ../
+sphinx-apidoc -o source ../ dashboard.py
