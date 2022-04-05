@@ -52,10 +52,11 @@ jobs:
       - name: Run make
         working-directory: ./docs
         run: make html
-  #Making pages
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{secrets.TOKEN}}
-          branch: gh-pages
-          documentation_path: './docs/http'
+
+      - name: Deploy
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: gh-pages
+          FOLDER: ./docs/build/http/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
