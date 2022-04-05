@@ -198,8 +198,139 @@
           </label>
         </div>
         <article role="main">
-          <section id="pyduino2-module">
-<h1>pyduino2 module<a class="headerlink" href="#pyduino2-module" title="Permalink to this headline">#</a></h1>
+          <section id="module-pyduino2">
+<span id="pyduino2-module"></span><h1>pyduino2 module<a class="headerlink" href="#module-pyduino2" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyduino2.Reactor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">Reactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Master of HTTP Server to Serial handler.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.close" title="Permalink to this definition">#</a></dt>
+<dd><p>Sends ‘fim’.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.connect" title="Permalink to this definition">#</a></dt>
+<dd><p>Starts connection</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.http_get">
+<span class="sig-name descname"><span class="pre">http_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.http_get" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.http_post">
+<span class="sig-name descname"><span class="pre">http_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">await_response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.http_post" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Resets connection.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.send" title="Permalink to this definition">#</a></dt>
+<dd><p>Sends command and awaits for a response</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">{"440":</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">"brilho":</span> <span class="pre">100}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.set" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.Reactor.set_in_chunks">
+<span class="sig-name descname"><span class="pre">set_in_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.Reactor.set_in_chunks" title="Permalink to this definition">#</a></dt>
+<dd><p>Sets params into chunks.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">ReactorManager</span></span><a class="headerlink" href="#pyduino2.ReactorManager" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.calibrate">
+<span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calibrate'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.calibrate" title="Permalink to this definition">#</a></dt>
+<dd><p>Runs <cite>curva</cite> and dumps the result into txts.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.connect" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.dados">
+<span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.dados" title="Permalink to this definition">#</a></dt>
+<dd><p>Get data from Arduinos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>save_cache</strong> (<em>bool</em>) – Whether or not so save a cache file with the last reading with <cite>log.log.cache_data</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.get" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.log_dados">
+<span class="sig-name descname"><span class="pre">log_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.log_dados" title="Permalink to this definition">#</a></dt>
+<dd><p>Logs output of <cite>dados</cite> in csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>save_cache</strong> (<em>bool</em>) – Whether or not so save a cache file with the last reading with <cite>log.log.cache_data</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.log_init">
+<span class="sig-name descname"><span class="pre">log_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.log_init" title="Permalink to this definition">#</a></dt>
+<dd><p>Creates log directories for each Arduino.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the subdirectory in the log folder where the files will be saved.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.pinged">
+<span class="sig-name descname"><span class="pre">pinged</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#pyduino2.ReactorManager.pinged" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">await_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.send" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.send_parallel">
+<span class="sig-name descname"><span class="pre">send_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">await_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.send_parallel" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.set" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino2.ReactorManager.set_preset_state">
+<span class="sig-name descname"><span class="pre">set_preset_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'preset_state.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['branco',</span> <span class="pre">'full',</span> <span class="pre">'440',</span> <span class="pre">'470',</span> <span class="pre">'495',</span> <span class="pre">'530',</span> <span class="pre">'595',</span> <span class="pre">'634',</span> <span class="pre">'660',</span> <span class="pre">'684',</span> <span class="pre">'cor',</span> <span class="pre">'modopainel',</span> <span class="pre">'brilho',</span> <span class="pre">'bomdia',</span> <span class="pre">'boanoite',</span> <span class="pre">'tau',</span> <span class="pre">'step',</span> <span class="pre">'modotemp',</span> <span class="pre">'temp',</span> <span class="pre">'densidade',</span> <span class="pre">'mododil',</span> <span class="pre">'ar',</span> <span class="pre">'ima',</span> <span class="pre">'modoco2',</span> <span class="pre">'co2',</span> <span class="pre">'dtco2']</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.ReactorManager.set_preset_state" title="Permalink to this definition">#</a></dt>
+<dd><p>Prepare Arduinos with preset parameters from a csv file.
+:param path: Path to the csv file.
+:type path: str
+:param chunksize: How many to commands to send in a single line. A large value can cause Serial errors.
+:type chunksize: int
+:param sep: Column separator used in the csv.
+:type sep: str</p>
+</dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyduino2.chunks">
+<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.chunks" title="Permalink to this definition">#</a></dt>
+<dd><p>Yield successive n-sized chunks from lst.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyduino2.send_wrapper">
+<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">send_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">await_response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.send_wrapper" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyduino2.set_in_chunks">
+<span class="sig-prename descclassname"><span class="pre">pyduino2.</span></span><span class="sig-name descname"><span class="pre">set_in_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino2.set_in_chunks" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 </section>
 
         </article>

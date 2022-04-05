@@ -198,8 +198,127 @@
           </label>
         </div>
         <article role="main">
-          <section id="spectra-module">
-<h1>spectra module<a class="headerlink" href="#spectra-module" title="Permalink to this headline">#</a></h1>
+          <section id="module-spectra">
+<span id="spectra-module"></span><h1>spectra module<a class="headerlink" href="#module-spectra" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="spectra.Spectra">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">spectra.</span></span><span class="sig-name descname"><span class="pre">Spectra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elitism</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="data_parser.html#data_parser.RangeParser" title="data_parser.RangeParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">data_parser.RangeParser</span></code></a>, <a class="reference internal" href="pyduino2.html#pyduino2.ReactorManager" title="pyduino2.ReactorManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyduino2.ReactorManager</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">gapy.gapy2.GA</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.F_get">
+<span class="sig-name descname"><span class="pre">F_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.F_get" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts relevant data from Arduinos.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.F_set">
+<span class="sig-name descname"><span class="pre">F_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.F_set" title="Permalink to this definition">#</a></dt>
+<dd><p>Sets parameters to Arduinos.
+:param x: Dictionary having reactor id as keys
+:type x: <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code>
+:param and a dictionary of parameters and their values as values.:</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.G_as_keyed">
+<span class="sig-name descname"><span class="pre">G_as_keyed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.G_as_keyed" title="Permalink to this definition">#</a></dt>
+<dd><p>Converts genome matrix into an appropriate format to send to the reactors.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.data_dict_to_matrix">
+<span class="sig-name descname"><span class="pre">data_dict_to_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.data_dict_to_matrix" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.f_map">
+<span class="sig-name descname"><span class="pre">f_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.f_map" title="Permalink to this definition">#</a></dt>
+<dd><p>Computation for the fitness function.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.payload_to_matrix">
+<span class="sig-name descname"><span class="pre">payload_to_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.payload_to_matrix" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.pretty_print_dict">
+<span class="sig-name descname"><span class="pre">pretty_print_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.pretty_print_dict" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_ga</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.run" title="Permalink to this definition">#</a></dt>
+<dd><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deltaT</strong> (<em>int</em>) – Amount of time in seconds to wait in each iteration.</p></li>
+<li><p><strong>run_ga</strong> (<em>bool</em>) – Whether or not execute a step in the genetic algorithm.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.set_preset_state_spectra">
+<span class="sig-name descname"><span class="pre">set_preset_state_spectra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.set_preset_state_spectra" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spectra.Spectra.set_spectrum">
+<span class="sig-name descname"><span class="pre">set_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.Spectra.set_spectrum" title="Permalink to this definition">#</a></dt>
+<dd><p>Sets all reactors with a preset spectrum contained in <cite>SPECTRUM_PATH</cite>.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="spectra.dict_subset">
+<span class="sig-prename descclassname"><span class="pre">spectra.</span></span><span class="sig-name descname"><span class="pre">dict_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.dict_subset" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts a subdictionary from a given dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>D</strong> (<em>dict</em>) – Input dictionary.</p></li>
+<li><p><strong>(</strong> (<em>keys</em>) – obj:list of :obj:str): A list of keys pertaining to the dictionary.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="spectra.parse_dados">
+<span class="sig-prename descclassname"><span class="pre">spectra.</span></span><span class="sig-name descname"><span class="pre">parse_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.parse_dados" title="Permalink to this definition">#</a></dt>
+<dd><p>Parses data from <cite>ReactorManager.log_dados</cite> into an array while attempting to convert the input string into an appropriate data type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderedDict</span></code>) – Data obtained from <cite>ReactorManager.log_dados</cite>.</p></li>
+<li><p><strong>param</strong> (<em>str</em>) – Parameter name to be extracted from <cite>X</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="spectra.row_subset">
+<span class="sig-prename descclassname"><span class="pre">spectra.</span></span><span class="sig-name descname"><span class="pre">row_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.row_subset" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts a subset from a <cite>rows</cite> table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rows</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderedDict</span></code>) – Data obtained from <cite>ReactorManager.log_dados</cite>.</p></li>
+<li><p><strong>(</strong> (<em>keys</em>) – obj:list of :obj:str): A list of keys.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="spectra.seval">
+<span class="sig-prename descclassname"><span class="pre">spectra.</span></span><span class="sig-name descname"><span class="pre">seval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.seval" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="spectra.update_dict">
+<span class="sig-prename descclassname"><span class="pre">spectra.</span></span><span class="sig-name descname"><span class="pre">update_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spectra.update_dict" title="Permalink to this definition">#</a></dt>
+<dd><p>Updates dictionary <cite>D</cite> with values in <cite>A</cite> with key name <cite>key</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong> (<em>D</em>) – obj:dict of :obj:dict): Input dictionary.</p></li>
+<li><p><strong>A</strong> (<em>dict</em>) – Dict of values to be added with the same keys as in <cite>D</cite>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – Key name to assign to values of <cite>A</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 </section>
 
         </article>

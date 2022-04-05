@@ -198,8 +198,77 @@
           </label>
         </div>
         <article role="main">
-          <section id="log-module">
-<h1>log module<a class="headerlink" href="#log-module" title="Permalink to this headline">#</a></h1>
+          <section id="module-log">
+<span id="log-module"></span><h1>log module<a class="headerlink" href="#module-log" title="Permalink to this headline">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="log.datetime_from_str">
+<span class="sig-prename descclassname"><span class="pre">log.</span></span><span class="sig-name descname"><span class="pre">datetime_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.datetime_from_str" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="log.datetime_to_str">
+<span class="sig-prename descclassname"><span class="pre">log.</span></span><span class="sig-name descname"><span class="pre">datetime_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.datetime_to_str" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="log.log">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">log.</span></span><span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.log" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="log.log.cache_data">
+<span class="sig-name descname"><span class="pre">cache_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./cache.csv'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.log.cache_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Dumps rows into a single csv.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rows</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code>) – List of dictionary-encoded rows.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the csv file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="log.log.log_many_rows">
+<span class="sig-name descname"><span class="pre">log_many_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.log.log_many_rows" title="Permalink to this definition">#</a></dt>
+<dd><p>Logs rows into csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code>) – Dictionary encoded data frame.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to <cite>self.log_rows</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="log.log.log_optimal">
+<span class="sig-name descname"><span class="pre">log_optimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.log.log_optimal" title="Permalink to this definition">#</a></dt>
+<dd><p>Logs optima of all rows into a single file.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="log.log.log_rows">
+<span class="sig-name descname"><span class="pre">log_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#log.log.log_rows" title="Permalink to this definition">#</a></dt>
+<dd><p>Logs rows into csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rows</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code>) – List of dictionary-encoded rows.</p></li>
+<li><p><strong>subdir</strong> (<em>str</em>) – Subdirectory name. Intended to be an element of <cite>self.subdir</cite>.</p></li>
+<li><p><strong>add_timestamp</strong> (<em>bool</em><em>,</em><em>optional</em>) – Whether or not to include a timestamp column.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to <cite>pandas.to_csv</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="log.log.timestamp">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timestamp</span></span><a class="headerlink" href="#log.log.timestamp" title="Permalink to this definition">#</a></dt>
+<dd><p>Current date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
 </section>
 
         </article>
