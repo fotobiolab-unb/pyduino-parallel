@@ -48,6 +48,11 @@ class ReactorServer(Flask):
         def http_reset():
             self.reset()
             return "OK", 200
+        
+        @self.route("/reboot")
+        def reboot():
+            os.system("sudo reboot")
+            return "OK", 200
 
         @self.route("/send",methods=['POST'])
         def http_send():
