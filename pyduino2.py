@@ -72,6 +72,10 @@ class Reactor:
         """
         resp = self.http_get("connect")
         return resp.ok
+    
+    def reboot(self):
+        resp = self.http_get("reboot")
+        return resp.ok
 
     def reset(self):
         """
