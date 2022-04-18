@@ -71,11 +71,22 @@ class Reactor:
         Starts connection
         """
         resp = self.http_get("connect")
+        if resp.ok:
+            self.connected = True
         return resp.ok
     
-    def reboot(self):
-        resp = self.http_get("reboot")
-        return resp.ok
+    def reboot(self,retry_time=5):
+        try:
+            resp = self.http_get("reboot")
+        except requests.ConnectionError:
+            self.connected = False
+        print(bcolors.WARNING,"Rebooting reactor",self.id,"at",self.url,bcolors.ENDC)
+        while not self.connected:
+            try:
+                self.connect()
+            except requests.ConnectionError:
+                print(bcolors.WARNING,"Waiting for reactor",self.id,bcolors.ENDC)
+                sleep(retry_time)
 
     def reset(self):
         """
@@ -136,6 +147,11 @@ def send_wrapper(reactor,command,delay,await_response):
     else:
         return (id,reactor._send(command))
 
+def reboot_wrapper(reactor):
+    id,reactor = reactor
+    reactor.reboot(retry_time=SYSTEM_PARAMETERS["reboot_wait_time"])
+    return True
+
 def set_in_chunks(X):
     reactor,row,chunksize = X
     reactor.set_in_chunks(list(row.items()),chunksize)
@@ -187,6 +203,12 @@ class ReactorManager:
         for k,r in self.reactors.items():
             r.connect()
         self.connected = True
+    def reboot(self):
+        self.connected = False
+        with Pool(7) as p:
+            response = p.map(reboot_wrapper,list(self.reactors.items()))
+        self.connected = True
+        
 
     #Logging
 
