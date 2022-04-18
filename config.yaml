@@ -75,7 +75,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/power_opt/*.csv"
+  glob: "./log/free_growth_branco/*.csv"
   cols:
     Temp: #[23,30]
     pH: #[1,10] # min,max (must have two)
@@ -90,6 +90,6 @@ dash:
   theme: cyborg
   subplot_height: 300
   cumulative: false
-  update_time: 30000 #In miliseconds
+  update_time: 10000 #In miliseconds
   max_points: 50 #Maximum number of points to display at once
   vspace: 0.1

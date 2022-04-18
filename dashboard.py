@@ -100,6 +100,7 @@ def get_matrix(n):
     fig['layout']['title'] = "Computed Parameters"
     fig.data[0].update(zmin=0,zmax=100)
     return fig
+
 @app.callback(Output('live-update-graph', 'figure'),Input('interval-component', 'n_intervals'))
 def update_graph_live(n):
     global df
@@ -107,13 +108,13 @@ def update_graph_live(n):
         df = {}
     for gpath in LOG_PATH:
         gbase = os.path.basename(gpath)
-        df_tail = tail(gpath,NROWSDF,sep=SEP,header=None)
-        df_tail.columns = HEAD
         if gbase in df.keys():
-            df[gbase] = pd.concat([df[gbase],df_tail]).copy()
+            df_tail = tail(gpath,NROWSDF,sep=SEP,header=None)
+            df_tail.columns = HEAD
+            df[gbase] = pd.concat([df[gbase],df_tail],ignore_index=True).copy()
+            print(df[gbase])
         else:
-            df[gbase] = df_tail.copy()
-            df[gbase].columns = HEAD
+            df[gbase] = tail(gpath,NROWSDF,sep=SEP)
 
     fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
     fig['layout']['legend'] = {'y':1.08,'orientation':'h'}
@@ -125,7 +126,7 @@ def update_graph_live(n):
             cap = len(data)//MAXPOINTS if MAXPOINTS else 1
             cap = cap if cap!=0 else 1
             plot_data = data.copy().loc[::cap,:]
-            fig.append_trace({
+            fig.add_trace({
                 'y': plot_data[colname],
                 'x':plot_data[X_COL],
                 'name': f"{_name}({cap})",
@@ -135,8 +136,8 @@ def update_graph_live(n):
                 'showlegend': i == 0,
                 'line_color': color_dict[_name]
             }, row, col)
-            fig.update_xaxes(title_text=X_COL,row=row,col=col,tickmode='linear',dtick=1)
-            fig.update_yaxes(range=y['cols'][colname],row=row,col=col)
+            #fig.update_xaxes(title_text=X_COL,row=row,col=col,tickmode='linear',dtick=1)
+            #fig.update_yaxes(range=y['cols'][colname],row=row,col=col)
     return fig
 
 
