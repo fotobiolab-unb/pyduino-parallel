@@ -24,7 +24,7 @@ def yaml_get(filename):
 
 def get_servers(net="192.168.0.1/24",port="5000"):
     port_scanner = PortScanner()
-    results = port_scanner.scan(net,port,"--open",timeout=10)
+    results = port_scanner.scan(net,port,"--open",timeout=60)
     hosts = list(map(lambda x: f"http://{x}:{str(port)}",results["scan"].keys()))
     servers = []
     for host in hosts:
