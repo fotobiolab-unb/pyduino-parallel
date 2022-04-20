@@ -1,6 +1,6 @@
 hyperparameters:
   reset_density: false #Whether or not to use gotod
-  log_name: "free_growth_branco" #Log folder name (delete to use the default)
+  log_name: "free_growth_branco_temp_4" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
@@ -75,14 +75,36 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/free_growth_branco/*.csv"
-  cols:
-    Temp: #[23,30]
-    pH: #[1,10] # min,max (must have two)
-    DensidadeAtual: #No range
-    power: #No range
-    efficiency: #No range
-    growth_rate:
+  glob: "./log/free_growth_branco_temp_4/*.csv"
+  plot:
+    - 
+      name: Temperature
+      cols:
+        Temp:
+        SetTemp:
+          dash: "dot"
+    -
+      name: pH
+      cols:
+        pH:
+    -
+      name: Density
+      cols:
+        DensidadeAtual:
+    -
+      name: Efficiency
+      cols:
+        efficiency:
+    -
+      name: GrowthRate
+      cols:
+        growth_rate:
+    -
+      name: CO2
+      cols:
+        CO2:
+        SetCO2:
+          dash: "dash"
   x_col: 'elapsed_time_hours'
   sep: "\t"
   tail: 128
@@ -90,6 +112,6 @@ dash:
   theme: cyborg
   subplot_height: 300
   cumulative: false
-  update_time: 10000 #In miliseconds
+  update_time: 30000 #In miliseconds
   max_points: 50 #Maximum number of points to display at once
   vspace: 0.1

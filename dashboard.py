@@ -25,7 +25,8 @@ y = yaml_get(os.path.join(__location__,"config.yaml"))['dash']
 RELEVANT_PARAMETERS = yaml_get(os.path.join(__location__,"config.yaml"))['system']['relevant_parameters']
 
 COLOR = plotly.colors.qualitative.Alphabet
-USE_COLS = list(y['cols'].keys())
+PLOTS = list(y['plot'])
+SUBPLOT_NAMES = list(map(lambda x: x.get('name',"nameless"),PLOTS))
 X_COL = y['x_col']
 THEME = y['theme']
 load_figure_template(THEME)
@@ -44,7 +45,7 @@ if len(LOG_PATH)!=0:
 else:
     print(f"Glob {y['glob']} doesn't exist.")
     exit()
-NCOLSDF = len(USE_COLS)
+NCOLSDF = len(PLOTS)
 #Number of columns for the layout
 NCOLS = y["display_cols"]
 #Number of rows for the layout
@@ -75,7 +76,7 @@ app.layout = html.Div(
         html.H1('DASH'),
         html.P("\t".join(LOG_PATH)),
         dcc.Graph(id='matrix'),
-        dcc.Graph(id='live-update-graph',style={'height': y['subplot_height']*len(USE_COLS)}),
+        dcc.Graph(id='live-update-graph',style={'height': y['subplot_height']*NCOLSDF}),
         dcc.Interval(
             id='interval-component',
             interval=y['update_time'], # in milliseconds
@@ -110,36 +111,39 @@ def update_graph_live(n):
         gbase = os.path.basename(gpath)
         if gbase in df.keys():
             df_tail = tail(gpath,NROWSDF,sep=SEP,header=None)
-            df_tail.columns = HEAD
+            df_tail.columns = df[gbase].columns
             df[gbase] = pd.concat([df[gbase],df_tail],ignore_index=True).copy()
-            print(df[gbase])
         else:
-            df[gbase] = tail(gpath,NROWSDF,sep=SEP)
+            df[gbase] = pd.read_csv(gpath,sep=SEP)#tail(gpath,NROWSDF,sep=SEP)
 
-    fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=USE_COLS,vertical_spacing=y['vspace'])
+    fig = plotly.subplots.make_subplots(rows=NROWS, cols=NCOLS,subplot_titles=SUBPLOT_NAMES,vertical_spacing=y['vspace'])
     fig['layout']['legend'] = {'y':1.08,'orientation':'h'}
     fig['layout']['template'] = THEME
 
-    for i,colname in enumerate(USE_COLS):
+    for i,plot in enumerate(PLOTS):
         row, col = RCGEN[i]
-        for _name,data in df.items():
-            cap = len(data)//MAXPOINTS if MAXPOINTS else 1
-            cap = cap if cap!=0 else 1
-            plot_data = data.copy().loc[::cap,:]
-            fig.add_trace({
-                'y': plot_data[colname],
-                'x':plot_data[X_COL],
-                'name': f"{_name}({cap})",
-                'mode': 'lines',
-                'type': 'scatter',
-                'legendgroup': _name,
-                'showlegend': i == 0,
-                'line_color': color_dict[_name]
-            }, row, col)
-            #fig.update_xaxes(title_text=X_COL,row=row,col=col,tickmode='linear',dtick=1)
-            #fig.update_yaxes(range=y['cols'][colname],row=row,col=col)
+        fig['layout'][f"yaxis{i+1}"]['title'] = plot['name']
+        for colname,options in plot['cols'].items():
+            if options is None:
+                options = {}
+            for _name,data in df.items():
+                cap = len(data)//MAXPOINTS if MAXPOINTS else 1
+                cap = cap if cap!=0 else 1
+                plot_data = data.copy().loc[::cap,:]
+                fig.add_trace({
+                    'y': plot_data[colname],
+                    'x':plot_data[X_COL],
+                    'name': f"{_name}({cap})",
+                    'mode': 'lines',
+                    'type': 'scatter',
+                    'legendgroup': _name,
+                    'showlegend': i == 0,
+                    'line_color': color_dict[_name],
+                    'line': {'dash':options.get('dash',None)}
+                }, row, col)
+
     return fig
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, host='0.0.0.0')
+    app.run_server(debug=True, host='0.0.0.0', dev_tools_silence_routes_logging = False)

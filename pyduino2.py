@@ -16,6 +16,7 @@ from utils import bcolors, yaml_get, get_servers
 import requests
 from urllib.parse import urljoin
 import logging
+from datetime import datetime
 
 logging.basicConfig(filename='pyduino.log', filemode='w', level=logging.DEBUG)
 
@@ -123,10 +124,6 @@ class Reactor:
         for chunk in ch:
             self.set(dict(chunk))
             sleep(2)
-            #cmd = ",".join(list(map(lambda u: f"{u[0]},{int(u[1])}",chunk)))
-            #cmd = f"set({cmd})"
-            #self._send(cmd)
-            #sleep(2)
     
     def __repr__(self):
         return f"{bcolors.OKCYAN}<Reactor {self.id} at {self.meta['hostname']}({self.url})>{bcolors.ENDC}"
@@ -139,6 +136,19 @@ class Reactor:
         args = ",".join(f'{k},{v}' for k, v in data.items())
         cmd = f"set({args})"
         self._send(cmd)
+    
+    def horacerta(self):
+        """
+        Synchronizes Arduino clock with the client computer.
+        """
+        now = datetime.now()
+        print("[INFO]", "Set clock on",self.meta['hostname'])
+        self.set_in_chunks([["ano",now.year],["mes",now.month],["dia",now.day],["hora",now.hour],["minuto",now.minute]],chunksize=2)
+        #self.set_in_chunks({"ano":now.year,"mes":now.month,"dia":now.day,"hora":now.hour,"minuto":now.minute},chunksize=1)
+        sleep(2)
+        print("[INFO]", "horacerta")
+        self._send("horacerta")
+
 
 def send_wrapper(reactor,command,delay,await_response):
     id, reactor = reactor
@@ -177,6 +187,8 @@ class ReactorManager:
         print("\n".join(map(lambda x: f"Reactor {bcolors.OKCYAN}{x.id}{bcolors.ENDC} at {bcolors.OKCYAN}{x.meta['hostname']}({x.url}){bcolors.ENDC}",self.reactors.values())))
         self.header = None
         self.payload = None
+
+        #self.horacerta()
     
     def send(self,command,await_response=True,**kwargs):
         out = {}
@@ -208,7 +220,13 @@ class ReactorManager:
         with Pool(7) as p:
             response = p.map(reboot_wrapper,list(self.reactors.items()))
         self.connected = True
-        
+    def horacerta(self):
+        """
+        Updates Arduino clocks with clock of current system.
+        """
+        print("[INFO]", f"{bcolors.BOLD}Syncronizing clocks{bcolors.ENDC}")
+        for k,r in self.reactors.items():
+            r.horacerta()
 
     #Logging
 
