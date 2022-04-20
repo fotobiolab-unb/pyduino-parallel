@@ -222,7 +222,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                     self.data = self.F_get()
                     #gotod
                     if self.do_gotod:
-                        gotod_response = self.send_parallel("gotod",2,True)
+                        gotod_response = self.send_parallel("gotod",60,True)
                         gotod_response = list(map(lambda x: json.loads(x[1]),gotod_response))
                         print("[INFO] gotod")
                         print(pd.DataFrame(gotod_response))
