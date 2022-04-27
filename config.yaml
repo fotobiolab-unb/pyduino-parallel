@@ -1,6 +1,6 @@
 hyperparameters:
   reset_density: false #Whether or not to use gotod
-  log_name: "free_growth_branco_temp_4" #Log folder name (delete to use the default)
+  log_name: "free_growth_branco_lower_density" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
@@ -75,7 +75,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/free_growth_branco_temp_4/*.csv"
+  glob: "./log/free_growth_branco_lower_density/*.csv"
   plot:
     - 
       name: Temperature
