@@ -74,9 +74,9 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.layout = html.Div(
     html.Div([
         html.H1('DASH'),
-        html.P("\t".join(LOG_PATH)),
-        dcc.Graph(id='matrix'),
-        dcc.Graph(id='live-update-graph',style={'height': y['subplot_height']*NCOLSDF}),
+        html.P("Glob: "+"\t".join(y["glob"])),
+        dcc.Graph(id='matrix',style={'margin':15}),
+        dcc.Graph(id='live-update-graph',style={'height': y['subplot_height']*NCOLSDF, 'margin':15}),
         dcc.Interval(
             id='interval-component',
             interval=y['update_time'], # in milliseconds
@@ -100,6 +100,8 @@ def get_matrix(n):
     fig['layout']['template'] = THEME
     fig['layout']['title'] = "Computed Parameters"
     fig.data[0].update(zmin=0,zmax=100)
+    fig['layout']['font']['size']=20
+    fig['layout']['font']['family']="monospace"
     return fig
 
 @app.callback(Output('live-update-graph', 'figure'),Input('interval-component', 'n_intervals'))
@@ -141,6 +143,9 @@ def update_graph_live(n):
                     'line_color': color_dict[_name],
                     'line': {'dash':options.get('dash',None)}
                 }, row, col)
+
+    fig['layout']['font']['size']=15
+    fig['layout']['font']['family']="monospace"
 
     return fig
 

@@ -150,9 +150,9 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.growth_rate = np.zeros(len(self.reactors))
             self.efficiency = np.zeros_like(f_1)
         #Added new columns to current data
-        update_dict(x_1,dict(zip(self.reactors.keys(),self.power)),'power')
-        update_dict(x_1,dict(zip(self.reactors.keys(),self.efficiency)),'efficiency')
-        update_dict(x_1,dict(zip(self.reactors.keys(),self.growth_rate)),'growth_rate')
+        update_dict(x_1,dict(zip(self.ids,self.power)),'power')
+        update_dict(x_1,dict(zip(self.ids,self.efficiency)),'efficiency')
+        update_dict(x_1,dict(zip(self.ids,self.growth_rate)),'growth_rate')
         #Get and return parameter chosen for fitness
         self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(x_1).loc[self.fparam].astype(float).to_numpy()
         #self.fitness = 61.1-partial(parse_dados,param=self.fparam)(x_1).astype(float)
@@ -160,13 +160,13 @@ class Spectra(RangeParser,ReactorManager,GA):
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
-                [[self.payload[i].get(u,np.nan) for u in self.keyed_ranges.keys()] for i in self.reactors.keys()]
+                [[self.payload[i].get(u,np.nan) for u in self.keyed_ranges.keys()] for i in self.ids]
                 ).astype(float)
             )
     def data_dict_to_matrix(self,D):
         return np.nan_to_num(
             np.array(
-                [[self.D[i].get(u,np.nan) for u in self.parameters] for i in self.reactors.keys()]
+                [[self.D[i].get(u,np.nan) for u in self.parameters] for i in self.ids]
                 ).astype(float)
             )
     def pretty_print_dict(self,D):
