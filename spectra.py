@@ -110,6 +110,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             **kwargs
             )
         self.ids = list(self.reactors.keys())
+        self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)        
         self.payload = self.G_as_keyed() if self.payload is None else self.payload
         self.data = None
@@ -150,9 +151,9 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.growth_rate = np.zeros(len(self.reactors))
             self.efficiency = np.zeros_like(f_1)
         #Added new columns to current data
-        update_dict(x_1,dict(zip(self.ids,self.power)),'power')
-        update_dict(x_1,dict(zip(self.ids,self.efficiency)),'efficiency')
-        update_dict(x_1,dict(zip(self.ids,self.growth_rate)),'growth_rate')
+        update_dict(x_1,dict(zip(self.sorted_ids,self.power)),'power')
+        update_dict(x_1,dict(zip(self.sorted_ids,self.efficiency)),'efficiency')
+        update_dict(x_1,dict(zip(self.sorted_ids,self.growth_rate)),'growth_rate')
         #Get and return parameter chosen for fitness
         self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(x_1).loc[self.fparam].astype(float).to_numpy()
         #self.fitness = 61.1-partial(parse_dados,param=self.fparam)(x_1).astype(float)
