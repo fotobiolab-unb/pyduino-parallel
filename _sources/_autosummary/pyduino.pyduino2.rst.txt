@@ -1,0 +1,8 @@
+﻿pyduino.pyduino2
+================
+
+.. automodule:: pyduino.pyduino2
+
+   .. autopackagesummary:: pyduino.pyduino2
+      :toctree: .
+      :template: autosummary/package.rst
