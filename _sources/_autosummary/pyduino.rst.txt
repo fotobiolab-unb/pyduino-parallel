@@ -1,0 +1,37 @@
+﻿pyduino
+=======
+
+.. automodule:: pyduino
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   pyduino.dashboard
+   pyduino.data_parser
+   pyduino.log
+   pyduino.pyduino2
+   pyduino.slave
+   pyduino.spectra
+   pyduino.utils
+

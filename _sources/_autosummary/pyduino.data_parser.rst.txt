@@ -1,0 +1,37 @@
+pyduino.data\_parser
+====================
+
+.. automodule:: pyduino.data_parser
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      datetime_parser
+      get_datetimes
+      yaml_genetic_algorithm
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RangeParser
+   
+   
+
+   
+   
+   
+
+
+

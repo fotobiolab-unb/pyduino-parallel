@@ -1,7 +1,6 @@
-pyduino-parallel
-================
+doc
+===
 
 .. toctree::
    :maxdepth: 4
 
-   pyduino-parallel
