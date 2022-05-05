@@ -1,0 +1,8 @@
+﻿pyduino.spectra
+===============
+
+.. automodule:: pyduino.spectra
+
+   .. autopackagesummary:: pyduino.spectra
+      :toctree: .
+      :template: autosummary/package.rst
