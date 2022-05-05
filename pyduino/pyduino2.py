@@ -12,7 +12,7 @@ import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial
 import os
-from utils import bcolors, yaml_get, get_servers
+from pyduino.utils import bcolors, yaml_get, get_servers
 import requests
 from urllib.parse import urljoin
 import logging
