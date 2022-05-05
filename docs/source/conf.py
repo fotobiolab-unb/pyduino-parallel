@@ -63,3 +63,5 @@ mermaid_version = "latest"
 html_js_files = [
    'js/mermaid.js',
 ]
+
+autosummary_generate = True
