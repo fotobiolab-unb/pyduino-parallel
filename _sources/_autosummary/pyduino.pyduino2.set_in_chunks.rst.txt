@@ -1,0 +1,6 @@
+pyduino.pyduino2.set\_in\_chunks
+================================
+
+.. currentmodule:: pyduino.pyduino2
+
+.. autofunction:: set_in_chunks

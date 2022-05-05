@@ -2,7 +2,41 @@
 ================
 
 .. automodule:: pyduino.pyduino2
+  
+   
+   
+   
 
-   .. autopackagesummary:: pyduino.pyduino2
-      :toctree: .
-      :template: autosummary/package.rst
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:                                          
+   
+      chunks
+      reboot_wrapper
+      send_wrapper
+      set_in_chunks
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:                                          
+      :template: custom-class-template.rst               
+   
+      Reactor
+      ReactorManager
+   
+   
+
+   
+   
+   
+
+
+

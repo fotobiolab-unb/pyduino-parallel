@@ -2,7 +2,30 @@
 =============
 
 .. automodule:: pyduino.slave
+  
+   
+   
+   
 
-   .. autopackagesummary:: pyduino.slave
-      :toctree: .
-      :template: autosummary/package.rst
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:                                          
+      :template: custom-class-template.rst               
+   
+      ReactorServer
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+pyduino.spectra.row\_subset
+===========================
+
+.. currentmodule:: pyduino.spectra
+
+.. autofunction:: row_subset

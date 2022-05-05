@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.log.datetime_from_str" href="pyduino.log.datetime_from_str.html" /><link rel="prev" title="pyduino.data_parser.RangeParser" href="pyduino.data_parser.RangeParser.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.slave" href="pyduino.slave.html" /><link rel="prev" title="pyduino.pyduino2.Reactor" href="pyduino.pyduino2.Reactor.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>pyduino.log - Pyduino documentation</title>
+        <title>pyduino.pyduino2.ReactorManager - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -163,20 +163,20 @@
 <li class="toctree-l2"><a class="reference internal" href="pyduino.data_parser.RangeParser.html">pyduino.data_parser.RangeParser</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">pyduino.log</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.log.html">pyduino.log</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.datetime_from_str.html">pyduino.log.datetime_from_str</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.datetime_to_str.html">pyduino.log.datetime_to_str</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.LogAggregrator.html">pyduino.log.LogAggregrator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.log.html">pyduino.log.log</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.pyduino2.html">pyduino.pyduino2</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="pyduino.pyduino2.html">pyduino.pyduino2</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.chunks.html">pyduino.pyduino2.chunks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.reboot_wrapper.html">pyduino.pyduino2.reboot_wrapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.send_wrapper.html">pyduino.pyduino2.send_wrapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.set_in_chunks.html">pyduino.pyduino2.set_in_chunks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.Reactor.html">pyduino.pyduino2.Reactor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.ReactorManager.html">pyduino.pyduino2.ReactorManager</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.pyduino2.ReactorManager</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.slave.html">pyduino.slave</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -230,38 +230,128 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-pyduino.log">
-<span id="pyduino-log"></span><h1>pyduino.log<a class="headerlink" href="#module-pyduino.log" title="Permalink to this headline">#</a></h1>
-<p class="rubric">Functions</p>
+          <section id="pyduino-pyduino2-reactormanager">
+<h1>pyduino.pyduino2.ReactorManager<a class="headerlink" href="#pyduino-pyduino2-reactormanager" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.pyduino2.</span></span><span class="sig-name descname"><span class="pre">ReactorManager</span></span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+<p class="rubric">Methods</p>
 <div class="table-wrapper"><table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%"/>
 <col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.log.datetime_from_str.html#pyduino.log.datetime_from_str" title="pyduino.log.datetime_from_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_from_str</span></code></a>(x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.__init__" title="pyduino.pyduino2.ReactorManager.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyduino.log.datetime_to_str.html#pyduino.log.datetime_to_str" title="pyduino.log.datetime_to_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_to_str</span></code></a>(x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.calibrate" title="pyduino.pyduino2.ReactorManager.calibrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibrate</span></code></a>([deltaT, dir])</p></td>
+<td><p>Runs <cite>curva</cite> and dumps the result into txts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect</span></code>()</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.dados" title="pyduino.pyduino2.ReactorManager.dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dados</span></code></a>([save_cache])</p></td>
+<td><p>Get data from Arduinos.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>([key])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.horacerta" title="pyduino.pyduino2.ReactorManager.horacerta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horacerta</span></code></a>()</p></td>
+<td><p>Updates Arduino clocks with clock of current system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.log_dados" title="pyduino.pyduino2.ReactorManager.log_dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_dados</span></code></a>([save_cache])</p></td>
+<td><p>Logs output of <cite>dados</cite> in csv format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.log_init" title="pyduino.pyduino2.ReactorManager.log_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_init</span></code></a>(**kwargs)</p></td>
+<td><p>Creates log directories for each Arduino.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reboot</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([data])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.set_preset_state" title="pyduino.pyduino2.ReactorManager.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
+<td><p>Prepare Arduinos with preset parameters from a csv file.</p></td>
 </tr>
 </tbody>
 </table></div>
-<p class="rubric">Classes</p>
+<p class="rubric">Attributes</p>
 <div class="table-wrapper"><table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%"/>
 <col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.log.LogAggregrator.html#pyduino.log.LogAggregrator" title="pyduino.log.LogAggregrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogAggregrator</span></code></a>(log_paths[, timestamp_col, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyduino.log.log.html#pyduino.log.log" title="pyduino.log.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(subdir[, path, name])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table></div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.calibrate">
+<span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calibrate'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.calibrate" title="Permalink to this definition">#</a></dt>
+<dd><p>Runs <cite>curva</cite> and dumps the result into txts.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.dados">
+<span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.dados" title="Permalink to this definition">#</a></dt>
+<dd><p>Get data from Arduinos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>save_cache</strong> (<em>bool</em>) – Whether or not so save a cache file with the last reading with <cite>log.log.cache_data</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.horacerta">
+<span class="sig-name descname"><span class="pre">horacerta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.horacerta" title="Permalink to this definition">#</a></dt>
+<dd><p>Updates Arduino clocks with clock of current system.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.log_dados">
+<span class="sig-name descname"><span class="pre">log_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.log_dados" title="Permalink to this definition">#</a></dt>
+<dd><p>Logs output of <cite>dados</cite> in csv format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>save_cache</strong> (<em>bool</em>) – Whether or not so save a cache file with the last reading with <cite>log.log.cache_data</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.log_init">
+<span class="sig-name descname"><span class="pre">log_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.log_init" title="Permalink to this definition">#</a></dt>
+<dd><p>Creates log directories for each Arduino.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the subdirectory in the log folder where the files will be saved.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.set_preset_state">
+<span class="sig-name descname"><span class="pre">set_preset_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'preset_state.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['branco',</span> <span class="pre">'full',</span> <span class="pre">'440',</span> <span class="pre">'470',</span> <span class="pre">'495',</span> <span class="pre">'530',</span> <span class="pre">'595',</span> <span class="pre">'634',</span> <span class="pre">'660',</span> <span class="pre">'684',</span> <span class="pre">'cor',</span> <span class="pre">'modopainel',</span> <span class="pre">'brilho',</span> <span class="pre">'bomdia',</span> <span class="pre">'boanoite',</span> <span class="pre">'tau',</span> <span class="pre">'step',</span> <span class="pre">'modotemp',</span> <span class="pre">'temp',</span> <span class="pre">'densidade',</span> <span class="pre">'mododil',</span> <span class="pre">'ar',</span> <span class="pre">'ima',</span> <span class="pre">'modoco2',</span> <span class="pre">'co2',</span> <span class="pre">'dtco2']</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.set_preset_state" title="Permalink to this definition">#</a></dt>
+<dd><p>Prepare Arduinos with preset parameters from a csv file.
+:param path: Path to the csv file.
+:type path: str
+:param chunksize: How many to commands to send in a single line. A large value can cause Serial errors.
+:type chunksize: int
+:param sep: Column separator used in the csv.
+:type sep: str</p>
+</dd></dl>
+</dd></dl>
 </section>
 
         </article>
@@ -269,23 +359,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="pyduino.log.datetime_from_str.html">
+          <a class="next-page" href="pyduino.slave.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">pyduino.log.datetime_from_str</div>
+                <div class="title">pyduino.slave</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="pyduino.data_parser.RangeParser.html">
+          <a class="prev-page" href="pyduino.pyduino2.Reactor.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">pyduino.data_parser.RangeParser</div>
+                <div class="title">pyduino.pyduino2.Reactor</div>
                 
               </div>
             </a>

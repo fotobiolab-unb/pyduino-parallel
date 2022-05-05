@@ -1,0 +1,6 @@
+pyduino.spectra.parse\_dados
+============================
+
+.. currentmodule:: pyduino.spectra
+
+.. autofunction:: parse_dados

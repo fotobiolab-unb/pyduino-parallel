@@ -2,7 +2,41 @@
 ===============
 
 .. automodule:: pyduino.spectra
+  
+   
+   
+   
 
-   .. autopackagesummary:: pyduino.spectra
-      :toctree: .
-      :template: autosummary/package.rst
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:                                          
+   
+      dict_subset
+      parse_dados
+      row_subset
+      seval
+      update_dict
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:                                          
+      :template: custom-class-template.rst               
+   
+      Spectra
+   
+   
+
+   
+   
+   
+
+
+

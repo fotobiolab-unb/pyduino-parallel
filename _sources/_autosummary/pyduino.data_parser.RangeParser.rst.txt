@@ -1,0 +1,27 @@
+pyduino.data\_parser.RangeParser
+================================
+
+.. currentmodule:: pyduino.data_parser
+
+.. autoclass:: RangeParser
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RangeParser.__init__
+      ~RangeParser.ranges_as_keyed
+      ~RangeParser.ranges_as_list
+   
+   
+
+   
+   
+   

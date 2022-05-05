@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.log.datetime_from_str" href="pyduino.log.datetime_from_str.html" /><link rel="prev" title="pyduino.data_parser.RangeParser" href="pyduino.data_parser.RangeParser.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.spectra.row_subset" href="pyduino.spectra.row_subset.html" /><link rel="prev" title="pyduino.spectra.dict_subset" href="pyduino.spectra.dict_subset.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>pyduino.log - Pyduino documentation</title>
+        <title>pyduino.spectra.parse_dados - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -163,7 +163,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pyduino.data_parser.RangeParser.html">pyduino.data_parser.RangeParser</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">pyduino.log</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.log.html">pyduino.log</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.datetime_from_str.html">pyduino.log.datetime_from_str</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.datetime_to_str.html">pyduino.log.datetime_to_str</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.LogAggregrator.html">pyduino.log.LogAggregrator</a></li>
@@ -183,9 +183,9 @@
 <li class="toctree-l2"><a class="reference internal" href="pyduino.slave.ReactorServer.html">pyduino.slave.ReactorServer</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.spectra.html">pyduino.spectra</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="pyduino.spectra.html">pyduino.spectra</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.dict_subset.html">pyduino.spectra.dict_subset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.parse_dados.html">pyduino.spectra.parse_dados</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.spectra.parse_dados</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.row_subset.html">pyduino.spectra.row_subset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.seval.html">pyduino.spectra.seval</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.update_dict.html">pyduino.spectra.update_dict</a></li>
@@ -230,38 +230,21 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-pyduino.log">
-<span id="pyduino-log"></span><h1>pyduino.log<a class="headerlink" href="#module-pyduino.log" title="Permalink to this headline">#</a></h1>
-<p class="rubric">Functions</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.log.datetime_from_str.html#pyduino.log.datetime_from_str" title="pyduino.log.datetime_from_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_from_str</span></code></a>(x)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyduino.log.datetime_to_str.html#pyduino.log.datetime_to_str" title="pyduino.log.datetime_to_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime_to_str</span></code></a>(x)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table></div>
-<p class="rubric">Classes</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.log.LogAggregrator.html#pyduino.log.LogAggregrator" title="pyduino.log.LogAggregrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogAggregrator</span></code></a>(log_paths[, timestamp_col, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pyduino.log.log.html#pyduino.log.log" title="pyduino.log.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(subdir[, path, name])</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table></div>
+          <section id="pyduino-spectra-parse-dados">
+<h1>pyduino.spectra.parse_dados<a class="headerlink" href="#pyduino-spectra-parse-dados" title="Permalink to this headline">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyduino.spectra.parse_dados">
+<span class="sig-prename descclassname"><span class="pre">pyduino.spectra.</span></span><span class="sig-name descname"><span class="pre">parse_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.parse_dados" title="Permalink to this definition">#</a></dt>
+<dd><p>Parses data from <cite>ReactorManager.log_dados</cite> into an array while attempting to convert the input string into an appropriate data type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderedDict</span></code>) – Data obtained from <cite>ReactorManager.log_dados</cite>.</p></li>
+<li><p><strong>param</strong> (<em>str</em>) – Parameter name to be extracted from <cite>X</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 </section>
 
         </article>
@@ -269,23 +252,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="pyduino.log.datetime_from_str.html">
+          <a class="next-page" href="pyduino.spectra.row_subset.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">pyduino.log.datetime_from_str</div>
+                <div class="title">pyduino.spectra.row_subset</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="pyduino.data_parser.RangeParser.html">
+          <a class="prev-page" href="pyduino.spectra.dict_subset.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">pyduino.data_parser.RangeParser</div>
+                <div class="title">pyduino.spectra.dict_subset</div>
                 
               </div>
             </a>

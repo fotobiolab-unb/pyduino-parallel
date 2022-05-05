@@ -1,0 +1,6 @@
+pyduino.pyduino2.send\_wrapper
+==============================
+
+.. currentmodule:: pyduino.pyduino2
+
+.. autofunction:: send_wrapper

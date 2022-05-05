@@ -1,0 +1,6 @@
+pyduino.pyduino2.reboot\_wrapper
+================================
+
+.. currentmodule:: pyduino.pyduino2
+
+.. autofunction:: reboot_wrapper

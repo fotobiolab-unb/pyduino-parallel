@@ -1,0 +1,6 @@
+pyduino.pyduino2.chunks
+=======================
+
+.. currentmodule:: pyduino.pyduino2
+
+.. autofunction:: chunks

@@ -1,0 +1,147 @@
+pyduino.slave.ReactorServer
+===========================
+
+.. currentmodule:: pyduino.slave
+
+.. autoclass:: ReactorServer
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ReactorServer.__init__
+      ~ReactorServer.add_template_filter
+      ~ReactorServer.add_template_global
+      ~ReactorServer.add_template_test
+      ~ReactorServer.add_url_rule
+      ~ReactorServer.after_request
+      ~ReactorServer.app_context
+      ~ReactorServer.async_to_sync
+      ~ReactorServer.auto_find_instance_path
+      ~ReactorServer.before_first_request
+      ~ReactorServer.before_request
+      ~ReactorServer.close
+      ~ReactorServer.connect
+      ~ReactorServer.context_processor
+      ~ReactorServer.create_global_jinja_loader
+      ~ReactorServer.create_jinja_environment
+      ~ReactorServer.create_url_adapter
+      ~ReactorServer.delete
+      ~ReactorServer.dispatch_request
+      ~ReactorServer.do_teardown_appcontext
+      ~ReactorServer.do_teardown_request
+      ~ReactorServer.endpoint
+      ~ReactorServer.ensure_sync
+      ~ReactorServer.errorhandler
+      ~ReactorServer.finalize_request
+      ~ReactorServer.full_dispatch_request
+      ~ReactorServer.get
+      ~ReactorServer.get_send_file_max_age
+      ~ReactorServer.handle_exception
+      ~ReactorServer.handle_http_exception
+      ~ReactorServer.handle_url_build_error
+      ~ReactorServer.handle_user_exception
+      ~ReactorServer.inject_url_defaults
+      ~ReactorServer.iter_blueprints
+      ~ReactorServer.log_exception
+      ~ReactorServer.make_config
+      ~ReactorServer.make_default_options_response
+      ~ReactorServer.make_response
+      ~ReactorServer.make_shell_context
+      ~ReactorServer.open_instance_resource
+      ~ReactorServer.open_resource
+      ~ReactorServer.patch
+      ~ReactorServer.post
+      ~ReactorServer.preprocess_request
+      ~ReactorServer.process_response
+      ~ReactorServer.put
+      ~ReactorServer.raise_routing_exception
+      ~ReactorServer.register_blueprint
+      ~ReactorServer.register_error_handler
+      ~ReactorServer.request_context
+      ~ReactorServer.reset
+      ~ReactorServer.route
+      ~ReactorServer.run
+      ~ReactorServer.select_jinja_autoescape
+      ~ReactorServer.send
+      ~ReactorServer.send_static_file
+      ~ReactorServer.set
+      ~ReactorServer.shell_context_processor
+      ~ReactorServer.should_ignore_error
+      ~ReactorServer.teardown_appcontext
+      ~ReactorServer.teardown_request
+      ~ReactorServer.template_filter
+      ~ReactorServer.template_global
+      ~ReactorServer.template_test
+      ~ReactorServer.test_cli_runner
+      ~ReactorServer.test_client
+      ~ReactorServer.test_request_context
+      ~ReactorServer.trap_http_exception
+      ~ReactorServer.try_trigger_before_first_request_functions
+      ~ReactorServer.update_template_context
+      ~ReactorServer.url_defaults
+      ~ReactorServer.url_value_preprocessor
+      ~ReactorServer.wsgi_app
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ReactorServer.debug
+      ~ReactorServer.default_config
+      ~ReactorServer.env
+      ~ReactorServer.got_first_request
+      ~ReactorServer.has_static_folder
+      ~ReactorServer.jinja_env
+      ~ReactorServer.jinja_loader
+      ~ReactorServer.jinja_options
+      ~ReactorServer.logger
+      ~ReactorServer.name
+      ~ReactorServer.permanent_session_lifetime
+      ~ReactorServer.preserve_context_on_exception
+      ~ReactorServer.propagate_exceptions
+      ~ReactorServer.secret_key
+      ~ReactorServer.send_file_max_age_default
+      ~ReactorServer.session_cookie_name
+      ~ReactorServer.session_interface
+      ~ReactorServer.static_folder
+      ~ReactorServer.static_url_path
+      ~ReactorServer.templates_auto_reload
+      ~ReactorServer.test_cli_runner_class
+      ~ReactorServer.test_client_class
+      ~ReactorServer.testing
+      ~ReactorServer.use_x_sendfile
+      ~ReactorServer.instance_path
+      ~ReactorServer.config
+      ~ReactorServer.url_build_error_handlers
+      ~ReactorServer.before_first_request_funcs
+      ~ReactorServer.teardown_appcontext_funcs
+      ~ReactorServer.shell_context_processors
+      ~ReactorServer.blueprints
+      ~ReactorServer.extensions
+      ~ReactorServer.url_map
+      ~ReactorServer.import_name
+      ~ReactorServer.template_folder
+      ~ReactorServer.root_path
+      ~ReactorServer.cli
+      ~ReactorServer.view_functions
+      ~ReactorServer.error_handler_spec
+      ~ReactorServer.before_request_funcs
+      ~ReactorServer.after_request_funcs
+      ~ReactorServer.teardown_request_funcs
+      ~ReactorServer.template_context_processors
+      ~ReactorServer.url_value_preprocessors
+      ~ReactorServer.url_default_functions
+   
+   

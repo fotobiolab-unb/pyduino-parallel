@@ -1,0 +1,43 @@
+pyduino.pyduino2.ReactorManager
+===============================
+
+.. currentmodule:: pyduino.pyduino2
+
+.. autoclass:: ReactorManager
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ReactorManager.__init__
+      ~ReactorManager.calibrate
+      ~ReactorManager.connect
+      ~ReactorManager.dados
+      ~ReactorManager.get
+      ~ReactorManager.horacerta
+      ~ReactorManager.log_dados
+      ~ReactorManager.log_init
+      ~ReactorManager.reboot
+      ~ReactorManager.send
+      ~ReactorManager.send_parallel
+      ~ReactorManager.set
+      ~ReactorManager.set_preset_state
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ReactorManager.pinged
+   
+   

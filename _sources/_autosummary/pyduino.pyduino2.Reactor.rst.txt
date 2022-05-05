@@ -1,0 +1,35 @@
+pyduino.pyduino2.Reactor
+========================
+
+.. currentmodule:: pyduino.pyduino2
+
+.. autoclass:: Reactor
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Reactor.__init__
+      ~Reactor.close
+      ~Reactor.connect
+      ~Reactor.horacerta
+      ~Reactor.http_get
+      ~Reactor.http_post
+      ~Reactor.reboot
+      ~Reactor.reset
+      ~Reactor.send
+      ~Reactor.set
+      ~Reactor.set_in_chunks
+   
+   
+
+   
+   
+   
