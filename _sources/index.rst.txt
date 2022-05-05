@@ -12,13 +12,6 @@ Welcome to Pyduino's documentation!
 
 .. rubric:: Modules
 
-.. autosummary::
-   :toctree: _autosummary
-   :template: custom-module-template.rst
-   :recursive:
-   
-   pyduino
-
 .. autopackagesummary:: pyduino
    :toctree: _autosummary
    :template: package.rst

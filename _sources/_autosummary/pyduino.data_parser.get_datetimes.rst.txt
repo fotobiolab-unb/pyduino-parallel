@@ -1,6 +1,0 @@
-pyduino.data\_parser.get\_datetimes
-===================================
-
-.. currentmodule:: pyduino.data_parser
-
-.. autofunction:: get_datetimes

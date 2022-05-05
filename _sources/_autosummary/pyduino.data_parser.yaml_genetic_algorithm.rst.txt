@@ -1,6 +1,0 @@
-pyduino.data\_parser.yaml\_genetic\_algorithm
-=============================================
-
-.. currentmodule:: pyduino.data_parser
-
-.. autofunction:: yaml_genetic_algorithm

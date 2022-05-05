@@ -1,6 +1,0 @@
-pyduino.utils.get\_servers
-==========================
-
-.. currentmodule:: pyduino.utils
-
-.. autofunction:: get_servers

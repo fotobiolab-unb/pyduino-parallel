@@ -1,40 +1,8 @@
-pyduino.log
+﻿pyduino.log
 ===========
 
 .. automodule:: pyduino.log
-  
-   
-   
-   
 
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:                                          
-   
-      datetime_from_str
-      datetime_to_str
-   
-   
-
-   
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:                                          
-      :template: custom-class-template.rst               
-   
-      LogAggregrator
-      log
-   
-   
-
-   
-   
-   
-
-
-
+   .. autopackagesummary:: pyduino.log
+      :toctree: .
+      :template: autosummary/package.rst

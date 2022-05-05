@@ -1,40 +1,8 @@
-pyduino.data\_parser
+﻿pyduino.data\_parser
 ====================
 
 .. automodule:: pyduino.data_parser
-  
-   
-   
-   
 
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:                                          
-   
-      datetime_parser
-      get_datetimes
-      yaml_genetic_algorithm
-   
-   
-
-   
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:                                          
-      :template: custom-class-template.rst               
-   
-      RangeParser
-   
-   
-
-   
-   
-   
-
-
-
+   .. autopackagesummary:: pyduino.data_parser
+      :toctree: .
+      :template: autosummary/package.rst

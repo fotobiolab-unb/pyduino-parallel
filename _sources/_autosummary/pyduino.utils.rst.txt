@@ -1,39 +1,8 @@
-pyduino.utils
+﻿pyduino.utils
 =============
 
 .. automodule:: pyduino.utils
-  
-   
-   
-   
 
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:                                          
-   
-      get_servers
-      yaml_get
-   
-   
-
-   
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:                                          
-      :template: custom-class-template.rst               
-   
-      bcolors
-   
-   
-
-   
-   
-   
-
-
-
+   .. autopackagesummary:: pyduino.utils
+      :toctree: .
+      :template: autosummary/package.rst
