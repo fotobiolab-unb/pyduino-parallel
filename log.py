@@ -1,8 +1,11 @@
+from email.mime import base
 import pandas as pd
 import os
 from pathlib import Path
 from datetime import datetime
 import io
+from glob import glob
+
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 config_file = os.path.join(__location__,"config.yaml")
 
@@ -17,6 +20,10 @@ class log:
     def timestamp(self):
         """str: Current date."""
         return datetime.now()
+    
+    @property
+    def prefix(self):
+        return os.path.join(self.path,self.start_timestamp)
 
     def __init__(self,subdir,path="./log",name=None):
         """
@@ -35,14 +42,21 @@ class log:
             path (str): Save path for the logs.
             name (str): Name given for this particular instance. If none will name it with the current timestamp.
         """
+        self.path = path
         self.start_timestamp = datetime_to_str(self.timestamp) if name is None else name
         self.log_name = name
-        self.subdir = subdir
-        self.path = path
+        Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
+        if isinstance(subdir,str):
+            self.subdir = list(map(os.path.basename,glob(os.path.join(self.prefix,subdir))))
+        elif isinstance(subdir,list):
+            self.subdir = subdir
+        else:
+            raise ValueError("Invalid type for subdir. Must be either a list of strings or a glob string.")
+        self.subdir = list(map(lambda x: x+".csv" if len(os.path.splitext(x)[1])==0 else x,self.subdir))
         self.first_timestamp = None
         self.data_frames = {}
 
-        Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
+        self.paths = list(map(lambda x: os.path.join(self.prefix,x),self.subdir))
 
         with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp}.yaml"),'w') as wfile:
             wfile.write(cfile.read())
@@ -111,3 +125,68 @@ class log:
             path (str): Path to the csv file.
         """
         pd.DataFrame(rows).T.to_csv(path,**kwargs)
+
+    def transpose(self,columns,destination,sep='\t',skip=1,**kwargs):
+        """
+        Maps reactor csv to column csvs with columns given by columns.
+
+        Args:
+            columns (:obj:list of :obj:str): List of columns to extract.
+            destination (str): Destination path. Creates directories as needed and overwrites any existing files.
+            sep (str, optional): Column separator. Defaults to '\t'.
+            skip (int, optional): How many rows to jump while reading the input files. Defaults to 1.
+        """
+        dfs = []
+        for file in self.paths:
+            df = pd.read_csv(file,index_col=False,sep=sep,**kwargs)
+            df['FILE'] = file
+            dfs.append(df.iloc[::skip,:])
+        df = pd.concat(dfs)
+
+        for column in columns:
+            Path(destination).mkdir(parents=True,exist_ok=True)
+            df.loc[:,['ID','FILE',column,'elapsed_time_hours']].to_csv(os.path.join(destination,f"{column}.csv"),sep=sep)
+
+
+class LogAggregrator:
+    def __init__(self,log_paths,timestamp_col="log_timestamp",elapsed_time_col="elapsed_time_hours"):
+        """
+        Merges logs from various experiments into a single file for each bioreactor.
+
+        Args:
+            log_paths (:obj:list of :obj:str): List of glob strings pointing at the input files for each experiment.
+            timestamp_col (str, optional): Column to use as timestamp. Defaults to "log_timestamp".
+            elapsed_time_col (str, optional): Columns to use as 'elapsed time'. Defaults to "elapsed_time_hours".
+        """
+        self.glob_list = log_paths
+        self.timestamp_col = timestamp_col
+        self.elapsed_time_col = elapsed_time_col
+    def agg(self,destination,skip=1,sep='\t',**kwargs):
+        """
+        Aggregator
+
+        Args:
+            destination (str): Destination path. Creates directories as needed and overwrites any existing files.
+            skip (int, optional): How many rows to jump while reading the input files. Defaults to 1.
+            sep (str, optional): Column separator. Defaults to '\t'.
+        """
+        dfs = {}
+        for path in self.glob_list:
+            for file in glob(path):
+                basename = os.path.basename(file)
+                df = pd.read_csv(file,index_col=False,sep=sep,dtype={self.elapsed_time_col:float},**kwargs)
+                df = df.iloc[::skip,:]
+                df['FILE'] = file
+                if dfs.get(basename,None) is not None:
+                    top_timestamp = datetime_from_str(df.head(1)[self.timestamp_col].iloc[0])
+                    bottom_timestamp = datetime_from_str(dfs.get(basename).tail(1)[self.timestamp_col].iloc[0])
+                    deltaT = (top_timestamp - bottom_timestamp).total_seconds()/3600.0
+                    df[self.elapsed_time_col] += deltaT
+                    dfs[basename] = pd.concat([dfs[basename],df])
+                else:
+                    dfs[basename] = df
+        for filename, df in dfs.items():
+            Path(destination).mkdir(parents=True,exist_ok=True)
+            path = os.path.join(destination,filename)
+            df.to_csv(path,sep=sep,index=False)
+
