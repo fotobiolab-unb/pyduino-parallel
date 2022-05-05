@@ -43,8 +43,7 @@ if len(LOG_PATH)!=0:
         print(HEAD)
         HEAD = HEAD.columns
 else:
-    print(f"Glob {y['glob']} doesn't exist.")
-    exit()
+    raise ValueError(f"Glob {y['glob']} doesn't exist.")
 NCOLSDF = len(PLOTS)
 #Number of columns for the layout
 NCOLS = y["display_cols"]
