@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 import time
 from datetime import datetime
-from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
+from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
 from pyduino.utils import yaml_get, bcolors
