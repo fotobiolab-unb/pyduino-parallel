@@ -13,12 +13,10 @@ Welcome to Pyduino's documentation!
 .. rubric:: Modules
 
 .. autosummary::
-   :toctree: generated
-
-   sphinxdemo_with_docs.__init__
-   sphinxdemo_with_docs.__main__
-   sphinxdemo_with_docs.file_functions
+   :toctree: _autosummary
+   :recursive:
    
+   pyduino-parallel
 
 Indices and tables
 ==================
