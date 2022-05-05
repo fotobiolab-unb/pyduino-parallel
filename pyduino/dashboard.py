@@ -16,7 +16,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
-from pyduino2 import RELEVANT_PARAMETERS, CACHEPATH
+from pyduino.pyduino2 import RELEVANT_PARAMETERS, CACHEPATH
 from utils import yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
