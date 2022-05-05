@@ -7,7 +7,7 @@ import pandas as pd
 import serial.tools.list_ports
 import re
 from collections import OrderedDict
-from log import log
+from pyduino.log import log
 import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial

@@ -1,5 +1,5 @@
 from gapy.gapy2 import GA
-from pyduino2 import ReactorManager, chunks, SYSTEM_PARAMETERS, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS, SCHEMA
+from pyduino.pyduino2 import ReactorManager, chunks, SYSTEM_PARAMETERS, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS, SCHEMA
 import numpy as np
 from functools import partial
 import json
@@ -11,8 +11,8 @@ from datetime import datetime
 from data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
-from utils import yaml_get, bcolors
-from log import datetime_to_str
+from pyduino.utils import yaml_get, bcolors
+from pyduino.log import datetime_to_str
 import traceback
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
