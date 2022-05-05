@@ -18,6 +18,11 @@ Welcome to Pyduino's documentation!
    :recursive:
    
    pyduino
+   dashboard
+   slave
+   spectra
+   data_parser
+   pyduino2
 
 Indices and tables
 ==================
