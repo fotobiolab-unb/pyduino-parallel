@@ -34,10 +34,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./pyduino
         run: python3 -m pip install -r ./requirements.txt
-
-      - name: Run Autodoc
-        working-directory: ./doc/docs
-        run: sphinx-apidoc -o source ../
       
       - name: Run make
         working-directory: ./doc/docs
