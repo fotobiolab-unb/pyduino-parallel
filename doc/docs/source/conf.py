@@ -34,7 +34,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinxcontrib.mermaid',
     'sphinx.ext.graphviz',
-    'sphinx.ext.autosummary'
+    'sphinx.ext.autosummary',
+    'sphinx_autopackagesummary'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
