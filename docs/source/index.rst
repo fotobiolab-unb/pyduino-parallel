@@ -7,15 +7,18 @@ Welcome to Pyduino's documentation!
 ===================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :caption: Contents:
 
-   logging
-   basic_structure
-   modules
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree: generated
+
+   sphinxdemo_with_docs.__init__
+   sphinxdemo_with_docs.__main__
+   sphinxdemo_with_docs.file_functions
    
-
-
 
 Indices and tables
 ==================
