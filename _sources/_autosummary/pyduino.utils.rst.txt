@@ -2,7 +2,7 @@ pyduino.utils
 =============
 
 .. automodule:: pyduino.utils
-
+  
    
    
    
@@ -12,6 +12,7 @@ pyduino.utils
    .. rubric:: Functions
 
    .. autosummary::
+      :toctree:                                          
    
       get_servers
       yaml_get
@@ -23,6 +24,8 @@ pyduino.utils
    .. rubric:: Classes
 
    .. autosummary::
+      :toctree:                                          
+      :template: custom-class-template.rst               
    
       bcolors
    

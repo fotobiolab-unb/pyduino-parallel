@@ -1,0 +1,26 @@
+pyduino.log.LogAggregrator
+==========================
+
+.. currentmodule:: pyduino.log
+
+.. autoclass:: LogAggregrator
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LogAggregrator.__init__
+      ~LogAggregrator.agg
+   
+   
+
+   
+   
+   

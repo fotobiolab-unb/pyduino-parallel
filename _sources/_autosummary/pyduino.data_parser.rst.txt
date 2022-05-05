@@ -2,7 +2,7 @@ pyduino.data\_parser
 ====================
 
 .. automodule:: pyduino.data_parser
-
+  
    
    
    
@@ -12,6 +12,7 @@ pyduino.data\_parser
    .. rubric:: Functions
 
    .. autosummary::
+      :toctree:                                          
    
       datetime_parser
       get_datetimes
@@ -24,6 +25,8 @@ pyduino.data\_parser
    .. rubric:: Classes
 
    .. autosummary::
+      :toctree:                                          
+      :template: custom-class-template.rst               
    
       RangeParser
    

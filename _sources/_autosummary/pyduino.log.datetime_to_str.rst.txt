@@ -1,0 +1,6 @@
+pyduino.log.datetime\_to\_str
+=============================
+
+.. currentmodule:: pyduino.log
+
+.. autofunction:: datetime_to_str

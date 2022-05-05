@@ -2,7 +2,7 @@ pyduino.log
 ===========
 
 .. automodule:: pyduino.log
-
+  
    
    
    
@@ -12,6 +12,7 @@ pyduino.log
    .. rubric:: Functions
 
    .. autosummary::
+      :toctree:                                          
    
       datetime_from_str
       datetime_to_str
@@ -23,6 +24,8 @@ pyduino.log
    .. rubric:: Classes
 
    .. autosummary::
+      :toctree:                                          
+      :template: custom-class-template.rst               
    
       LogAggregrator
       log
