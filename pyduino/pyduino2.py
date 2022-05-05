@@ -1,11 +1,8 @@
 from importlib.resources import path
 import logging
-import serial
 from operator import attrgetter
 from time import sleep, time
 import pandas as pd
-import serial.tools.list_ports
-import re
 from collections import OrderedDict
 from pyduino.log import log
 import pandas as pd

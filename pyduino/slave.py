@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 from serial import Serial
 import serial.tools.list_ports as list_ports
 from time import sleep
-from utils import bcolors
+from pyduino.utils import bcolors
 import logging
 import re
 import os
