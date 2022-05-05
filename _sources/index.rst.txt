@@ -10,6 +10,11 @@ Welcome to Pyduino's documentation!
    :maxdepth: 4
    :caption: Contents:
 
+.. toctree::
+   :maxdepth: 2
+
+   quickstart
+
 .. rubric:: Modules
 
 .. autopackagesummary:: pyduino
