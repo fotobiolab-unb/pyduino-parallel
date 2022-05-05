@@ -157,7 +157,6 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#log-manipulation">Log manipulation</a></li>
 </ul>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="_autosummary/pyduino.data_parser.html">pyduino.data_parser</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -238,10 +237,10 @@
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">#</a></h1>
 <section id="working-on-ipython">
 <h2>Working on iPython<a class="headerlink" href="#working-on-ipython" title="Permalink to this headline">#</a></h2>
-</section>
-</section>
 <section id="log-manipulation">
-<h1>Log manipulation<a class="headerlink" href="#log-manipulation" title="Permalink to this headline">#</a></h1>
+<h3>Log manipulation<a class="headerlink" href="#log-manipulation" title="Permalink to this headline">#</a></h3>
+<section id="aggregating-logs-from-different-experiments">
+<h4>Aggregating logs from different experiments<a class="headerlink" href="#aggregating-logs-from-different-experiments" title="Permalink to this headline">#</a></h4>
 <p>Suppose you have the logs of two experiments 1 and 2 on the default log directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>log/
 ├─ experiment_1/
@@ -261,6 +260,9 @@
 lagg = LogAggregator([“log/experiment_1/<em>.csv”,”log/experiment_2/</em>.csv”])
 lagg.agg(“experiment_aggregated/”)</p>
 </div></blockquote>
+</section>
+<section id="extracting-particular-columns-from-a-log-folder">
+<h4>Extracting particular columns from a log folder<a class="headerlink" href="#extracting-particular-columns-from-a-log-folder" title="Permalink to this headline">#</a></h4>
 <p>The method <cite>pyduino.log.log.transpose</cite> can be used to extract specific columns from all reactors in
 a given experiment and save them into a separate folder having the csv’s of each column in a different
 file. Using the same example as above, if we wish to extract <cite>column_1</cite> and <cite>column_2</cite> from all reactors
@@ -274,6 +276,9 @@ log1.transpose([“column_1”,”column_2”],”experiment_transpose”)</p>
 <p>In both of the aforementioned options, you can pass an integer to the parameter <cite>skip</cite> to jump a certain number
 of lines instead of reading the entire csv. Conceptually, this is the same as slicing a list with <cite>::skip</cite>.
 So, if you pass zero, no lines would be read.</p>
+</section>
+</section>
+</section>
 </section>
 
         </article>
@@ -334,10 +339,16 @@ So, if you pass zero, no lines would be read.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Quickstart</a><ul>
-<li><a class="reference internal" href="#working-on-ipython">Working on iPython</a></li>
+<li><a class="reference internal" href="#working-on-ipython">Working on iPython</a><ul>
+<li><a class="reference internal" href="#log-manipulation">Log manipulation</a><ul>
+<li><a class="reference internal" href="#aggregating-logs-from-different-experiments">Aggregating logs from different experiments</a></li>
+<li><a class="reference internal" href="#extracting-particular-columns-from-a-log-folder">Extracting particular columns from a log folder</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#log-manipulation">Log manipulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
           </div>
