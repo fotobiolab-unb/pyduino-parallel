@@ -35,15 +35,15 @@ jobs:
         run: python3 -m pip install -r ./requirements.txt
 
       - name: Run Autodoc
-        working-directory: ./docs
+        working-directory: ./doc/docs
         run: sphinx-apidoc -o source ../
       
       - name: Run make
-        working-directory: ./docs
+        working-directory: ./doc/docs
         run: make html
       
       - name: Add .nojekyll
-        working-directory: ./docs/build/html
+        working-directory: ./doc/docs/build/html
         run: touch .nojekyll
 
       - name: Deploy to gh-pages
@@ -51,5 +51,5 @@ jobs:
         env:
           REPO: self
           BRANCH: gh-pages
-          FOLDER: ./docs/build/html
+          FOLDER: ./doc/docs/build/html
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

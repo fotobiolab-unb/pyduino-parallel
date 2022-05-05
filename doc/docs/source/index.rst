@@ -16,7 +16,7 @@ Welcome to Pyduino's documentation!
    :toctree: _autosummary
    :recursive:
    
-   pyduino-parallel
+   pyduino
 
 Indices and tables
 ==================
