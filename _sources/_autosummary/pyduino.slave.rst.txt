@@ -1,0 +1,8 @@
+﻿pyduino.slave
+=============
+
+.. automodule:: pyduino.slave
+
+   .. autopackagesummary:: pyduino.slave
+      :toctree: .
+      :template: autosummary/package.rst
