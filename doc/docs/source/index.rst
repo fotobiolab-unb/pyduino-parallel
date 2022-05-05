@@ -14,7 +14,7 @@ Welcome to Pyduino's documentation!
 
 .. autopackagesummary:: pyduino
    :toctree: _autosummary
-   :template: package.rst
+   :template: custom-module-template.rst
    :recursive:
 
 Indices and tables
