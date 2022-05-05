@@ -18,11 +18,11 @@ Welcome to Pyduino's documentation!
    :recursive:
    
    pyduino
-   dashboard
-   slave
-   spectra
-   data_parser
-   pyduino2
+
+.. autopackagesummary:: pyduino
+   :toctree: _autosummary
+   :template: package.rst
+   :recursive:
 
 Indices and tables
 ==================
