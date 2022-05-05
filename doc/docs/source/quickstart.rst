@@ -5,7 +5,7 @@ Working on iPython
 ##################
 
 Log manipulation
-================
+****************
 
 Aggregating logs from different experiments
 -------------------------------------------
