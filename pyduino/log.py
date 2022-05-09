@@ -147,7 +147,7 @@ class log:
             df.loc[:,['ID','FILE',column,'elapsed_time_hours']].to_csv(os.path.join(destination,f"{column}.csv"),sep=sep)
 
 
-class LogAggregrator:
+class LogAggregator:
     def __init__(self,log_paths,timestamp_col="log_timestamp",elapsed_time_col="elapsed_time_hours"):
         """
         Merges logs from various experiments into a single file for each bioreactor.
@@ -179,8 +179,12 @@ class LogAggregrator:
                 if dfs.get(basename,None) is not None:
                     top_timestamp = datetime_from_str(df.head(1)[self.timestamp_col].iloc[0])
                     bottom_timestamp = datetime_from_str(dfs.get(basename).tail(1)[self.timestamp_col].iloc[0])
+                    bottom_elapsed_time = dfs.get(basename).tail(1)[self.elapsed_time_col].iloc[0]
                     deltaT = (top_timestamp - bottom_timestamp).total_seconds()/3600.0
-                    df[self.elapsed_time_col] += deltaT
+                    print("DeltaT",deltaT)
+                    print(df[self.elapsed_time_col].head())
+                    df[self.elapsed_time_col] = df[self.elapsed_time_col] + deltaT + bottom_elapsed_time
+                    print(df[self.elapsed_time_col].head())
                     dfs[basename] = pd.concat([dfs[basename],df])
                 else:
                     dfs[basename] = df
