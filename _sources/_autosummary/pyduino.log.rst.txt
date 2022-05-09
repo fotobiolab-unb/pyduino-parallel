@@ -27,7 +27,7 @@
       :toctree:                                          
       :template: custom-class-template.rst               
    
-      LogAggregrator
+      LogAggregator
       log
    
    

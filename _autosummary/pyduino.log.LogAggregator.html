@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.log.log" href="pyduino.log.log.html" /><link rel="prev" title="pyduino.log.datetime_to_str" href="pyduino.log.datetime_to_str.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
-        <title>pyduino.log.LogAggregrator - Pyduino documentation</title>
+        <title>pyduino.log.LogAggregator - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -169,7 +169,7 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="pyduino.log.html">pyduino.log</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.datetime_from_str.html">pyduino.log.datetime_from_str</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.datetime_to_str.html">pyduino.log.datetime_to_str</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.log.LogAggregrator</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.log.LogAggregator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.log.html">pyduino.log.log</a></li>
 </ul>
 </li>
@@ -233,15 +233,15 @@
           </label>
         </div>
         <article role="main">
-          <section id="pyduino-log-logaggregrator">
-<h1>pyduino.log.LogAggregrator<a class="headerlink" href="#pyduino-log-logaggregrator" title="Permalink to this headline">#</a></h1>
+          <section id="pyduino-log-logaggregator">
+<h1>pyduino.log.LogAggregator<a class="headerlink" href="#pyduino-log-logaggregator" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="pyduino.log.LogAggregrator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.log.</span></span><span class="sig-name descname"><span class="pre">LogAggregrator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elapsed_time_hours'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregrator" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyduino.log.LogAggregator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.log.</span></span><span class="sig-name descname"><span class="pre">LogAggregator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elapsed_time_hours'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregator" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="pyduino.log.LogAggregrator.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elapsed_time_hours'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregrator.__init__" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyduino.log.LogAggregator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elapsed_time_hours'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregator.__init__" title="Permalink to this definition">#</a></dt>
 <dd><p>Merges logs from various experiments into a single file for each bioreactor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -260,17 +260,17 @@
 <col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.LogAggregrator.__init__" title="pyduino.log.LogAggregrator.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(log_paths[, timestamp_col, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.LogAggregator.__init__" title="pyduino.log.LogAggregator.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(log_paths[, timestamp_col, ...])</p></td>
 <td><p>Merges logs from various experiments into a single file for each bioreactor.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.LogAggregrator.agg" title="pyduino.log.LogAggregrator.agg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agg</span></code></a>(destination[, skip, sep])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.LogAggregator.agg" title="pyduino.log.LogAggregator.agg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agg</span></code></a>(destination[, skip, sep])</p></td>
 <td><p>Aggregator</p></td>
 </tr>
 </tbody>
 </table></div>
 <dl class="py method">
-<dt class="sig sig-object py" id="pyduino.log.LogAggregrator.agg">
-<span class="sig-name descname"><span class="pre">agg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregrator.agg" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pyduino.log.LogAggregator.agg">
+<span class="sig-name descname"><span class="pre">agg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregator.agg" title="Permalink to this definition">#</a></dt>
 <dd><p>Aggregator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

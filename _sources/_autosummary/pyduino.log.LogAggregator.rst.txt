@@ -1,9 +1,9 @@
-pyduino.log.LogAggregrator
-==========================
+pyduino.log.LogAggregator
+=========================
 
 .. currentmodule:: pyduino.log
 
-.. autoclass:: LogAggregrator
+.. autoclass:: LogAggregator
    :members:                                    
    :show-inheritance:                           
    :inherited-members:                          
@@ -16,8 +16,8 @@ pyduino.log.LogAggregrator
 
    .. autosummary::
    
-      ~LogAggregrator.__init__
-      ~LogAggregrator.agg
+      ~LogAggregator.__init__
+      ~LogAggregator.agg
    
    
 
