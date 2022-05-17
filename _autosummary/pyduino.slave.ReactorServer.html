@@ -419,55 +419,58 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.send_static_file" title="pyduino.slave.ReactorServer.send_static_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_static_file</span></code></a>(filename)</p></td>
 <td><p>The view function used to serve files from <a class="reference internal" href="#pyduino.slave.ReactorServer.static_folder" title="pyduino.slave.ReactorServer.static_folder"><code class="xref py py-attr docutils literal notranslate"><span class="pre">static_folder</span></code></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.set" title="pyduino.slave.ReactorServer.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>([data])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">serial_connect</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.set" title="pyduino.slave.ReactorServer.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>([data])</p></td>
 <td><p>Define o valor de todas as variáveis a partir de um dicionário.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.shell_context_processor" title="pyduino.slave.ReactorServer.shell_context_processor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shell_context_processor</span></code></a>(f)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.shell_context_processor" title="pyduino.slave.ReactorServer.shell_context_processor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shell_context_processor</span></code></a>(f)</p></td>
 <td><p>Registers a shell context processor function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.should_ignore_error" title="pyduino.slave.ReactorServer.should_ignore_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">should_ignore_error</span></code></a>(error)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.should_ignore_error" title="pyduino.slave.ReactorServer.should_ignore_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">should_ignore_error</span></code></a>(error)</p></td>
 <td><p>This is called to figure out if an error should be ignored or not as far as the teardown system is concerned.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_appcontext" title="pyduino.slave.ReactorServer.teardown_appcontext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown_appcontext</span></code></a>(f)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_appcontext" title="pyduino.slave.ReactorServer.teardown_appcontext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown_appcontext</span></code></a>(f)</p></td>
 <td><p>Registers a function to be called when the application context ends.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_request" title="pyduino.slave.ReactorServer.teardown_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown_request</span></code></a>(f)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_request" title="pyduino.slave.ReactorServer.teardown_request"><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown_request</span></code></a>(f)</p></td>
 <td><p>Register a function to be run at the end of each request, regardless of whether there was an exception or not.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.template_filter" title="pyduino.slave.ReactorServer.template_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_filter</span></code></a>([name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.template_filter" title="pyduino.slave.ReactorServer.template_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_filter</span></code></a>([name])</p></td>
 <td><p>A decorator that is used to register custom template filter. You can specify a name for the filter, otherwise the function name will be used. Example::.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.template_global" title="pyduino.slave.ReactorServer.template_global"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_global</span></code></a>([name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.template_global" title="pyduino.slave.ReactorServer.template_global"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_global</span></code></a>([name])</p></td>
 <td><p>A decorator that is used to register a custom template global function. You can specify a name for the global function, otherwise the function name will be used. Example::.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.template_test" title="pyduino.slave.ReactorServer.template_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_test</span></code></a>([name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.template_test" title="pyduino.slave.ReactorServer.template_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_test</span></code></a>([name])</p></td>
 <td><p>A decorator that is used to register custom template test. You can specify a name for the test, otherwise the function name will be used. Example::.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.test_cli_runner" title="pyduino.slave.ReactorServer.test_cli_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_cli_runner</span></code></a>(**kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.test_cli_runner" title="pyduino.slave.ReactorServer.test_cli_runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_cli_runner</span></code></a>(**kwargs)</p></td>
 <td><p>Create a CLI runner for testing CLI commands.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.test_client" title="pyduino.slave.ReactorServer.test_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_client</span></code></a>([use_cookies])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.test_client" title="pyduino.slave.ReactorServer.test_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_client</span></code></a>([use_cookies])</p></td>
 <td><p>Creates a test client for this application.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.test_request_context" title="pyduino.slave.ReactorServer.test_request_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_request_context</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.test_request_context" title="pyduino.slave.ReactorServer.test_request_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_request_context</span></code></a>(*args, **kwargs)</p></td>
 <td><p>Create a <code class="xref py py-class docutils literal notranslate"><span class="pre">RequestContext</span></code> for a WSGI environment created from the given values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.trap_http_exception" title="pyduino.slave.ReactorServer.trap_http_exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trap_http_exception</span></code></a>(e)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.trap_http_exception" title="pyduino.slave.ReactorServer.trap_http_exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trap_http_exception</span></code></a>(e)</p></td>
 <td><p>Checks if an HTTP exception should be trapped or not.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.try_trigger_before_first_request_functions" title="pyduino.slave.ReactorServer.try_trigger_before_first_request_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">try_trigger_before_first_request_functions</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.try_trigger_before_first_request_functions" title="pyduino.slave.ReactorServer.try_trigger_before_first_request_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">try_trigger_before_first_request_functions</span></code></a>()</p></td>
 <td><p>Called before each request and will ensure that it triggers the <a class="reference internal" href="#pyduino.slave.ReactorServer.before_first_request_funcs" title="pyduino.slave.ReactorServer.before_first_request_funcs"><code class="xref py py-attr docutils literal notranslate"><span class="pre">before_first_request_funcs</span></code></a> and only exactly once per application instance (which means process usually).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.update_template_context" title="pyduino.slave.ReactorServer.update_template_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_template_context</span></code></a>(context)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.update_template_context" title="pyduino.slave.ReactorServer.update_template_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_template_context</span></code></a>(context)</p></td>
 <td><p>Update the template context with some commonly used variables.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.url_defaults" title="pyduino.slave.ReactorServer.url_defaults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">url_defaults</span></code></a>(f)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.url_defaults" title="pyduino.slave.ReactorServer.url_defaults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">url_defaults</span></code></a>(f)</p></td>
 <td><p>Callback function for URL defaults for all view functions of the application.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.url_value_preprocessor" title="pyduino.slave.ReactorServer.url_value_preprocessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">url_value_preprocessor</span></code></a>(f)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.url_value_preprocessor" title="pyduino.slave.ReactorServer.url_value_preprocessor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">url_value_preprocessor</span></code></a>(f)</p></td>
 <td><p>Register a URL value preprocessor function for all view functions in the application.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.wsgi_app" title="pyduino.slave.ReactorServer.wsgi_app"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wsgi_app</span></code></a>(environ, start_response)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.slave.ReactorServer.wsgi_app" title="pyduino.slave.ReactorServer.wsgi_app"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wsgi_app</span></code></a>(environ, start_response)</p></td>
 <td><p>The actual WSGI application. This is not implemented in <code class="xref py py-meth docutils literal notranslate"><span class="pre">__call__()</span></code> so that middlewares can be applied without losing a reference to the app object. Instead of doing this::.</p></td>
 </tr>
 </tbody>

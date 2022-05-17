@@ -72,6 +72,7 @@ pyduino.slave.ReactorServer
       ~ReactorServer.select_jinja_autoescape
       ~ReactorServer.send
       ~ReactorServer.send_static_file
+      ~ReactorServer.serial_connect
       ~ReactorServer.set
       ~ReactorServer.shell_context_processor
       ~ReactorServer.should_ignore_error
