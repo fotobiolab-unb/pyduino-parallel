@@ -26,13 +26,12 @@ class ReactorServer(Flask):
         self.connected = False
         self.reactor_id = None
         self.port = serial_port
-        if serial_port is None:
-            logging.debug("No serial port specified. Searching for available devices.")
-            self.available_ports = list_ports.comports()
-            self.available_ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
-            self.port = self.available_ports[0].device
-        self.serial = Serial(self.port, baudrate=baudrate, timeout=STEP)
-        logging.info(f"Connected to serial port {self.serial}.")
+        self.baudrate = baudrate
+
+        try:
+            self.serial_connect()
+        except IndexError:
+            logging.error("Could not find an available serial port. Most functionalities will be unavailable.")
 
         #Routes
         @self.route("/")
@@ -75,6 +74,15 @@ class ReactorServer(Flask):
 
     def __delete__(self, _):
         self.serial.__del__()
+    
+    def serial_connect(self):
+        if self.port is None:
+            logging.debug("No serial port specified. Searching for available devices.")
+            self.available_ports = list_ports.comports()
+            self.available_ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
+            self.port = self.available_ports[0].device
+        self.serial = Serial(self.port, baudrate=self.baudrate, timeout=STEP)
+        logging.info(f"Connected to serial port {self.serial}.")
 
     def connect(self,delay=STEP):
         """
