@@ -51,7 +51,7 @@ class log:
             self.subdir = subdir
         else:
             raise ValueError("Invalid type for subdir. Must be either a list of strings or a glob string.")
-        self.subdir = list(map(lambda x: str(x)+".csv" if len(os.path.splitext(x)[1])==0 else x,self.subdir))
+        self.subdir = list(map(lambda x: str(x)+".csv" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
         self.first_timestamp = None
         self.data_frames = {}
 
