@@ -9,6 +9,7 @@ from pyduino.utils import bcolors
 import logging
 import re
 import os
+import socket
 
 logging.basicConfig(filename='slave.log', filemode='w', level=logging.DEBUG)
 
@@ -28,10 +29,7 @@ class ReactorServer(Flask):
         self.port = serial_port
         self.baudrate = baudrate
 
-        try:
-            self.serial_connect()
-        except IndexError:
-            logging.error("Could not find an available serial port. Most functionalities will be unavailable.")
+        self.serial_connect()
 
         #Routes
         @self.route("/")
@@ -65,11 +63,18 @@ class ReactorServer(Flask):
         
         @self.route("/ping")
         def ping():
-            if not self.reactor_id:
-                if not self.connected:
-                    self.connect()
-                response = self.send("ping",delay=1)
-                self.reactor_id = int(re.findall(r"\d+?",response)[0])
+            """
+            Returns reactor id based on hostname. It is assumed that the id number is the last set of digits at the end of the hostname string.
+            """
+            # if not self.reactor_id:
+            #     if not self.connected:
+            #         self.connect()
+            #     response = self.send("ping",delay=1)
+            #     self.reactor_id = int(re.findall(r"\d+?",response)[0])
+            digit_regex = r"(\d+)(?!.*\d)"
+            hostname = socket.gethostname()
+            digits = int(re.findall(digit_regex,hostname)[0])
+            self.reactor_id = digits
             return jsonify({"id":self.reactor_id,"serial_port":self.port,"hostname":os.uname().nodename})         
 
     def __delete__(self, _):
@@ -168,5 +173,5 @@ class ReactorServer(Flask):
         resp = self.send("get")
 
 if __name__=="__main__":
-    rs = ReactorServer(import_name="a")
+    rs = ReactorServer(import_name="Pyduino Slave Server")
     rs.run(port=5000,host="0.0.0.0")
