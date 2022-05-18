@@ -6,8 +6,8 @@ Wants=network-online.target
 [Service]
 Restart=on-failure
 RestartSec=5
-WorkingDirectory=/home/pi/pyduino-parallel/pyduino
-ExecStart=/usr/bin/python3 slave.py
+WorkingDirectory=/home/pi/pyduino-parallel
+ExecStart=/usr/bin/python3 init_slave.py
 User=pi
 [Install]
 WantedBy=multi-user.target
