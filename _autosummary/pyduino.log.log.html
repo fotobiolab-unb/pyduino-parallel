@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.pyduino2" href="pyduino.pyduino2.html" /><link rel="prev" title="pyduino.log.LogAggregator" href="pyduino.log.LogAggregator.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.04"/>
         <title>pyduino.log.log - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -219,7 +219,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -259,38 +260,42 @@
 </dd>
 </dl>
 </dd></dl>
+
 <p class="rubric">Methods</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.log.__init__" title="pyduino.log.log.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(subdir[, path, name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.log.__init__" title="pyduino.log.log.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(subdir[, path, name])</p></td>
 <td><p>Logs data into csvs with timestamps.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.log.cache_data" title="pyduino.log.log.cache_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cache_data</span></code></a>(rows[, path])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.log.cache_data" title="pyduino.log.log.cache_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cache_data</span></code></a>(rows[, path])</p></td>
 <td><p>Dumps rows into a single csv.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.log.log_many_rows" title="pyduino.log.log.log_many_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_many_rows</span></code></a>(data, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.log.log_many_rows" title="pyduino.log.log.log_many_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_many_rows</span></code></a>(data, **kwargs)</p></td>
 <td><p>Logs rows into csv format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.log.log_optimal" title="pyduino.log.log.log_optimal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_optimal</span></code></a>(column[, maximum])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.log.log_optimal" title="pyduino.log.log.log_optimal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_optimal</span></code></a>(column[, maximum])</p></td>
 <td><p>Logs optima of all rows into a single file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.log.log_rows" title="pyduino.log.log.log_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_rows</span></code></a>(rows, subdir[, add_timestamp])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.log.log_rows" title="pyduino.log.log.log_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_rows</span></code></a>(rows, subdir[, add_timestamp])</p></td>
 <td><p>Logs rows into csv format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.log.transpose" title="pyduino.log.log.transpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code></a>(columns, destination[, sep, skip])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.log.log.transpose" title="pyduino.log.log.transpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code></a>(columns, destination[, sep, skip])</p></td>
 <td><p>Maps reactor csv to column csvs with columns given by columns.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <p class="rubric">Attributes</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">prefix</span></code></p></td>
@@ -300,7 +305,8 @@
 <td><p>Current date.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.log.log.cache_data">
 <span class="sig-name descname"><span class="pre">cache_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./cache.csv'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.log.cache_data" title="Permalink to this definition">#</a></dt>
@@ -314,6 +320,7 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.log.log.log_many_rows">
 <span class="sig-name descname"><span class="pre">log_many_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.log.log_many_rows" title="Permalink to this definition">#</a></dt>
@@ -327,11 +334,13 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.log.log.log_optimal">
 <span class="sig-name descname"><span class="pre">log_optimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.log.log_optimal" title="Permalink to this definition">#</a></dt>
 <dd><p>Logs optima of all rows into a single file.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.log.log.log_rows">
 <span class="sig-name descname"><span class="pre">log_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.log.log_rows" title="Permalink to this definition">#</a></dt>
@@ -347,6 +356,7 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="pyduino.log.log.timestamp">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timestamp</span></span><a class="headerlink" href="#pyduino.log.log.timestamp" title="Permalink to this definition">#</a></dt>
@@ -357,6 +367,7 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.log.log.transpose">
 <span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.log.transpose" title="Permalink to this definition">#</a></dt>
@@ -372,7 +383,9 @@
 </dd>
 </dl>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 
         </article>

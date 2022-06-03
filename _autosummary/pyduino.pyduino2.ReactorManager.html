@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.slave" href="pyduino.slave.html" /><link rel="prev" title="pyduino.pyduino2.Reactor" href="pyduino.pyduino2.Reactor.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.04"/>
         <title>pyduino.pyduino2.ReactorManager - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -219,7 +219,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -243,17 +244,19 @@
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.__init__" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <p class="rubric">Methods</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.__init__" title="pyduino.pyduino2.ReactorManager.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.calibrate" title="pyduino.pyduino2.ReactorManager.calibrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibrate</span></code></a>([deltaT, dir])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.calibrate" title="pyduino.pyduino2.ReactorManager.calibrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibrate</span></code></a>([deltaT, dir])</p></td>
 <td><p>Runs <cite>curva</cite> and dumps the result into txts.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect</span></code>()</p></td>
@@ -277,37 +280,41 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reboot</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([data])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.set_preset_state" title="pyduino.pyduino2.ReactorManager.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.ReactorManager.set_preset_state" title="pyduino.pyduino2.ReactorManager.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
 <td><p>Prepare Arduinos with preset parameters from a csv file.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <p class="rubric">Attributes</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.calibrate">
 <span class="sig-name descname"><span class="pre">calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calibrate'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.calibrate" title="Permalink to this definition">#</a></dt>
 <dd><p>Runs <cite>curva</cite> and dumps the result into txts.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.dados">
 <span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.dados" title="Permalink to this definition">#</a></dt>
@@ -318,11 +325,13 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.horacerta">
 <span class="sig-name descname"><span class="pre">horacerta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.horacerta" title="Permalink to this definition">#</a></dt>
 <dd><p>Updates Arduino clocks with clock of current system.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.log_dados">
 <span class="sig-name descname"><span class="pre">log_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.log_dados" title="Permalink to this definition">#</a></dt>
@@ -333,6 +342,7 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.log_init">
 <span class="sig-name descname"><span class="pre">log_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.log_init" title="Permalink to this definition">#</a></dt>
@@ -343,6 +353,7 @@
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.ReactorManager.set_preset_state">
 <span class="sig-name descname"><span class="pre">set_preset_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'preset_state.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['branco',</span> <span class="pre">'full',</span> <span class="pre">'440',</span> <span class="pre">'470',</span> <span class="pre">'495',</span> <span class="pre">'530',</span> <span class="pre">'595',</span> <span class="pre">'634',</span> <span class="pre">'660',</span> <span class="pre">'684',</span> <span class="pre">'cor',</span> <span class="pre">'modopainel',</span> <span class="pre">'brilho',</span> <span class="pre">'bomdia',</span> <span class="pre">'boanoite',</span> <span class="pre">'tau',</span> <span class="pre">'step',</span> <span class="pre">'modotemp',</span> <span class="pre">'temp',</span> <span class="pre">'densidade',</span> <span class="pre">'mododil',</span> <span class="pre">'ar',</span> <span class="pre">'ima',</span> <span class="pre">'modoco2',</span> <span class="pre">'co2',</span> <span class="pre">'dtco2']</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.ReactorManager.set_preset_state" title="Permalink to this definition">#</a></dt>
@@ -354,7 +365,9 @@
 :param sep: Column separator used in the csv.
 :type sep: str</p>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 
         </article>

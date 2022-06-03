@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.pyduino2.ReactorManager" href="pyduino.pyduino2.ReactorManager.html" /><link rel="prev" title="pyduino.pyduino2.set_in_chunks" href="pyduino.pyduino2.set_in_chunks.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.04"/>
         <title>pyduino.pyduino2.Reactor - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -219,7 +219,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -244,11 +245,13 @@
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.__init__" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <p class="rubric">Methods</p>
-<div class="table-wrapper"><table class="autosummary longtable docutils align-default">
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.__init__" title="pyduino.pyduino2.Reactor.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(url)</p></td>
@@ -266,7 +269,7 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_get</span></code>(route)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_post</span></code>(route, command, await_response, delay)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">http_post</span></code>(route, command, await_response, delay)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reboot</span></code>([retry_time])</p></td>
@@ -275,52 +278,61 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.reset" title="pyduino.pyduino2.Reactor.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
 <td><p>Resets connection.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.send" title="pyduino.pyduino2.Reactor.send"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code></a>(msg[, delay])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.send" title="pyduino.pyduino2.Reactor.send"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code></a>(msg[, delay])</p></td>
 <td><p>Sends command and awaits for a response</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.set" title="pyduino.pyduino2.Reactor.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.set_in_chunks" title="pyduino.pyduino2.Reactor.set_in_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_in_chunks</span></code></a>(params[, chunksize])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.Reactor.set_in_chunks" title="pyduino.pyduino2.Reactor.set_in_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_in_chunks</span></code></a>(params[, chunksize])</p></td>
 <td><p>Sets params into chunks.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.close" title="Permalink to this definition">#</a></dt>
 <dd><p>Sends ‘fim’.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.connect" title="Permalink to this definition">#</a></dt>
 <dd><p>Starts connection</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.horacerta">
 <span class="sig-name descname"><span class="pre">horacerta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.horacerta" title="Permalink to this definition">#</a></dt>
 <dd><p>Synchronizes Arduino clock with the client computer.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.reset" title="Permalink to this definition">#</a></dt>
 <dd><p>Resets connection.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.send">
 <span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.send" title="Permalink to this definition">#</a></dt>
 <dd><p>Sends command and awaits for a response</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">{"440":</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">"brilho":</span> <span class="pre">100}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.set" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">{&quot;440&quot;:</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&quot;brilho&quot;:</span> <span class="pre">100}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.set" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.pyduino2.Reactor.set_in_chunks">
 <span class="sig-name descname"><span class="pre">set_in_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Reactor.set_in_chunks" title="Permalink to this definition">#</a></dt>
 <dd><p>Sets params into chunks.</p>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 
         </article>
