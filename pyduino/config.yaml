@@ -1,6 +1,6 @@
 hyperparameters:
-  reset_density: false #Whether or not to use gotod
-  log_name: "free_growth_branco_lower_density_3.2" #Log folder name (delete to use the default)
+  reset_density: true #Whether or not to use gotod
+  log_name: "densidade_constante_1" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
@@ -12,13 +12,13 @@ hyperparameters:
   ranges:
     branco:
       - 0
-      - 30
+      - 100
     full:
       - 0
-      - 30
+      - 100
     others:
       - 0
-      - 30
+      - 100
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"
@@ -75,7 +75,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/free_growth_branco_lower_density_3.2/*.csv"
+  glob: "./log/densidade_constante_1/*.csv"
   plot:
     - 
       name: Temperature
