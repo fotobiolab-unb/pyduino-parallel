@@ -235,6 +235,7 @@ class ReactorManager:
             name (str): Name of the subdirectory in the log folder where the files will be saved.
         """
         self.log = log(subdir=list(self.reactors.keys()),**kwargs)
+        print(f"Log will be saved on: {bcolors.OKGREEN}{self.log.prefix}{bcolors.ENDC}")
     
     def dados(self,save_cache=True):
         """
