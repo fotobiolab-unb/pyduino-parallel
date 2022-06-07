@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.utils" href="pyduino.utils.html" /><link rel="prev" title="pyduino.spectra.update_dict" href="pyduino.spectra.update_dict.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.04"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>pyduino.spectra.Spectra - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
@@ -235,16 +235,16 @@
         </div>
         <article role="main">
           <section id="pyduino-spectra-spectra">
-<h1>pyduino.spectra.Spectra<a class="headerlink" href="#pyduino-spectra-spectra" title="Permalink to this headline">#</a></h1>
+<h1>pyduino.spectra.Spectra<a class="headerlink" href="#pyduino-spectra-spectra" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyduino.spectra.Spectra">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.spectra.</span></span><span class="sig-name descname"><span class="pre">Spectra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elitism</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pyduino.data_parser.RangeParser.html#pyduino.data_parser.RangeParser" title="pyduino.data_parser.RangeParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyduino.data_parser.RangeParser</span></code></a>, <a class="reference internal" href="pyduino.pyduino2.ReactorManager.html#pyduino.pyduino2.ReactorManager" title="pyduino.pyduino2.ReactorManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyduino.pyduino2.ReactorManager</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">gapy.gapy2.GA</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="pyduino.data_parser.RangeParser.html#pyduino.data_parser.RangeParser" title="pyduino.data_parser.RangeParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">RangeParser</span></code></a>, <a class="reference internal" href="pyduino.pyduino2.ReactorManager.html#pyduino.pyduino2.ReactorManager" title="pyduino.pyduino2.ReactorManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReactorManager</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">GA</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.spectra.Spectra.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elitism</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.__init__" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f_param</strong> (<em>str</em>) – Parameter name to be extracted from <cite>ReactorManager.log_dados</cite>.</p></li>
 <li><p><strong>(</strong> (<em>ranges</em>) – obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
@@ -260,10 +260,6 @@ its minimum and maximum attainable values respectively.</p></li>
 <p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.F_get" title="pyduino.spectra.Spectra.F_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">F_get</span></code></a>()</p></td>
 <td><p>Extracts relevant data from Arduinos.</p></td>
@@ -276,7 +272,7 @@ its minimum and maximum attainable values respectively.</p></li>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.__init__" title="pyduino.spectra.Spectra.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(elitism, f_param, ranges, density_param)</p></td>
 <td><p><dl class="field-list simple">
-<dt class="field-odd">param f_param</dt>
+<dt class="field-odd">param f_param<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Parameter name to be extracted from <cite>ReactorManager.log_dados</cite>.</p>
 </dd>
 </dl>
@@ -369,10 +365,6 @@ its minimum and maximum attainable values respectively.</p></li>
 <p class="rubric">Attributes</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
 <td><p></p></td>
@@ -427,7 +419,7 @@ generated individuals.</p>
 <span class="sig-name descname"><span class="pre">dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.dados" title="Permalink to this definition">#</a></dt>
 <dd><p>Get data from Arduinos.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>save_cache</strong> (<em>bool</em>) – Whether or not so save a cache file with the last reading with <cite>log.log.cache_data</cite>.</p>
 </dd>
 </dl>
@@ -456,7 +448,7 @@ generated individuals.</p>
 <span class="sig-name descname"><span class="pre">log_dados</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.log_dados" title="Permalink to this definition">#</a></dt>
 <dd><p>Logs output of <cite>dados</cite> in csv format.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>save_cache</strong> (<em>bool</em>) – Whether or not so save a cache file with the last reading with <cite>log.log.cache_data</cite>.</p>
 </dd>
 </dl>
@@ -467,7 +459,7 @@ generated individuals.</p>
 <span class="sig-name descname"><span class="pre">log_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.log_init" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates log directories for each Arduino.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the subdirectory in the log folder where the files will be saved.</p>
 </dd>
 </dl>
@@ -490,7 +482,7 @@ generated individuals.</p>
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_ga</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.run" title="Permalink to this definition">#</a></dt>
 <dd><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deltaT</strong> (<em>int</em>) – Amount of time in seconds to wait in each iteration.</p></li>
 <li><p><strong>run_ga</strong> (<em>bool</em>) – Whether or not execute a step in the genetic algorithm.</p></li>
@@ -581,6 +573,7 @@ generated individuals.</p>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>

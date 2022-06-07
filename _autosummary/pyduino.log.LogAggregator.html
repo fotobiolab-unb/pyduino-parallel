@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.log.log" href="pyduino.log.log.html" /><link rel="prev" title="pyduino.log.datetime_to_str" href="pyduino.log.datetime_to_str.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.04"/>
+    <meta name="generator" content="sphinx-5.0.1, furo 2022.06.04.1"/>
         <title>pyduino.log.LogAggregator - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
@@ -235,7 +235,7 @@
         </div>
         <article role="main">
           <section id="pyduino-log-logaggregator">
-<h1>pyduino.log.LogAggregator<a class="headerlink" href="#pyduino-log-logaggregator" title="Permalink to this headline">#</a></h1>
+<h1>pyduino.log.LogAggregator<a class="headerlink" href="#pyduino-log-logaggregator" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyduino.log.LogAggregator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.log.</span></span><span class="sig-name descname"><span class="pre">LogAggregator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elapsed_time_hours'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregator" title="Permalink to this definition">#</a></dt>
@@ -245,7 +245,7 @@
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'log_timestamp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elapsed_time_hours'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregator.__init__" title="Permalink to this definition">#</a></dt>
 <dd><p>Merges logs from various experiments into a single file for each bioreactor.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>(</strong> (<em>log_paths</em>) – obj:list of :obj:str): List of glob strings pointing at the input files for each experiment.</p></li>
 <li><p><strong>timestamp_col</strong> (<em>str</em><em>, </em><em>optional</em>) – Column to use as timestamp. Defaults to “log_timestamp”.</p></li>
@@ -258,10 +258,6 @@
 <p class="rubric">Methods</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.log.LogAggregator.__init__" title="pyduino.log.LogAggregator.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(log_paths[, timestamp_col, ...])</p></td>
 <td><p>Merges logs from various experiments into a single file for each bioreactor.</p></td>
@@ -277,7 +273,7 @@
 <span class="sig-name descname"><span class="pre">agg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destination</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.log.LogAggregator.agg" title="Permalink to this definition">#</a></dt>
 <dd><p>Aggregator</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>destination</strong> (<em>str</em>) – Destination path. Creates directories as needed and overwrites any existing files.</p></li>
 <li><p><strong>skip</strong> (<em>int</em><em>, </em><em>optional</em>) – How many rows to jump while reading the input files. Defaults to 1.</p></li>
@@ -345,6 +341,7 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
