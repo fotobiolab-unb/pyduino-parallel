@@ -234,10 +234,10 @@ class Spectra(RangeParser,ReactorManager,GA):
                     if self.do_gotod:
                         self.send("gotod",await_response=False)
                         print("[INFO] gotod sent")
+                        time.sleep(deltaTgotod)
                         self.past_data = self.data.copy() if self.data is not None else self.payload
                         self.data = self.F_get()
                         self.f_map(self.data,self.past_data)
-                        time.sleep(deltaTgotod)
                     #---
                     if run_ga:
                         self.p = softmax(self.fitness)
