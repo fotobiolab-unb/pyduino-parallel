@@ -257,7 +257,7 @@ class ReactorManager:
             if len_empty!=0:
                 #Error treatment in case some reactor fails to respond.
                 empty = list(map(lambda x: x[0],empty))
-                print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n\t"+"\n\t".join(empty))
+                print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n\t"+"\n\t".join(list(map(str,empty))))
                 print("Resetting serial")
                 sleep(10)
                 self.reconnect()
