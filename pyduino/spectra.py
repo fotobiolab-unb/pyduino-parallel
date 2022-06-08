@@ -154,10 +154,6 @@ class Spectra(RangeParser,ReactorManager,GA):
         update_dict(x_1,dict(zip(self.sorted_ids,self.power)),'power')
         update_dict(x_1,dict(zip(self.sorted_ids,self.efficiency)),'efficiency')
         update_dict(x_1,dict(zip(self.sorted_ids,self.growth_rate)),'growth_rate')
-        #Get and return parameter chosen for fitness
-        self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(x_1).loc[self.fparam].astype(float).to_numpy()
-        #self.fitness = 61.1-partial(parse_dados,param=self.fparam)(x_1).astype(float)
-        return self.fitness
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -203,15 +199,26 @@ class Spectra(RangeParser,ReactorManager,GA):
     def set_preset_state_spectra(self,*args,**kwargs):
         self.set_preset_state(*args,**kwargs)
         self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+    
+    def update_fitness(self,X):
+        #Get and return parameter chosen for fitness
+        self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(X).loc[self.fparam].astype(float).to_numpy()
+        return self.fitness
 
-    def run(self,deltaT,run_ga=True):
+    def run(self,deltaT,run_ga=True,deltaTgotod=None):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT`.
 
         Args:
             deltaT (int): Amount of time in seconds to wait in each iteration.
             run_ga (bool): Whether or not execute a step in the genetic algorithm.
+            deltaTgotod (int): Time to wait after sending `gotod` command.
         """
+
+        #Checking if gotod time is at least five minutes
+        if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
+        if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
+
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
             try:
@@ -222,6 +229,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                     self.past_data = self.data.copy() if self.data is not None else self.payload
                     self.data = self.F_get()
                     self.f_map(self.data,self.past_data)
+                    self.update_fitness(self.data)
                     #gotod
                     if self.do_gotod:
                         self.send("gotod",await_response=False)
@@ -229,6 +237,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.past_data = self.data.copy() if self.data is not None else self.payload
                         self.data = self.F_get()
                         self.f_map(self.data,self.past_data)
+                        time.sleep(deltaTgotod)
                     #---
                     if run_ga:
                         self.p = softmax(self.fitness)
