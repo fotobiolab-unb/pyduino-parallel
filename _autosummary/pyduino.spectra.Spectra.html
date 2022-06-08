@@ -332,7 +332,7 @@ its minimum and maximum attainable values respectively.</p></li>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reboot</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.run" title="pyduino.spectra.Spectra.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(deltaT[, run_ga])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.run" title="pyduino.spectra.Spectra.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(deltaT[, run_ga, deltaTgotod])</p></td>
 <td><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
@@ -353,10 +353,13 @@ its minimum and maximum attainable values respectively.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_spectrum" title="pyduino.spectra.Spectra.set_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectrum</span></code></a>(preset)</p></td>
 <td><p>Sets all reactors with a preset spectrum contained in <cite>SPECTRUM_PATH</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.view" title="pyduino.spectra.Spectra.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>(x, linmap)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_fitness</span></code>(X)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.view" title="pyduino.spectra.Spectra.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>(x, linmap)</p></td>
 <td><p>Converts binary population matrix into real representation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_g</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_g</span></code>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -479,13 +482,14 @@ generated individuals.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.spectra.Spectra.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_ga</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.run" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_ga</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaTgotod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.run" title="Permalink to this definition">#</a></dt>
 <dd><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deltaT</strong> (<em>int</em>) – Amount of time in seconds to wait in each iteration.</p></li>
 <li><p><strong>run_ga</strong> (<em>bool</em>) – Whether or not execute a step in the genetic algorithm.</p></li>
+<li><p><strong>deltaTgotod</strong> (<em>int</em>) – Time to wait after sending <cite>gotod</cite> command.</p></li>
 </ul>
 </dd>
 </dl>

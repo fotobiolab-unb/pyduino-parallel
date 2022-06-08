@@ -45,6 +45,7 @@ pyduino.spectra.Spectra
       ~Spectra.set_preset_state
       ~Spectra.set_preset_state_spectra
       ~Spectra.set_spectrum
+      ~Spectra.update_fitness
       ~Spectra.view
       ~Spectra.view_g
    
