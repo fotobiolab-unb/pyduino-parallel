@@ -267,10 +267,13 @@ its minimum and maximum attainable values respectively.</p></li>
 <tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.F_set" title="pyduino.spectra.Spectra.F_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">F_set</span></code></a>(x)</p></td>
 <td><p>Sets parameters to Arduinos.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.G_as_keyed" title="pyduino.spectra.Spectra.G_as_keyed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">G_as_keyed</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.GET" title="pyduino.spectra.Spectra.GET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GET</span></code></a>()</p></td>
+<td><p>Collects data from Arduinos and logs it to disk.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.G_as_keyed" title="pyduino.spectra.Spectra.G_as_keyed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">G_as_keyed</span></code></a>()</p></td>
 <td><p>Converts genome matrix into an appropriate format to send to the reactors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.__init__" title="pyduino.spectra.Spectra.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(elitism, f_param, ranges, density_param)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.__init__" title="pyduino.spectra.Spectra.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(elitism, f_param, ranges, density_param)</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param f_param<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Parameter name to be extracted from <cite>ReactorManager.log_dados</cite>.</p>
@@ -278,88 +281,88 @@ its minimum and maximum attainable values respectively.</p></li>
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.ask_oracle" title="pyduino.spectra.Spectra.ask_oracle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ask_oracle</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.ask_oracle" title="pyduino.spectra.Spectra.ask_oracle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ask_oracle</span></code></a>()</p></td>
 <td><p>Needs the function to receive the entire matrix and return a list of results equal to the population size.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.calibrate" title="pyduino.spectra.Spectra.calibrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibrate</span></code></a>([deltaT, dir])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.calibrate" title="pyduino.spectra.Spectra.calibrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calibrate</span></code></a>([deltaT, dir])</p></td>
 <td><p>Runs <cite>curva</cite> and dumps the result into txts.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.crossover" title="pyduino.spectra.Spectra.crossover"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crossover</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.crossover" title="pyduino.spectra.Spectra.crossover"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crossover</span></code></a>()</p></td>
 <td><p>Performs crossover generating pairs of individuals until the population matrix is full.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.dados" title="pyduino.spectra.Spectra.dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dados</span></code></a>([save_cache])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.dados" title="pyduino.spectra.Spectra.dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dados</span></code></a>([save_cache])</p></td>
 <td><p>Get data from Arduinos.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_dict_to_matrix</span></code>(D)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_dict_to_matrix</span></code>(D)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.f_map" title="pyduino.spectra.Spectra.f_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f_map</span></code></a>(x_1, x_0)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.f_map" title="pyduino.spectra.Spectra.f_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f_map</span></code></a>(x_1, x_0)</p></td>
 <td><p>Computation for the fitness function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>([key])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>([key])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.horacerta" title="pyduino.spectra.Spectra.horacerta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horacerta</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.horacerta" title="pyduino.spectra.Spectra.horacerta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horacerta</span></code></a>()</p></td>
 <td><p>Updates Arduino clocks with clock of current system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.inverse_view" title="pyduino.spectra.Spectra.inverse_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_view</span></code></a>(x[, linmap])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.inverse_view" title="pyduino.spectra.Spectra.inverse_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_view</span></code></a>(x[, linmap])</p></td>
 <td><p>Inverse transform of <cite>view</cite></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.log_dados" title="pyduino.spectra.Spectra.log_dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_dados</span></code></a>([save_cache])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.log_dados" title="pyduino.spectra.Spectra.log_dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_dados</span></code></a>([save_cache])</p></td>
 <td><p>Logs output of <cite>dados</cite> in csv format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.log_init" title="pyduino.spectra.Spectra.log_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_init</span></code></a>(**kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.log_init" title="pyduino.spectra.Spectra.log_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_init</span></code></a>(**kwargs)</p></td>
 <td><p>Creates log directories for each Arduino.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutation</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutation</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">payload_to_matrix</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">payload_to_matrix</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretty_print_dict</span></code>(D)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pretty_print_dict</span></code>(D)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.ranges_as_keyed" title="pyduino.spectra.Spectra.ranges_as_keyed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges_as_keyed</span></code></a>([x])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.ranges_as_keyed" title="pyduino.spectra.Spectra.ranges_as_keyed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges_as_keyed</span></code></a>([x])</p></td>
 <td><p>Converts range list into keyed format.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.ranges_as_list" title="pyduino.spectra.Spectra.ranges_as_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges_as_list</span></code></a>([x])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.ranges_as_list" title="pyduino.spectra.Spectra.ranges_as_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges_as_list</span></code></a>([x])</p></td>
 <td><p>Converts range dictionary into list format.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reboot</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reboot</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.run" title="pyduino.spectra.Spectra.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(deltaT[, run_ga, deltaTgotod])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.run" title="pyduino.spectra.Spectra.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(deltaT[, run_ga, deltaTgotod])</p></td>
 <td><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([data])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([data])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_preset_state" title="pyduino.spectra.Spectra.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_preset_state" title="pyduino.spectra.Spectra.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
 <td><p>Prepare Arduinos with preset parameters from a csv file.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state_spectra</span></code>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state_spectra</span></code>(*args, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_spectrum" title="pyduino.spectra.Spectra.set_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectrum</span></code></a>(preset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_spectrum" title="pyduino.spectra.Spectra.set_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectrum</span></code></a>(preset)</p></td>
 <td><p>Sets all reactors with a preset spectrum contained in <cite>SPECTRUM_PATH</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_fitness</span></code>(X)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_fitness</span></code>(X)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.view" title="pyduino.spectra.Spectra.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>(x, linmap)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.view" title="pyduino.spectra.Spectra.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>(x, linmap)</p></td>
 <td><p>Converts binary population matrix into real representation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_g</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_g</span></code>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -388,6 +391,12 @@ its minimum and maximum attainable values respectively.</p></li>
 :param x: Dictionary having reactor id as keys
 :type x: <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code>
 :param and a dictionary of parameters and their values as values.:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.spectra.Spectra.GET">
+<span class="sig-name descname"><span class="pre">GET</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.GET" title="Permalink to this definition">#</a></dt>
+<dd><p>Collects data from Arduinos and logs it to disk.</p>
 </dd></dl>
 
 <dl class="py method">

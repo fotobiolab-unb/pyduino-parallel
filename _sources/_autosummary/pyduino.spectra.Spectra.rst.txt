@@ -18,6 +18,7 @@ pyduino.spectra.Spectra
    
       ~Spectra.F_get
       ~Spectra.F_set
+      ~Spectra.GET
       ~Spectra.G_as_keyed
       ~Spectra.__init__
       ~Spectra.ask_oracle
