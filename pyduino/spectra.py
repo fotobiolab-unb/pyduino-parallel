@@ -204,6 +204,15 @@ class Spectra(RangeParser,ReactorManager,GA):
         #Get and return parameter chosen for fitness
         self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(X).loc[self.fparam].astype(float).to_numpy()
         return self.fitness
+    
+    def GET(self):
+        """
+        Collects data from Arduinos and logs it to disk.
+        """
+        print("[INFO]","GET",datetime.now().strftime("%c"))
+        self.past_data = self.data.copy() if self.data is not None else self.payload
+        self.data = self.F_get()
+        self.f_map(self.data,self.past_data)   
 
     def run(self,deltaT,run_ga=True,deltaTgotod=None):
         """
@@ -225,19 +234,14 @@ class Spectra(RangeParser,ReactorManager,GA):
                 self.deltaT = deltaT
                 while True:
                     self.t1 = datetime.now()
-                    print("[INFO]","GET",datetime.now().strftime("%c"))
-                    self.past_data = self.data.copy() if self.data is not None else self.payload
-                    self.data = self.F_get()
-                    self.f_map(self.data,self.past_data)
+                    self.GET()
                     self.update_fitness(self.data)
                     #gotod
                     if self.do_gotod:
                         self.send("gotod",await_response=False)
                         print("[INFO] gotod sent")
                         time.sleep(deltaTgotod)
-                        self.past_data = self.data.copy() if self.data is not None else self.payload
-                        self.data = self.F_get()
-                        self.f_map(self.data,self.past_data)
+                        self.GET()
                     #---
                     if run_ga:
                         self.p = softmax(self.fitness)
