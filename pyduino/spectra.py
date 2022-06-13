@@ -212,7 +212,9 @@ class Spectra(RangeParser,ReactorManager,GA):
         print("[INFO]","GET",datetime.now().strftime("%c"))
         self.past_data = self.data.copy() if self.data is not None else self.payload
         self.data = self.F_get()
-        self.f_map(self.data,self.past_data)   
+        self.f_map(self.data,self.past_data)
+        self.log.log_many_rows(self.data)
+        self.log.log_optimal(column=self.fparam,maximum=self.maximize)   
 
     def run(self,deltaT,run_ga=True,deltaTgotod=None):
         """
@@ -262,8 +264,6 @@ class Spectra(RangeParser,ReactorManager,GA):
                         df.columns = df.columns.str.lower()
                         self.payload = df[self.parameters].T.to_dict()
                         self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
-                    self.log.log_many_rows(self.data)
-                    self.log.log_optimal(column=self.fparam,maximum=self.maximize)
                     print("[INFO]","SET",self.t1.strftime("%c"))
                     self.F_set(self.payload) if run_ga else None
                     time.sleep(2)
