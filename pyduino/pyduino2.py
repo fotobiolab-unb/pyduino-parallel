@@ -211,6 +211,9 @@ class ReactorManager:
     def connect(self):
         for k,r in self.reactors.items():
             r.connect()
+    def reset(self):
+        for k,r in self.reactors.items():
+            r.reset()
         self.connected = True
     def reboot(self):
         self.connected = False
@@ -260,7 +263,9 @@ class ReactorManager:
                 print(bcolors.FAIL+"[FAIL]","The following reactors didn't respond:"+"\n\t"+"\n\t".join(list(map(str,empty))))
                 print("Resetting serial")
                 sleep(10)
-                self.reconnect()
+                for i in empty:
+                    self.reactors[i].reset()
+                self.reset()
                 print("Recovering last state")
                 self.set_preset_state(path=INITIAL_STATE_PATH)
                 self.set_preset_state(path=CACHEPATH)
