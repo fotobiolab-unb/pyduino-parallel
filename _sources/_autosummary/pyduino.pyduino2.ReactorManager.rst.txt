@@ -25,6 +25,7 @@ pyduino.pyduino2.ReactorManager
       ~ReactorManager.log_dados
       ~ReactorManager.log_init
       ~ReactorManager.reboot
+      ~ReactorManager.reset
       ~ReactorManager.send
       ~ReactorManager.send_parallel
       ~ReactorManager.set

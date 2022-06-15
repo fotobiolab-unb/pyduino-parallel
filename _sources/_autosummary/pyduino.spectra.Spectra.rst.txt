@@ -39,6 +39,7 @@ pyduino.spectra.Spectra
       ~Spectra.ranges_as_keyed
       ~Spectra.ranges_as_list
       ~Spectra.reboot
+      ~Spectra.reset
       ~Spectra.run
       ~Spectra.send
       ~Spectra.send_parallel
