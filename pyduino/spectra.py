@@ -243,7 +243,9 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.send("gotod",await_response=False)
                         print("[INFO] gotod sent")
                         time.sleep(deltaTgotod)
+                        self.dt = (datetime.now()-self.t1).total_seconds()
                         self.GET()
+                        self.t1 = datetime.now()
                     #---
                     if run_ga:
                         self.p = softmax(self.fitness)
