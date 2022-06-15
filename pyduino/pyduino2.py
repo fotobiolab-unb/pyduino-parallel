@@ -265,7 +265,7 @@ class ReactorManager:
                 sleep(10)
                 for i in empty:
                     self.reactors[i].reset()
-                self.reset()
+                    self.reactors[i].connect()
                 print("Recovering last state")
                 self.set_preset_state(path=INITIAL_STATE_PATH)
                 self.set_preset_state(path=CACHEPATH)
