@@ -131,8 +131,11 @@ def update_graph_live(n):
                 cap = len(data)//MAXPOINTS if MAXPOINTS else 1
                 cap = cap if cap!=0 else 1
                 plot_data = data.copy().loc[::cap,:]
+                y_data = plot_data[colname]
+                if options.get('positive_only',False):
+                    y_data = y_data.mask(y_data.lt(0)).ffill().fillna(0).convert_dtypes()
                 fig.add_trace({
-                    'y': plot_data[colname],
+                    'y': y_data,
                     'x':plot_data[X_COL],
                     'name': f"{_name}({cap})",
                     'mode': 'lines',
