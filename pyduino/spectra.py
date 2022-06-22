@@ -244,6 +244,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         print("[INFO] gotod sent")
                         time.sleep(deltaTgotod)
                         self.dt = (datetime.now()-self.t1).total_seconds()
+                        print("[INFO] gotod DT", self.dt)
                         self.GET()
                         self.t1 = datetime.now()
                     #---
