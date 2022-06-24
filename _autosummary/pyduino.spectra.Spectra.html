@@ -341,31 +341,34 @@ its minimum and maximum attainable values respectively.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.run" title="pyduino.spectra.Spectra.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(deltaT[, run_ga, deltaTgotod])</p></td>
 <td><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.run_incremental" title="pyduino.spectra.Spectra.run_incremental"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_incremental</span></code></a>(deltaT, parameter[, ...])</p></td>
+<td><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite> and increments parameters periodically on an interval given by <cite>deltaClockHours</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send</span></code>(command[, await_response])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_parallel</span></code>(command, delay[, await_response])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([data])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([data])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_preset_state" title="pyduino.spectra.Spectra.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_preset_state" title="pyduino.spectra.Spectra.set_preset_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state</span></code></a>([path, sep, chunksize, params])</p></td>
 <td><p>Prepare Arduinos with preset parameters from a csv file.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state_spectra</span></code>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_preset_state_spectra</span></code>(*args, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_spectrum" title="pyduino.spectra.Spectra.set_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectrum</span></code></a>(preset)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.set_spectrum" title="pyduino.spectra.Spectra.set_spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_spectrum</span></code></a>(preset)</p></td>
 <td><p>Sets all reactors with a preset spectrum contained in <cite>SPECTRUM_PATH</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_fitness</span></code>(X)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_fitness</span></code>(X)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.view" title="pyduino.spectra.Spectra.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>(x, linmap)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.view" title="pyduino.spectra.Spectra.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>(x, linmap)</p></td>
 <td><p>Converts binary population matrix into real representation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_g</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view_g</span></code>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -375,7 +378,10 @@ its minimum and maximum attainable values respectively.</p></li>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.parameter_increment" title="pyduino.spectra.Spectra.parameter_increment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_increment</span></code></a></p></td>
+<td><p>Auxiliary attribute for run_incrmental.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -480,6 +486,14 @@ generated individuals.</p>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="pyduino.spectra.Spectra.parameter_increment">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameter_increment</span></span><a class="headerlink" href="#pyduino.spectra.Spectra.parameter_increment" title="Permalink to this definition">#</a></dt>
+<dd><p>Auxiliary attribute for run_incrmental.
+:returns: Parameter increment.
+:rtype: int</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.spectra.Spectra.ranges_as_keyed">
 <span class="sig-name descname"><span class="pre">ranges_as_keyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.ranges_as_keyed" title="Permalink to this definition">#</a></dt>
@@ -502,6 +516,24 @@ generated individuals.</p>
 <li><p><strong>deltaT</strong> (<em>int</em>) – Amount of time in seconds to wait in each iteration.</p></li>
 <li><p><strong>run_ga</strong> (<em>bool</em>) – Whether or not execute a step in the genetic algorithm.</p></li>
 <li><p><strong>deltaTgotod</strong> (<em>int</em>) – Time to wait after sending <cite>gotod</cite> command.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.spectra.Spectra.run_incremental">
+<span class="sig-name descname"><span class="pre">run_incremental</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaTgotod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaParam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaClockHours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.run_incremental" title="Permalink to this definition">#</a></dt>
+<dd><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite> and increments parameters
+periodically on an interval given by <cite>deltaClockHours</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>deltaT</strong> (<em>int</em>) – Amount of time in seconds to wait in each iteration.</p></li>
+<li><p><strong>parameter</strong> (<em>str</em>) – Name of the parameter to be updated.</p></li>
+<li><p><strong>deltaTgotod</strong> (<em>int</em>) – Time to wait after sending <cite>gotod</cite> command.</p></li>
+<li><p><strong>deltaParam</strong> (<em>int</em>) – How much to add on the parameters at each update.</p></li>
+<li><p><strong>deltaClockHours</strong> (<em>int</em>) – Interval in hours to trigger a parameter update.</p></li>
 </ul>
 </dd>
 </dl>

@@ -41,6 +41,7 @@ pyduino.spectra.Spectra
       ~Spectra.reboot
       ~Spectra.reset
       ~Spectra.run
+      ~Spectra.run_incremental
       ~Spectra.send
       ~Spectra.send_parallel
       ~Spectra.set
@@ -59,6 +60,7 @@ pyduino.spectra.Spectra
 
    .. autosummary::
    
+      ~Spectra.parameter_increment
       ~Spectra.pinged
    
    
