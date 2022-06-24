@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import numpy as np
 import time
-from datetime import datetime
+from datetime import date, datetime
 from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
@@ -278,8 +278,75 @@ class Spectra(RangeParser,ReactorManager,GA):
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
+    @property
+    def parameter_increment(self):
+        """
+        Auxiliary attribute for run_incrmental.
+        Returns:
+            int: Parameter increment.
+        """
+        hours_passed = np.round((datetime.now()-self.run_incremental_start).total_seconds()/3600.0)
+        n_updates = hours_passed/self.delta_clock_hours
+        return n_updates*self.delta_parameter_increment
+
+    def run_incremental(self,deltaT,parameter,deltaTgotod=None,deltaParam=10,deltaClockHours=1):
+        """
+        Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
+        periodically on an interval given by `deltaClockHours`.
+
+        Args:
+            deltaT (int): Amount of time in seconds to wait in each iteration.
+            parameter (str): Name of the parameter to be updated.
+            deltaTgotod (int): Time to wait after sending `gotod` command.
+            deltaParam (int): How much to add on the parameters at each update.
+            deltaClockHours (int): Interval in hours to trigger a parameter update.
+        """
+
+        #Picking current time
+        self.run_incremental_start = datetime.now()
+        self.delta_parameter_increment = deltaParam
+        self.delta_clock_hours = deltaClockHours
+
+        #Checking if gotod time is at least five minutes
+        if deltaTgotod is not None and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
+
+        with open("error_traceback.log","w") as log_file:
+            log_file.write(datetime_to_str(self.log.timestamp)+'\n')
+            try:
+                self.deltaT = deltaT
+                while True:
+                    self.t1 = datetime.now()
+                    self.GET()
+                    self.update_fitness(self.data)
+                    #gotod
+                    if self.do_gotod:
+                        self.send("gotod",await_response=False)
+                        print("[INFO] gotod sent")
+                        time.sleep(deltaTgotod)
+                        self.dt = (datetime.now()-self.t1).total_seconds()
+                        print("[INFO] gotod DT", self.dt)
+                        self.GET()
+                        self.t1 = datetime.now()
+                    
+                    # Pick up original parameters from preset state and increment them with `parameter_increment`.
+                    df = pd.DataFrame(self.data).T
+                    df.loc[:,parameter] = self.preset_state.loc[:,parameter] + self.parameter_increment
+                    # ---------------------------
+                    
+                    df.columns = df.columns.str.lower()
+                    self.payload = df[self.parameters].T.to_dict()
+                    self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+                    print("[INFO]","SET",self.t1.strftime("%c"))
+                    self.F_set(self.payload)
+                    time.sleep(2)
+                    time.sleep(deltaT)
+                    self.t2 = datetime.now()
+                    self.dt = (self.t2-self.t1).total_seconds()
+                    print("[INFO]","DT",self.dt)
+            except Exception as e:
+                traceback.print_exc(file=log_file)
+                raise(e)
 
 
 if __name__ == "__main__":
     g = Spectra(**hyperparameters)
-    #g.set_preset_state(path=INITIAL_STATE_PATH)
