@@ -320,7 +320,8 @@ class ReactorManager:
             p.map(set_in_chunks,map(lambda x: (self.reactors[x[0]],x[1],chunksize),df.to_dict(orient="index").items()))
         #Saving relevant parameters' values
         cols = list(set(df.columns)&set(RELEVANT_PARAMETERS))
-        self.payload = df.loc[:,cols].to_dict('index')
+        self.preset_state = df.loc[:,cols]
+        self.payload = self.preset_state.to_dict('index').copy()
 
     def calibrate(self,deltaT=120,dir="calibrate"):
         """
