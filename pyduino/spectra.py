@@ -6,6 +6,7 @@ import json
 import os
 import pandas as pd
 import numpy as np
+from typing import Union
 import time
 from datetime import date, datetime
 from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
@@ -216,14 +217,19 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.log.log_many_rows(self.data)
         self.log.log_optimal(column=self.fparam,maximum=self.maximize)   
 
-    def run(self,deltaT,run_ga=True,deltaTgotod=None):
+    def run(
+        self,
+        deltaT: int,
+        run_ga: bool = True,
+        deltaTgotod: int = None
+        ):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT`.
 
         Args:
             deltaT (int): Amount of time in seconds to wait in each iteration.
             run_ga (bool): Whether or not execute a step in the genetic algorithm.
-            deltaTgotod (int): Time to wait after sending `gotod` command.
+            deltaTgotod (int, optional): Time to wait after sending `gotod` command.
         """
 
         #Checking if gotod time is at least five minutes
@@ -289,15 +295,22 @@ class Spectra(RangeParser,ReactorManager,GA):
         n_updates = hours_passed/self.delta_clock_hours
         return n_updates*self.delta_parameter_increment
 
-    def run_incremental(self,deltaT,parameter,deltaTgotod=None,deltaParam=10,deltaClockHours=1):
+    def run_incremental(
+            self,
+            deltaT: int,
+            parameter: Union[list,str],
+            deltaTgotod: int = None,
+            deltaParam: int = 10,
+            deltaClockHours: int = 1
+            ):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
         periodically on an interval given by `deltaClockHours`.
 
         Args:
             deltaT (int): Amount of time in seconds to wait in each iteration.
-            parameter (str): Name of the parameter to be updated.
-            deltaTgotod (int): Time to wait after sending `gotod` command.
+            parameter (Union[list,str]): Name of the parameters to be updated.
+            deltaTgotod (int, optional): Time to wait after sending `gotod` command.
             deltaParam (int): How much to add on the parameters at each update.
             deltaClockHours (int): Interval in hours to trigger a parameter update.
         """
@@ -332,7 +345,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                     df = pd.DataFrame(self.data).T
                     df.loc[:,parameter] = self.preset_state.loc[:,parameter] + self.parameter_increment
                     # ---------------------------
-                    
+
                     df.columns = df.columns.str.lower()
                     self.payload = df[self.parameters].T.to_dict()
                     self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
