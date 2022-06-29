@@ -1,11 +1,11 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "densidade_constante_14" #Log folder name (delete to use the default)
+  log_name: "incremental_1" #Log folder name (delete to use the default)
   f_param: power #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
   maximize: false
-  resolution: 4 #Number of bits used for each parameter
+  resolution: 8 #Number of bits used for each parameter
   elitism: true #Whether or not to use elitism
   do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
   rng_seed: 21 #Random seed for genetic algorithm
@@ -75,8 +75,12 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/densidade_constante_14/*.csv"
+  glob: "./log/incremental_1/*.csv"
   plot:
+    -
+      name: Branco
+      cols:
+        Branco:
     - 
       name: Temperature
       cols:

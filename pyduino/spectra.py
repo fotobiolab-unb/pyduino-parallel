@@ -12,7 +12,7 @@ from datetime import date, datetime
 from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
-from pyduino.utils import yaml_get, bcolors
+from pyduino.utils import yaml_get, bcolors, TriangleWave
 from pyduino.log import datetime_to_str
 import traceback
 
@@ -282,24 +282,25 @@ class Spectra(RangeParser,ReactorManager,GA):
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
-    @property
-    def parameter_increment(self):
-        """
-        Auxiliary attribute for run_incrmental.
-        Returns:
-            int: Parameter increment.
-        """
-        hours_passed = np.round((datetime.now()-self.run_incremental_start).total_seconds()/3600.0)
-        n_updates = hours_passed/self.delta_clock_hours
-        return n_updates*self.delta_parameter_increment
+    # @property
+    # def parameter_increment(self):
+    #     """
+    #     Auxiliary attribute for run_incrmental.
+    #     Returns:
+    #         int: Parameter increment.
+    #     """
+    #     hours_passed = np.round((datetime.now()-self.run_incremental_start).total_seconds()/3600.0)
+    #     n_updates = hours_passed/self.delta_clock_hours
+    #     return n_updates*self.delta_parameter_increment
 
     def run_incremental(
             self,
             deltaT: int,
-            parameter: Union[list,str],
+            parameter: str,
             deltaTgotod: int = None,
-            deltaParam: int = 10,
-            deltaClockHours: int = 1
+            N: int = 1,
+            M: int = 1,
+            bounds:list = [0,100]
             ):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
@@ -307,19 +308,22 @@ class Spectra(RangeParser,ReactorManager,GA):
 
         Args:
             deltaT (int): Amount of time in seconds to wait in each iteration.
-            parameter (Union[list,str]): Name of the parameters to be updated.
+            parameter (str): Name of the parameters to be updated.
             deltaTgotod (int, optional): Time to wait after sending `gotod` command.
-            deltaParam (int): How much to add on the parameters at each update.
-            deltaClockHours (int): Interval in hours to trigger a parameter update.
+            N (int): Number of iteration groups to wait to trigger a parameter update.
+            M (int): Number of iterations to wait to increment `N`.
+            bounds: Starts on `bounds[0]` and goes towards `bounds[1]`. Then, the other way around.
         """
 
-        #Picking current time
-        self.run_incremental_start = datetime.now()
-        self.delta_parameter_increment = deltaParam
-        self.delta_clock_hours = deltaClockHours
+        #Initialize stepping
+        df = pd.DataFrame(self.payload).T
+        self.triangles = list(map(lambda x: TriangleWave(x,bounds[0],bounds[1],N),df.loc[:,parameter].to_list()))
+        self.triangle_wave_state = 1 if bounds[1] >= bounds[0] else -1
+        c = 0
+        m = 0
 
         #Checking if gotod time is at least five minutes
-        if deltaTgotod is not None and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
+        if deltaTgotod is not None and deltaTgotod < 5*60: print(bcolors.WARNING,"[WARNING]","deltaTgotod should be at least 5 minutes.",bcolors.ENDC)
 
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
@@ -341,7 +345,10 @@ class Spectra(RangeParser,ReactorManager,GA):
                     
                     # Pick up original parameters from preset state and increment them with `parameter_increment`.
                     df = pd.DataFrame(self.data).T
-                    df.loc[:,parameter] = self.preset_state.loc[:,parameter] + self.parameter_increment
+                    df.loc[:,parameter] = list(map(lambda T: T.y(c),self.triangles))
+                    print("[INFO]","WAVE","UP" if self.triangle_wave_state > 0 else "DOWN", "COUNTER", str(m), "LEVEL", str(c))
+                    if c%N==0:
+                        self.triangle_wave_state *= -1
                     # ---------------------------
 
                     df.columns = df.columns.str.lower()
@@ -350,6 +357,9 @@ class Spectra(RangeParser,ReactorManager,GA):
                     print("[INFO]","SET",self.t1.strftime("%c"))
                     self.F_set(self.payload)
                     time.sleep(max(2,deltaT))
+                    m+=1
+                    if (m%M)==0:
+                        c += 1
                     self.t2 = datetime.now()
                     self.dt = (self.t2-self.t1).total_seconds()
                     print("[INFO]","DT",self.dt)
