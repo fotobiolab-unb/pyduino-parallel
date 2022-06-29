@@ -35,3 +35,28 @@ def get_servers(net="192.168.0.1/24",port="5000"):
         except:
             pass
     return servers
+
+class TriangleWave:
+    def __init__(self,p_0: float, p_i: float, p_f: float, N: int):
+        """Generates a triangular wave according to the formula:
+
+        Q\left(x\right)=(N-\operatorname{abs}(\operatorname{mod}\left(x,2N\right)-N))\left(\frac{p_{f}-p_{i}}{N}\right)+p_{i}
+
+        Args:
+            p_0 (float): Initial value at n=0
+            p_i (float): Lower bound
+            p_f (float): Upper bound
+            N (int): Steps to reach upper bound
+        """
+        self.N = N
+        self.p_0 = p_0
+        self.p_i = p_i
+        self.p_f = p_f
+
+        self.a = N*(self.p_0 - self.p_i)/(self.p_f - self.p_i)#Phase factor
+    
+    def Q(self,x: int):
+        return (self.N - abs((x%(2*self.N))-self.N))*(self.p_f - self.p_i)/self.N + self.p_i
+    
+    def y(self,x: int):
+        return self.Q(x + self.a)
