@@ -198,6 +198,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.utils.html">pyduino.utils</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.get_servers.html">pyduino.utils.get_servers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.yaml_get.html">pyduino.utils.yaml_get</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyduino.utils.TriangleWave.html">pyduino.utils.TriangleWave</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.bcolors.html">pyduino.utils.bcolors</a></li>
 </ul>
 </li>
@@ -378,10 +379,7 @@ its minimum and maximum attainable values respectively.</p></li>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.spectra.Spectra.parameter_increment" title="pyduino.spectra.Spectra.parameter_increment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_increment</span></code></a></p></td>
-<td><p>Auxiliary attribute for run_incrmental.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinged</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -486,14 +484,6 @@ generated individuals.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="pyduino.spectra.Spectra.parameter_increment">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameter_increment</span></span><a class="headerlink" href="#pyduino.spectra.Spectra.parameter_increment" title="Permalink to this definition">#</a></dt>
-<dd><p>Auxiliary attribute for run_incrmental.
-:returns: Parameter increment.
-:rtype: int</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.spectra.Spectra.ranges_as_keyed">
 <span class="sig-name descname"><span class="pre">ranges_as_keyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.ranges_as_keyed" title="Permalink to this definition">#</a></dt>
@@ -523,17 +513,18 @@ generated individuals.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyduino.spectra.Spectra.run_incremental">
-<span class="sig-name descname"><span class="pre">run_incremental</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaTgotod</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaParam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaClockHours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.run_incremental" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">run_incremental</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deltaT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltaTgotod</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[0,</span> <span class="pre">100]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.spectra.Spectra.run_incremental" title="Permalink to this definition">#</a></dt>
 <dd><p>Runs reading and wiriting operations in an infinite loop on intervals given by <cite>deltaT</cite> and increments parameters
 periodically on an interval given by <cite>deltaClockHours</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deltaT</strong> (<em>int</em>) – Amount of time in seconds to wait in each iteration.</p></li>
-<li><p><strong>parameter</strong> (<em>Union</em><em>[</em><em>list</em><em>,</em><em>str</em><em>]</em>) – Name of the parameters to be updated.</p></li>
+<li><p><strong>parameter</strong> (<em>str</em>) – Name of the parameters to be updated.</p></li>
 <li><p><strong>deltaTgotod</strong> (<em>int</em><em>, </em><em>optional</em>) – Time to wait after sending <cite>gotod</cite> command.</p></li>
-<li><p><strong>deltaParam</strong> (<em>int</em>) – How much to add on the parameters at each update.</p></li>
-<li><p><strong>deltaClockHours</strong> (<em>int</em>) – Interval in hours to trigger a parameter update.</p></li>
+<li><p><strong>N</strong> (<em>int</em>) – Number of iteration groups to wait to trigger a parameter update.</p></li>
+<li><p><strong>M</strong> (<em>int</em>) – Number of iterations to wait to increment <cite>N</cite>.</p></li>
+<li><p><strong>bounds</strong> – Starts on <cite>bounds[0]</cite> and goes towards <cite>bounds[1]</cite>. Then, the other way around.</p></li>
 </ul>
 </dd>
 </dl>

@@ -27,6 +27,7 @@
       :toctree:                                          
       :template: custom-class-template.rst               
    
+      TriangleWave
       bcolors
    
    

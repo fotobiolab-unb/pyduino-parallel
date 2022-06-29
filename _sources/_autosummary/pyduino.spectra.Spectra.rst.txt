@@ -60,7 +60,6 @@ pyduino.spectra.Spectra
 
    .. autosummary::
    
-      ~Spectra.parameter_increment
       ~Spectra.pinged
    
    

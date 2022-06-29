@@ -1,0 +1,27 @@
+pyduino.utils.TriangleWave
+==========================
+
+.. currentmodule:: pyduino.utils
+
+.. autoclass:: TriangleWave
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TriangleWave.Q
+      ~TriangleWave.__init__
+      ~TriangleWave.y
+   
+   
+
+   
+   
+   
