@@ -144,7 +144,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         if self.dt is not np.nan:
             f_0 = partial(parse_dados,param=self.density_param)(x_0).astype(float)
             self.growth_rate = (f_1 - f_0)/self.dt
-            self.efficiency = self.growth_rate/self.power
+            self.efficiency = self.growth_rate/(self.power+1)
             self.efficiency[self.efficiency == np.inf] == 0
             self.efficiency = np.nan_to_num(self.efficiency)
         else:
@@ -300,7 +300,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             deltaTgotod: int = None,
             N: int = 1,
             M: int = 1,
-            bounds:list = [0,100]
+            bounds:list = [100,0]
             ):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
