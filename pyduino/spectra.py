@@ -255,7 +255,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.t1 = datetime.now()
                     #---
                     if run_ga:
-                        self.p = softmax(self.fitness)
+                        self.p = softmax(self.fitness/100)
                         #Hotfix for elitism
                         print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
                         print(f"{bcolors.BOLD}{pd.DataFrame(self.pretty_print_dict(self.data))}{bcolors.ENDC}")

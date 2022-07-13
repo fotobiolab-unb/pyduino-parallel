@@ -1,23 +1,20 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "incremental_1" #Log folder name (delete to use the default)
-  f_param: power #Parameter to read as fitness from the reactors
+  log_name: "genetic_6" #Log folder name (delete to use the default)
+  f_param: efficiency #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
-  mutation_probability: 0.01
-  maximize: false
+  mutation_probability: 0.1
+  maximize: true
   resolution: 8 #Number of bits used for each parameter
   elitism: true #Whether or not to use elitism
   do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
-  rng_seed: 21 #Random seed for genetic algorithm
+  rng_seed: 1 #Random seed for genetic algorithm
   ranges:
     branco:
-      - 0
-      - 100
-    full:
-      - 0
+      - 5
       - 100
     others:
-      - 0
+      - 1
       - 100
 slave:
   port: "5000" #Must be a string
@@ -26,19 +23,19 @@ system:
   initial_state: "preset_state.csv"
   reboot_wait_time: 5 #Time in seconds to wait after a reboot.
   relevant_parameters:
-    - "440"
-    - "470"
-    - "495"
-    - "530"
-    - "595"
-    - "634"
-    - "660"
-    - "684"
     - branco
-    - full
+    #- full
+    #- "440"
+    #- "470"
+    #- "495"
+    #- "530"
+    #- "595"
+    #- "634"
+    #- "660"
+    #- "684"
   irradiance:
-    "branco": 9.87
-    "full": 9.80
+    "branco": 10.35
+    "full": 11.50
     "440": 7.72
     "470": 8.50
     "495": 8.30
@@ -75,7 +72,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/incremental_1/*.csv"
+  glob: "./log/genetic_6/*.csv"
   plot:
     -
       name: Branco
@@ -119,5 +116,5 @@ dash:
   subplot_height: 300
   cumulative: false
   update_time: 30000 #In miliseconds
-  max_points: 50 #Maximum number of points to display at once
+  max_points: 500 #Maximum number of points to display at once
   vspace: 0.1
