@@ -12,7 +12,7 @@ from datetime import date, datetime
 from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
-from pyduino.utils import yaml_get, bcolors, TriangleWave
+from pyduino.utils import yaml_get, bcolors, TriangleWave, ReLUP
 from pyduino.log import datetime_to_str
 import traceback
 
@@ -255,7 +255,8 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.t1 = datetime.now()
                     #---
                     if run_ga:
-                        self.p = softmax(self.fitness/100)
+                        #self.p = softmax(self.fitness/100)
+                        self.p = ReLUP(self.fitness)
                         #Hotfix for elitism
                         print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
                         print(f"{bcolors.BOLD}{pd.DataFrame(self.pretty_print_dict(self.data))}{bcolors.ENDC}")
