@@ -1,6 +1,0 @@
-pyduino.spectra.update\_dict
-============================
-
-.. currentmodule:: pyduino.spectra
-
-.. autofunction:: update_dict
