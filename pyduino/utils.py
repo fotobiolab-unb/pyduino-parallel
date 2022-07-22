@@ -1,6 +1,7 @@
 import yaml
 from nmap import PortScanner
 import requests
+import numpy as np
 
 class bcolors:
     HEADER = '\033[95m'
@@ -21,6 +22,21 @@ def yaml_get(filename):
     with open(filename) as f:
         y = yaml.load(f.read(),yaml.Loader)
     return y
+
+
+def ReLUP(x):
+    """Computes probability from an array X after passing it through a ReLU unit (negatives are zero).
+
+    Args:
+        x (numpy.array): Input Array
+    """
+    x_relu = x.copy()
+    x_relu[x_relu<0] = 0
+
+    if x_relu.sum() == 0:
+        return np.ones_like(x_relu)/len(x_relu)
+    else:
+        return x_relu/x_relu.sum()
 
 def get_servers(net="192.168.0.1/24",port="5000"):
     port_scanner = PortScanner()
