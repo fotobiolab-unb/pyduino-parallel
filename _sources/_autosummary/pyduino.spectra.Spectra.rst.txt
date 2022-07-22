@@ -1,0 +1,65 @@
+pyduino.spectra.Spectra
+=======================
+
+.. currentmodule:: pyduino.spectra
+
+.. autoclass:: Spectra
+   :members:                                    
+   :show-inheritance:                           
+   :inherited-members:                          
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Spectra.F_get
+      ~Spectra.F_set
+      ~Spectra.GET
+      ~Spectra.G_as_keyed
+      ~Spectra.__init__
+      ~Spectra.ask_oracle
+      ~Spectra.calibrate
+      ~Spectra.connect
+      ~Spectra.crossover
+      ~Spectra.dados
+      ~Spectra.data_dict_to_matrix
+      ~Spectra.f_map
+      ~Spectra.get
+      ~Spectra.horacerta
+      ~Spectra.inverse_view
+      ~Spectra.log_dados
+      ~Spectra.log_init
+      ~Spectra.mutation
+      ~Spectra.payload_to_matrix
+      ~Spectra.pretty_print_dict
+      ~Spectra.ranges_as_keyed
+      ~Spectra.ranges_as_list
+      ~Spectra.reboot
+      ~Spectra.reset
+      ~Spectra.run
+      ~Spectra.run_incremental
+      ~Spectra.send
+      ~Spectra.send_parallel
+      ~Spectra.set
+      ~Spectra.set_preset_state
+      ~Spectra.set_preset_state_spectra
+      ~Spectra.set_spectrum
+      ~Spectra.update_fitness
+      ~Spectra.view
+      ~Spectra.view_g
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Spectra.pinged
+   
+   

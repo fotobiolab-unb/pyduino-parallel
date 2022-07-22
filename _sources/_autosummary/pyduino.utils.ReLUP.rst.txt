@@ -1,0 +1,6 @@
+pyduino.utils.ReLUP
+===================
+
+.. currentmodule:: pyduino.utils
+
+.. autofunction:: ReLUP

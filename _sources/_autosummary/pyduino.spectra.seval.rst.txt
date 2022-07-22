@@ -1,0 +1,6 @@
+pyduino.spectra.seval
+=====================
+
+.. currentmodule:: pyduino.spectra
+
+.. autofunction:: seval

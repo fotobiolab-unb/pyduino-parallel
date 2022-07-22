@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.log" href="pyduino.log.html" /><link rel="prev" title="pyduino.data_parser.yaml_genetic_algorithm" href="pyduino.data_parser.yaml_genetic_algorithm.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.spectra.dict_subset" href="pyduino.spectra.dict_subset.html" /><link rel="prev" title="pyduino.slave.ReactorServer" href="pyduino.slave.ReactorServer.html" />
 
     <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
-        <title>pyduino.data_parser.RangeParser - Pyduino documentation</title>
+        <title>pyduino.spectra - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -135,7 +135,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -159,11 +159,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="pyduino.data_parser.html">pyduino.data_parser</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.data_parser.html">pyduino.data_parser</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.data_parser.datetime_parser.html">pyduino.data_parser.datetime_parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.data_parser.get_datetimes.html">pyduino.data_parser.get_datetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.data_parser.yaml_genetic_algorithm.html">pyduino.data_parser.yaml_genetic_algorithm</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.data_parser.RangeParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyduino.data_parser.RangeParser.html">pyduino.data_parser.RangeParser</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.log.html">pyduino.log</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -186,7 +186,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pyduino.slave.ReactorServer.html">pyduino.slave.ReactorServer</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.spectra.html">pyduino.spectra</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">pyduino.spectra</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.dict_subset.html">pyduino.spectra.dict_subset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.parse_dados.html">pyduino.spectra.parse_dados</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.row_subset.html">pyduino.spectra.row_subset</a></li>
@@ -230,67 +230,46 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="pyduino-data-parser-rangeparser">
-<h1>pyduino.data_parser.RangeParser<a class="headerlink" href="#pyduino-data-parser-rangeparser" title="Permalink to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="pyduino.data_parser.RangeParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.data_parser.</span></span><span class="sig-name descname"><span class="pre">RangeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.data_parser.RangeParser" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyduino.data_parser.RangeParser.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.data_parser.RangeParser.__init__" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong> (<em>ranges</em>) – obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
-its minimum and maximum attainable values respectively.</p></li>
-<li><p><strong>parameter_list</strong> (<em>list</em>) – List of parameter names.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<p class="rubric">Methods</p>
+          <section id="module-pyduino.spectra">
+<span id="pyduino-spectra"></span><h1>pyduino.spectra<a class="headerlink" href="#module-pyduino.spectra" title="Permalink to this heading">#</a></h1>
+<p class="rubric">Functions</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.data_parser.RangeParser.__init__" title="pyduino.data_parser.RangeParser.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(ranges, parameter_list)</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param ranges (<span class="colon">:</span></dt>
-<dd class="field-odd"><p>obj:dict of :obj:list): Dictionary of parameters with a two element list containing the</p>
-</dd>
-</dl>
-</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.spectra.dict_subset.html#pyduino.spectra.dict_subset" title="pyduino.spectra.dict_subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_subset</span></code></a>(D, keys)</p></td>
+<td><p>Extracts a subdictionary from a given dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyduino.data_parser.RangeParser.ranges_as_keyed" title="pyduino.data_parser.RangeParser.ranges_as_keyed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges_as_keyed</span></code></a>([x])</p></td>
-<td><p>Converts range list into keyed format.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pyduino.spectra.parse_dados.html#pyduino.spectra.parse_dados" title="pyduino.spectra.parse_dados"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_dados</span></code></a>(X, param)</p></td>
+<td><p>Parses data from <cite>ReactorManager.log_dados</cite> into an array while attempting to convert the input string into an appropriate data type.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.data_parser.RangeParser.ranges_as_list" title="pyduino.data_parser.RangeParser.ranges_as_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges_as_list</span></code></a>([x])</p></td>
-<td><p>Converts range dictionary into list format.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.spectra.row_subset.html#pyduino.spectra.row_subset" title="pyduino.spectra.row_subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">row_subset</span></code></a>(rows, keys)</p></td>
+<td><p>Extracts a subset from a <cite>rows</cite> table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyduino.spectra.seval.html#pyduino.spectra.seval" title="pyduino.spectra.seval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">seval</span></code></a>(x)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.spectra.update_dict.html#pyduino.spectra.update_dict" title="pyduino.spectra.update_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_dict</span></code></a>(D, A, key)</p></td>
+<td><p>Updates dictionary <cite>D</cite> with values in <cite>A</cite> with key name <cite>key</cite>.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyduino.data_parser.RangeParser.ranges_as_keyed">
-<span class="sig-name descname"><span class="pre">ranges_as_keyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.data_parser.RangeParser.ranges_as_keyed" title="Permalink to this definition">#</a></dt>
-<dd><p>Converts range list into keyed format.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyduino.data_parser.RangeParser.ranges_as_list">
-<span class="sig-name descname"><span class="pre">ranges_as_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.data_parser.RangeParser.ranges_as_list" title="Permalink to this definition">#</a></dt>
-<dd><p>Converts range dictionary into list format.</p>
-</dd></dl>
-
-</dd></dl>
-
+<p class="rubric">Classes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyduino.spectra.Spectra.html#pyduino.spectra.Spectra" title="pyduino.spectra.Spectra"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Spectra</span></code></a>(elitism, f_param, ranges, density_param)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 
         </article>
@@ -298,23 +277,23 @@ its minimum and maximum attainable values respectively.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="pyduino.log.html">
+          <a class="next-page" href="pyduino.spectra.dict_subset.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">pyduino.log</div>
+                <div class="title">pyduino.spectra.dict_subset</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="pyduino.data_parser.yaml_genetic_algorithm.html">
+          <a class="prev-page" href="pyduino.slave.ReactorServer.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">pyduino.data_parser.yaml_genetic_algorithm</div>
+                <div class="title">pyduino.slave.ReactorServer</div>
                 
               </div>
             </a>
@@ -338,8 +317,26 @@ its minimum and maximum attainable values respectively.</p></li>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">pyduino.spectra</a><ul>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

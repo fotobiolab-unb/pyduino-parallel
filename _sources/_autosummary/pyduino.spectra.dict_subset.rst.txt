@@ -1,0 +1,6 @@
+pyduino.spectra.dict\_subset
+============================
+
+.. currentmodule:: pyduino.spectra
+
+.. autofunction:: dict_subset

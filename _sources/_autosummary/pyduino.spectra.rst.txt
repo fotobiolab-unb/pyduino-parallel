@@ -1,7 +1,7 @@
-﻿pyduino.utils
-=============
+﻿pyduino.spectra
+===============
 
-.. automodule:: pyduino.utils
+.. automodule:: pyduino.spectra
   
    
    
@@ -14,9 +14,11 @@
    .. autosummary::
       :toctree:                                          
    
-      ReLUP
-      get_servers
-      yaml_get
+      dict_subset
+      parse_dados
+      row_subset
+      seval
+      update_dict
    
    
 
@@ -28,8 +30,7 @@
       :toctree:                                          
       :template: custom-class-template.rst               
    
-      TriangleWave
-      bcolors
+      Spectra
    
    
 
