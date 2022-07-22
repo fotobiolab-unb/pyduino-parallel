@@ -1,21 +1,48 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "genetic_6" #Log folder name (delete to use the default)
+  log_name: "genetic_10" #Log folder name (delete to use the default)
   f_param: efficiency #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
-  mutation_probability: 0.1
+  mutation_probability: 0.01
   maximize: true
   resolution: 8 #Number of bits used for each parameter
-  elitism: true #Whether or not to use elitism
+  elitism: false #Whether or not to use elitism
   do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
-  rng_seed: 1 #Random seed for genetic algorithm
+  rng_seed: 3 #Random seed for genetic algorithm
   ranges:
     branco:
-      - 5
-      - 100
-    others:
-      - 1
-      - 100
+      - 0
+      - 19
+    full:
+      - 0
+      - 17
+    "440":
+      - 0
+      - 26
+    "470":
+      - 0
+      - 24
+    "495":
+      - 0
+      - 24
+    "530":
+      - 0
+      - 24
+    "595":
+      - 0
+      - 92
+    "634":
+      - 0
+      - 58
+    "660":
+      - 0
+      - 44
+    "684":
+      - 0
+      - 35                                          
+    #others:
+      #- 0
+      #- 100
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"
@@ -24,15 +51,15 @@ system:
   reboot_wait_time: 5 #Time in seconds to wait after a reboot.
   relevant_parameters:
     - branco
-    #- full
-    #- "440"
-    #- "470"
-    #- "495"
-    #- "530"
-    #- "595"
-    #- "634"
-    #- "660"
-    #- "684"
+    - full
+    - "440"
+    - "470"
+    - "495"
+    - "530"
+    - "595"
+    - "634"
+    - "660"
+    - "684"
   irradiance:
     "branco": 10.35
     "full": 11.50
@@ -45,7 +72,7 @@ system:
     "660": 4.52
     "684": 5.74
   standard_parameters:
-    branco: int
+    branco: float
     full: float
     "440": float
     "470": float
@@ -72,12 +99,8 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/genetic_6/*.csv"
+  glob: "./log/genetic_10/*.csv"
   plot:
-    -
-      name: Branco
-      cols:
-        Branco:
     - 
       name: Temperature
       cols:
@@ -103,18 +126,63 @@ dash:
         growth_rate:
           positive_only: true
     -
+      name: power
+      cols:
+        power:
+    -
       name: CO2
       cols:
         CO2:
         SetCO2:
           dash: "dash"
+    -
+      name: Branco
+      cols:
+        Branco:
+    -
+      name: Full
+      cols:
+        Full:
+    -
+      name: 440
+      cols:
+        "440":
+    -
+      name: 470
+      cols:
+        "470":
+    -
+      name: 495
+      cols:
+        "495":
+    -
+      name: 530
+      cols:
+        "530":
+    -
+      name: 595
+      cols:
+        "595":                                          
+    -
+      name: 634
+      cols:
+        "634":
+    -
+      name: 660
+      cols:
+        "660":         
+    -
+      name: 684
+      cols:
+        "684":           
   x_col: 'elapsed_time_hours'
   sep: "\t"
   tail: 128
   display_cols: 3
   theme: cyborg
-  subplot_height: 300
+  subplot_height: 200
   cumulative: false
-  update_time: 30000 #In miliseconds
+  update_time: 300000 #In miliseconds
   max_points: 500 #Maximum number of points to display at once
-  vspace: 0.1
+  vspace: 0.02
+  hspace: 0.0
