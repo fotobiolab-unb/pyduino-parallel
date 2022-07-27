@@ -29,6 +29,7 @@ pyduino.spectra.Spectra
       ~Spectra.data_dict_to_matrix
       ~Spectra.f_map
       ~Spectra.get
+      ~Spectra.gotod
       ~Spectra.horacerta
       ~Spectra.inverse_view
       ~Spectra.log_dados

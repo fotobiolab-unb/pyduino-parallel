@@ -18,6 +18,7 @@ pyduino.log.log
    
       ~log.__init__
       ~log.cache_data
+      ~log.log_average
       ~log.log_many_rows
       ~log.log_optimal
       ~log.log_rows
