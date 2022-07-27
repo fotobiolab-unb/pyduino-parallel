@@ -1,12 +1,12 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "genetic_10" #Log folder name (delete to use the default)
+  log_name: "genetic_13" #Log folder name (delete to use the default)
   f_param: efficiency #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01
   maximize: true
   resolution: 8 #Number of bits used for each parameter
-  elitism: false #Whether or not to use elitism
+  elitism: true #Whether or not to use elitism
   do_crossover: true #Whether or not to perform crossover when the genetic algorithm is enabled
   rng_seed: 3 #Random seed for genetic algorithm
   ranges:
@@ -99,7 +99,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/genetic_10/*.csv"
+  glob: "./log/genetic_13/*.csv"
   plot:
     - 
       name: Temperature
@@ -119,12 +119,14 @@ dash:
       name: Efficiency
       cols:
         efficiency:
-          positive_only: true
+          growing_only: true
+          mode: 'lines+markers'
     -
       name: GrowthRate
       cols:
         growth_rate:
-          positive_only: true
+          growing_only: true
+          mode: 'lines+markers'
     -
       name: power
       cols:
@@ -185,4 +187,3 @@ dash:
   update_time: 300000 #In miliseconds
   max_points: 500 #Maximum number of points to display at once
   vspace: 0.02
-  hspace: 0.0
