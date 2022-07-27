@@ -206,7 +206,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(X).loc[self.fparam].astype(float).to_numpy()
         return self.fitness
     
-    def GET(self):
+    def GET(self,tag):
         """
         Collects data from Arduinos and logs it to disk.
         """
@@ -214,8 +214,9 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.past_data = self.data.copy() if self.data is not None else self.payload
         self.data = self.F_get()
         self.f_map(self.data,self.past_data)
-        self.log.log_many_rows(self.data)
-        self.log.log_optimal(column=self.fparam,maximum=self.maximize)   
+        self.log.log_many_rows(self.data,tags={'growth_state':tag})
+        self.log.log_optimal(column=self.fparam,maximum=self.maximize,tags={'growth_state':tag})   
+        self.log.log_average(tags={'growth_state':tag})   
 
     def run(
         self,
@@ -242,7 +243,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                 self.deltaT = deltaT
                 while True:
                     self.t1 = datetime.now()
-                    self.GET()
+                    self.GET("growing")
                     self.update_fitness(self.data)
                     #gotod
                     if self.do_gotod:
@@ -251,7 +252,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         time.sleep(deltaTgotod)
                         self.dt = (datetime.now()-self.t1).total_seconds()
                         print("[INFO] gotod DT", self.dt)
-                        self.GET()
+                        self.GET("gotod")
                         self.t1 = datetime.now()
                     #---
                     if run_ga:
@@ -332,7 +333,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                 self.deltaT = deltaT
                 while True:
                     self.t1 = datetime.now()
-                    self.GET()
+                    self.GET("growing")
                     self.update_fitness(self.data)
                     #gotod
                     if self.do_gotod:
@@ -341,7 +342,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         time.sleep(deltaTgotod)
                         self.dt = (datetime.now()-self.t1).total_seconds()
                         print("[INFO] gotod DT", self.dt)
-                        self.GET()
+                        self.GET("gotod")
                         self.t1 = datetime.now()
                     
                     # Pick up original parameters from preset state and increment them with `parameter_increment`.

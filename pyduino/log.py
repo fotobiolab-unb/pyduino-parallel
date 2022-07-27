@@ -61,19 +61,26 @@ class log:
             wfile.write(cfile.read())
 
 
-    def log_rows(self,rows,subdir,add_timestamp=True,**kwargs):
+    def log_rows(self,rows,subdir,add_timestamp=True,tags=None,**kwargs):
         """
         Logs rows into csv format.
 
         Args:
-            rows (:obj:`list` of :obj:`dict`): List of dictionary-encoded rows.
+            rows (:obj:`list` of :obj:`dict`): List of dictionary-encoded rows or pandas dataframe.
             subdir (str): Subdirectory name. Intended to be an element of `self.subdir`.
             add_timestamp (bool,optional): Whether or not to include a timestamp column.
+            tags (:obj:`dict` of :obj:`str`): Dictionary of strings to be inserted as constant columns.
             **kwargs: Additional arguments passed to `pandas.to_csv`.
         """
         t = self.timestamp
         path = os.path.join(self.path,self.start_timestamp,f"{subdir}.csv")
-        df = pd.DataFrame(rows)
+
+        df = pd.DataFrame()
+        if isinstance(rows,list):
+            df = pd.DataFrame(rows)
+        elif isinstance(rows,pd.DataFrame):
+            df = rows.copy()
+        
         if add_timestamp:
             df.loc[:,"log_timestamp"] = datetime_to_str(t)
         if os.path.exists(path):
@@ -84,6 +91,12 @@ class log:
         else:
             self.first_timestamp = t
         df.loc[:,"elapsed_time_hours"] = (t - self.first_timestamp).total_seconds()/3600.0
+
+        #Inserting constant values
+        if tags is not None:
+            for key,value in tags.items():
+                df.loc[:,key] = value
+
         df.to_csv(
             path,
             mode="a",
@@ -113,7 +126,15 @@ class log:
         i=self.data_frames.loc[:,column].argmax() if maximum else self.data_frames.loc[:,column].argmin()
         self.df_opt = self.data_frames.iloc[i,:]
         self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',sep='\t',**kwargs)
-
+    
+    def log_average(self,**kwargs):
+        """
+        Logs average of all rows into a single file.
+        """
+        df = self.data_frames.copy()
+        df.elapsed_time_hours = df.elapsed_time_hours.round(decimals=2)
+        self.df_avg = df.groupby("elapsed_time_hours").mean().reset_index()
+        self.log_rows(rows=self.df_avg,subdir='avg',sep='\t',**kwargs)
 
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """
