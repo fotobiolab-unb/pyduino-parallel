@@ -16,6 +16,7 @@ import plotly.express as px
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
+import yaml
 from pyduino.pyduino2 import RELEVANT_PARAMETERS, CACHEPATH
 from pyduino.utils import yaml_get
 
@@ -23,7 +24,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 
 y = yaml_get(os.path.join(__location__,"config.yaml"))['dash']
 RELEVANT_PARAMETERS = yaml_get(os.path.join(__location__,"config.yaml"))['system']['relevant_parameters']
-
+IRRADIANCE = yaml_get(os.path.join(__location__,"config.yaml"))['system']['irradiance']
 COLOR = plotly.colors.qualitative.Alphabet
 PLOTS = list(y['plot'])
 SUBPLOT_NAMES = list(map(lambda x: x.get('name',"nameless"),PLOTS))
@@ -90,6 +91,7 @@ def get_matrix(n):
     cache_df = pd.read_csv(CACHEPATH,sep='\t',index_col='ID')
     cache_df.columns = cache_df.columns.str.lower()
     cache_df = cache_df.loc[:,RELEVANT_PARAMETERS]
+    cache_df = cache_df * pd.Series(IRRADIANCE)/100
     fig = go.Figure(data=go.Heatmap(
         z=cache_df.to_numpy(),
         x=cache_df.columns,
@@ -98,7 +100,7 @@ def get_matrix(n):
     ))
     fig['layout']['template'] = THEME
     fig['layout']['title'] = "Computed Parameters"
-    fig.data[0].update(zmin=0,zmax=100)
+    #fig.data[0].update(zmin=0,zmax=100)
     fig['layout']['font']['size']=20
     fig['layout']['font']['family']="monospace"
     return fig
@@ -131,20 +133,28 @@ def update_graph_live(n):
                 cap = len(data)//MAXPOINTS if MAXPOINTS else 1
                 cap = cap if cap!=0 else 1
                 plot_data = data.copy().loc[::cap,:]
-                y_data = plot_data[colname]
-                if options.get('positive_only',False):
-                    y_data = y_data.mask(y_data.lt(0)).ffill().fillna(0).convert_dtypes()
-                fig.add_trace({
-                    'y': y_data,
-                    'x':plot_data[X_COL],
-                    'name': f"{_name}({cap})",
-                    'mode': 'lines',
-                    'type': 'scatter',
-                    'legendgroup': _name,
-                    'showlegend': i == 0,
-                    'line_color': color_dict[_name],
-                    'line': {'dash':options.get('dash',None)}
-                }, row, col)
+
+                if colname in plot_data.columns:
+
+                    if options.get('growing_only',False) and ("growth_state" in plot_data.columns):
+                        plot_data = plot_data.loc[plot_data.growth_state=="growing",:]
+
+                    y_data = plot_data[colname]
+                    if options.get('positive_only',False):
+                        y_data = y_data.mask(y_data.lt(0)).ffill().fillna(0).convert_dtypes()
+
+                    if X_COL in plot_data.columns:
+                        fig.add_trace({
+                            'y': y_data,
+                            'x':plot_data[X_COL],
+                            'name': f"{_name}({cap})",
+                            'mode': options.get('mode','lines'),
+                            'type': 'scatter',
+                            'legendgroup': _name,
+                            'showlegend': colname=='power',
+                            'line_color': color_dict[_name],
+                            'line': {'dash':options.get('dash',None)}
+                        }, row, col)
 
     fig['layout']['font']['size']=15
     fig['layout']['font']['family']="monospace"
