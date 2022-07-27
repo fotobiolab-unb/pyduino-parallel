@@ -218,6 +218,15 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.log.log_optimal(column=self.fparam,maximum=self.maximize,tags={'growth_state':tag})   
         self.log.log_average(tags={'growth_state':tag})   
 
+    def gotod(self,deltaTgotod):
+        self.send("gotod",await_response=False)
+        print("[INFO] gotod sent")
+        time.sleep(deltaTgotod)
+        self.dt = (datetime.now()-self.t1).total_seconds()
+        print("[INFO] gotod DT", self.dt)
+        self.GET("gotod")
+        self.t1 = datetime.now()
+
     def run(
         self,
         deltaT: int,
@@ -237,6 +246,9 @@ class Spectra(RangeParser,ReactorManager,GA):
         if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
         if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
 
+        if self.do_gotod:
+            self.gotod(deltaTgotod)
+
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
             try:
@@ -245,19 +257,10 @@ class Spectra(RangeParser,ReactorManager,GA):
                     self.t1 = datetime.now()
                     self.GET("growing")
                     self.update_fitness(self.data)
-                    #gotod
-                    if self.do_gotod:
-                        self.send("gotod",await_response=False)
-                        print("[INFO] gotod sent")
-                        time.sleep(deltaTgotod)
-                        self.dt = (datetime.now()-self.t1).total_seconds()
-                        print("[INFO] gotod DT", self.dt)
-                        self.GET("gotod")
-                        self.t1 = datetime.now()
                     #---
                     if run_ga:
                         #self.p = softmax(self.fitness/100)
-                        self.p = ReLUP(self.fitness)
+                        self.p = ReLUP(self.fitness*self.fitness*self.fitness)
                         #Hotfix for elitism
                         print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
                         print(f"{bcolors.BOLD}{pd.DataFrame(self.pretty_print_dict(self.data))}{bcolors.ENDC}")
@@ -278,22 +281,15 @@ class Spectra(RangeParser,ReactorManager,GA):
                     print("[INFO]","SET",self.t1.strftime("%c"))
                     self.F_set(self.payload) if run_ga else None
                     time.sleep(max(2,deltaT))
+                    #gotod
+                    if self.do_gotod:
+                        self.gotod(deltaTgotod)
                     self.t2 = datetime.now()
                     self.dt = (self.t2-self.t1).total_seconds()
                     print("[INFO]","DT",self.dt)
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
-    # @property
-    # def parameter_increment(self):
-    #     """
-    #     Auxiliary attribute for run_incrmental.
-    #     Returns:
-    #         int: Parameter increment.
-    #     """
-    #     hours_passed = np.round((datetime.now()-self.run_incremental_start).total_seconds()/3600.0)
-    #     n_updates = hours_passed/self.delta_clock_hours
-    #     return n_updates*self.delta_parameter_increment
 
     def run_incremental(
             self,
