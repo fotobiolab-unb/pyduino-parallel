@@ -219,13 +219,13 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.log.log_average(tags={'growth_state':tag})   
 
     def gotod(self,deltaTgotod):
+        self.t_gotod_1 = datetime.now()
         self.send("gotod",await_response=False)
         print("[INFO] gotod sent")
         time.sleep(deltaTgotod)
-        self.dt = (datetime.now()-self.t1).total_seconds()
+        self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
         print("[INFO] gotod DT", self.dt)
         self.GET("gotod")
-        self.t1 = datetime.now()
 
     def run(
         self,
@@ -246,18 +246,19 @@ class Spectra(RangeParser,ReactorManager,GA):
         if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
         if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
 
-        if self.do_gotod:
-            self.gotod(deltaTgotod)
-
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
             try:
                 self.deltaT = deltaT
                 while True:
-                    self.t1 = datetime.now()
+                    #growing
+                    self.t_grow_1 = datetime.now()
+                    time.sleep(max(2,deltaT))
+                    self.dt = (datetime.now()-self.t1).total_seconds()
+                    print("[INFO]","DT",self.dt)
                     self.GET("growing")
                     self.update_fitness(self.data)
-                    #---
+                    #GA
                     if run_ga:
                         #self.p = softmax(self.fitness/100)
                         self.p = ReLUP(self.fitness*self.fitness*self.fitness)
@@ -278,15 +279,11 @@ class Spectra(RangeParser,ReactorManager,GA):
                         df.columns = df.columns.str.lower()
                         self.payload = df[self.parameters].T.to_dict()
                         self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
-                    print("[INFO]","SET",self.t1.strftime("%c"))
+                    print("[INFO]","SET",datetime.now().strftime("%c"))
                     self.F_set(self.payload) if run_ga else None
-                    time.sleep(max(2,deltaT))
                     #gotod
                     if self.do_gotod:
                         self.gotod(deltaTgotod)
-                    self.t2 = datetime.now()
-                    self.dt = (self.t2-self.t1).total_seconds()
-                    print("[INFO]","DT",self.dt)
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
