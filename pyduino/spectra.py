@@ -254,7 +254,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                     #growing
                     self.t_grow_1 = datetime.now()
                     time.sleep(max(2,deltaT))
-                    self.dt = (datetime.now()-self.t1).total_seconds()
+                    self.dt = (datetime.now()-self.t_growth_1).total_seconds()
                     print("[INFO]","DT",self.dt)
                     self.GET("growing")
                     self.update_fitness(self.data)
