@@ -146,9 +146,9 @@ class Spectra(RangeParser,ReactorManager,GA):
             f_0 = x_0.loc[self.density_param].astype(float)
             self.growth_rate = (f_1-f_0)/self.dt
             self.efficiency = self.growing_rate/(self.power+1)
-        x_1.loc[:,'power'] = self.power.copy()
-        x_1.loc[:,'efficiency'] = self.efficiency.copy()
-        x_1.loc[:,'growth_rate'] = self.growth_rate.copy()
+        x_1.loc['power',:] = self.power.copy()
+        x_1.loc['efficiency',:] = self.efficiency.copy()
+        x_1.loc['growth_rate',:] = self.growth_rate.copy()
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
