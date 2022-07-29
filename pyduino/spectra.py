@@ -142,7 +142,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         f_1 = x_1.loc[self.density_param].astype(float)
         self.power = (pd.DataFrame(self.G_as_keyed()).T*self.irradiance).T
-        if self.dt is not np.nan:
+        if (self.dt is not np.nan) or (self.iteration_counter>0):
             f_0 = x_0.loc[self.density_param].astype(float)
             self.growth_rate = (f_1-f_0)/self.dt
             self.efficiency = self.growing_rate/(self.power+1)
@@ -240,6 +240,8 @@ class Spectra(RangeParser,ReactorManager,GA):
         if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
         if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
 
+        self.iteration_counter = 0
+
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
             try:
@@ -270,7 +272,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                             self.G[self.p.argmin()] = self.elite.copy()
                         self.payload = self.G_as_keyed()
                     else:
-                        df = pd.DataFrame(self.data).T
+                        df = self.data.T
                         df.columns = df.columns.str.lower()
                         self.payload = df[self.parameters].T.to_dict()
                         self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
@@ -279,6 +281,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                     #gotod
                     if self.do_gotod:
                         self.gotod(deltaTgotod)
+                    self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
