@@ -95,7 +95,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         
         #assert os.path.exists(PARAM_PATH)
         self.parameters = SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
-        self.titled_parameters = list(map(lambda x: x.title(),self.paramters))
+        self.titled_parameters = list(map(lambda x: x.title(),self.parameters))
 
         RangeParser.__init__(self,ranges,self.parameters)
 
