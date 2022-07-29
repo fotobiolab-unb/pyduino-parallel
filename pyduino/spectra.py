@@ -145,7 +145,10 @@ class Spectra(RangeParser,ReactorManager,GA):
         if (self.dt is not np.nan) and (self.iteration_counter>0):
             f_0 = x_0.loc[self.density_param].astype(float)
             self.growth_rate = (f_1-f_0)/self.dt
-            self.efficiency = self.growing_rate/(self.power+1)
+            self.efficiency = self.growth_rate/(self.power+1)
+        else:
+            self.growth_rate = 0
+            self.efficiency = 0
         x_1.loc['power',:] = self.power.copy()
         x_1.loc['efficiency',:] = self.efficiency.copy()
         x_1.loc['growth_rate',:] = self.growth_rate.copy()
