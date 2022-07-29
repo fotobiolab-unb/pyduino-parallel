@@ -100,7 +100,8 @@ class Spectra(RangeParser,ReactorManager,GA):
 
         #assert os.path.exists(IRRADIANCE_PATH)
         self.irradiance = SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
-        self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
+        #self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
+        self.irradiance = pd.Series(self.irradiance)
 
         ReactorManager.__init__(self)
         GA.__init__(
@@ -139,22 +140,15 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         Computation for the fitness function.
         """
-        f_1 = partial(parse_dados,param=self.density_param)(x_1).astype(float)
-        self.power = (self.view_g()*self.irradiance).sum(axis=1)/100.0
+        f_1 = x_1.loc[self.density_param].astype(float)
+        self.power = (pd.DataFrame(self.G_as_keyed()).T*self.irradiance).T
         if self.dt is not np.nan:
-            f_0 = partial(parse_dados,param=self.density_param)(x_0).astype(float)
-            self.growth_rate = (f_1 - f_0)/self.dt
-            self.efficiency = self.growth_rate/(self.power+1)
-            self.efficiency[self.efficiency == np.inf] == 0
-            self.efficiency = np.nan_to_num(self.efficiency)
-        else:
-            #Use default values if there's no past data
-            self.growth_rate = np.zeros(len(self.reactors))
-            self.efficiency = np.zeros_like(f_1)
-        #Added new columns to current data
-        update_dict(x_1,dict(zip(self.sorted_ids,self.power)),'power')
-        update_dict(x_1,dict(zip(self.sorted_ids,self.efficiency)),'efficiency')
-        update_dict(x_1,dict(zip(self.sorted_ids,self.growth_rate)),'growth_rate')
+            f_0 = x_0.loc[self.density_param].astype(float)
+            self.growth_rate = (f_1-f_0)/self.dt
+            self.efficiency = self.growing_rate/(self.power+1)
+        x_1.loc[:,'power'] = self.power.copy()
+        x_1.loc[:,'efficiency'] = self.efficiency.copy()
+        x_1.loc[:,'growth_rate'] = self.growth_rate.copy()
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -203,7 +197,7 @@ class Spectra(RangeParser,ReactorManager,GA):
     
     def update_fitness(self,X):
         #Get and return parameter chosen for fitness
-        self.fitness = ((-1)**(1+self.maximize))*pd.DataFrame(X).loc[self.fparam].astype(float).to_numpy()
+        self.fitness = ((-1)**(1+self.maximize))*X.loc[self.fparam].astype(float).to_numpy()
         return self.fitness
     
     def GET(self,tag):
@@ -211,8 +205,8 @@ class Spectra(RangeParser,ReactorManager,GA):
         Collects data from Arduinos and logs it to disk.
         """
         print("[INFO]","GET",datetime.now().strftime("%c"))
-        self.past_data = self.data.copy() if self.data is not None else self.payload
-        self.data = self.F_get()
+        self.past_data = self.data.copy() if self.data is not None else pd.DataFrame(self.payload)
+        self.data = pd.DataFrame(self.F_get())
         self.f_map(self.data,self.past_data)
         self.log.log_many_rows(self.data,tags={'growth_state':tag})
         self.log.log_optimal(column=self.fparam,maximum=self.maximize,tags={'growth_state':tag})   
@@ -264,7 +258,8 @@ class Spectra(RangeParser,ReactorManager,GA):
                         self.p = ReLUP(self.fitness*self.fitness*self.fitness)
                         #Hotfix for elitism
                         print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
-                        print(f"{bcolors.BOLD}{pd.DataFrame(self.pretty_print_dict(self.data))}{bcolors.ENDC}")
+                        self.data.loc['p',:] = self.p.copy()
+                        print(f"{bcolors.BOLD}{self.data.T.loc[:,self.parameters+['power','efficiency','growth_rate','p']]}{bcolors.ENDC}")
                         if self.elitism:
                             self.elite_ix = self.ids[self.p.argmax()]
                             self.anti_elite_ix = self.ids[self.p.argmin()]
