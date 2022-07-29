@@ -141,7 +141,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         Computation for the fitness function.
         """
         f_1 = x_1.loc[self.density_param].astype(float)
-        self.power = (pd.DataFrame(self.G_as_keyed()).T*self.irradiance).T
+        self.power = (pd.DataFrame(self.G_as_keyed()).T*self.irradiance).sum(axis=1)
         if (self.dt is not np.nan) and (self.iteration_counter>0):
             f_0 = x_0.loc[self.density_param].astype(float)
             self.growth_rate = (f_1-f_0)/self.dt
