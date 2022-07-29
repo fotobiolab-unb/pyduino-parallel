@@ -95,6 +95,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         
         #assert os.path.exists(PARAM_PATH)
         self.parameters = SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
+        self.titled_parameters = list(map(lambda x: x.title(),self.paramters))
 
         RangeParser.__init__(self,ranges,self.parameters)
 
@@ -264,7 +265,7 @@ class Spectra(RangeParser,ReactorManager,GA):
                         #Hotfix for elitism
                         print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
                         self.data.loc['p',:] = self.p.copy()
-                        print(f"{bcolors.BOLD}{self.data.T.loc[:,self.parameters+['power','efficiency','growth_rate','p']]}{bcolors.ENDC}")
+                        print(f"{bcolors.BOLD}{self.data.T.loc[:,self.titled_parameters+['power','efficiency','growth_rate','p']]}{bcolors.ENDC}")
                         if self.elitism:
                             self.elite_ix = self.ids[self.p.argmax()]
                             self.anti_elite_ix = self.ids[self.p.argmin()]
