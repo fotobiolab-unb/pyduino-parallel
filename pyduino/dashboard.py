@@ -100,7 +100,7 @@ def get_matrix(n):
     ))
     fig['layout']['template'] = THEME
     fig['layout']['title'] = "Computed Parameters"
-    #fig.data[0].update(zmin=0,zmax=100)
+    fig.data[0].update(zmin=0,zmax=2)
     fig['layout']['font']['size']=20
     fig['layout']['font']['family']="monospace"
     return fig

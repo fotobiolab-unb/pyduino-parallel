@@ -142,11 +142,12 @@ class Spectra(RangeParser,ReactorManager,GA):
         Computation for the fitness function.
         """
         f_1 = x_1.loc[self.density_param].astype(float)
-        self.power = (pd.DataFrame(self.G_as_keyed()).T*self.irradiance).sum(axis=1)
+        self.power = ((pd.DataFrame(self.G_as_keyed()).T*self.irradiance).sum(axis=1))/100
         if (self.dt is not np.nan) and (self.iteration_counter>0):
             f_0 = x_0.loc[self.density_param].astype(float)
             self.growth_rate = (f_1-f_0)/self.dt
-            self.efficiency = self.growth_rate/(self.power+1)
+            #self.efficiency = self.growth_rate/(self.power+1)
+            self.efficiency = self.growth_rate/(self.power)
         else:
             self.growth_rate = self.power*0
             self.efficiency = self.power*0
@@ -244,12 +245,15 @@ class Spectra(RangeParser,ReactorManager,GA):
         if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
         if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
 
-        self.iteration_counter = 0
+        self.iteration_counter = 1
+
+        self.GET("growing")
 
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
             try:
                 self.deltaT = deltaT
+                print("START")
                 while True:
                     #growing
                     self.t_grow_1 = datetime.now()
