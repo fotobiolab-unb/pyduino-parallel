@@ -149,8 +149,8 @@ class Spectra(RangeParser,ReactorManager,GA):
             #self.efficiency = self.growth_rate/(self.power+1)
             self.efficiency = self.growth_rate/(self.power)
         else:
-            self.growth_rate = self.power*0
-            self.efficiency = self.power*0
+            self.growth_rate = self.power*np.nan
+            self.efficiency = self.power*np.nan
         x_1.loc['power',:] = self.power.copy()
         x_1.loc['efficiency',:] = self.efficiency.copy()
         x_1.loc['growth_rate',:] = self.growth_rate.copy()
