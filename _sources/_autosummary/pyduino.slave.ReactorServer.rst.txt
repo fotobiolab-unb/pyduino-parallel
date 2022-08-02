@@ -51,6 +51,7 @@ pyduino.slave.ReactorServer
       ~ReactorServer.inject_url_defaults
       ~ReactorServer.iter_blueprints
       ~ReactorServer.log_exception
+      ~ReactorServer.make_aborter
       ~ReactorServer.make_config
       ~ReactorServer.make_default_options_response
       ~ReactorServer.make_response
@@ -63,6 +64,7 @@ pyduino.slave.ReactorServer
       ~ReactorServer.process_response
       ~ReactorServer.put
       ~ReactorServer.raise_routing_exception
+      ~ReactorServer.redirect
       ~ReactorServer.register_blueprint
       ~ReactorServer.register_error_handler
       ~ReactorServer.request_context
@@ -85,9 +87,9 @@ pyduino.slave.ReactorServer
       ~ReactorServer.test_client
       ~ReactorServer.test_request_context
       ~ReactorServer.trap_http_exception
-      ~ReactorServer.try_trigger_before_first_request_functions
       ~ReactorServer.update_template_context
       ~ReactorServer.url_defaults
+      ~ReactorServer.url_for
       ~ReactorServer.url_value_preprocessor
       ~ReactorServer.wsgi_app
    
@@ -107,10 +109,11 @@ pyduino.slave.ReactorServer
       ~ReactorServer.jinja_env
       ~ReactorServer.jinja_loader
       ~ReactorServer.jinja_options
+      ~ReactorServer.json_decoder
+      ~ReactorServer.json_encoder
       ~ReactorServer.logger
       ~ReactorServer.name
       ~ReactorServer.permanent_session_lifetime
-      ~ReactorServer.preserve_context_on_exception
       ~ReactorServer.propagate_exceptions
       ~ReactorServer.secret_key
       ~ReactorServer.send_file_max_age_default
@@ -125,6 +128,8 @@ pyduino.slave.ReactorServer
       ~ReactorServer.use_x_sendfile
       ~ReactorServer.instance_path
       ~ReactorServer.config
+      ~ReactorServer.aborter
+      ~ReactorServer.json
       ~ReactorServer.url_build_error_handlers
       ~ReactorServer.before_first_request_funcs
       ~ReactorServer.teardown_appcontext_funcs
