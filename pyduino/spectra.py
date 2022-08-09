@@ -145,7 +145,8 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.power = ((pd.DataFrame(self.G_as_keyed()).T*self.irradiance).sum(axis=1))/100
         if (self.dt is not np.nan) and (self.iteration_counter>0):
             f_0 = x_0.loc[self.density_param].astype(float)
-            self.growth_rate = (f_1-f_0)/self.dt
+            #self.growth_rate = (f_1-f_0)/self.dt
+            self.growth_rate = (f_1/f_0-1)/self.dt
             #self.efficiency = self.growth_rate/(self.power+1)
             self.efficiency = self.growth_rate/(self.power)
         else:
