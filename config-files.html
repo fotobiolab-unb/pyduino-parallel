@@ -2,10 +2,12 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="pyduino.data_parser" href="_autosummary/pyduino.data_parser.html" /><link rel="prev" title="Quickstart" href="quickstart.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/><title>Python Module Index - Pyduino documentation</title>
-<link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+        <title>Configuration Files - Pyduino documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -133,7 +135,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -153,9 +155,9 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config-files.html">Configuration Files</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Configuration Files</a></li>
 </ul>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="_autosummary/pyduino.data_parser.html">pyduino.data_parser</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -230,76 +232,55 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          
-<section class="domainindex-section">
-  <h1>Python Module Index</h1>
-  <div class="domainindex-jumpbox"><a href="#cap-p"><strong>p</strong></a></div>
+          <section id="configuration-files">
+<h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this heading">#</a></h1>
+<p>The configuration files are in YAML format and are divided in four sections: hyperparameters, slave, system and dash. By default, <cite>init_spectra.py</cite> will look for the default confguration file <cite>config.yaml</cite> located inside the <cite>pyduino</cite> folder. In order to specify a custom file, pass the flag <cite>–config</cite> along with the path. So, for a file named <cite>custom_config_file.yaml</cite>, the syntax will be</p>
+<p>:: python</p>
+<blockquote>
+<div><p>run init_spectra.py –config custom_config_file.yaml</p>
+</div></blockquote>
+<section id="slave-parameters">
+<h2>Slave Parameters<a class="headerlink" href="#slave-parameters" title="Permalink to this heading">#</a></h2>
+<p>The slave section gets parameters which are responsible to deal with the connection with the reactors. As the newtork search is done with Nmap, you can use the same conventions in the inputs.</p>
+<ul class="simple">
+<li><p><cite>ports</cite>: The port in which the slave service is running in the reactor. It’s 5000 by default.</p></li>
+<li><p><cite>network</cite>: Network to scan for reactors. As this will be passed to Nmap, you can specify a single IP, CIDR notation (192.168.1.0/24), or a range like “192.168.1.0-255”.</p></li>
+<li><p><cite>exclude</cite>: IPs to ignore in the search; these won’t be used by the program. For multiple IPs, use a comma to separate them: <cite>‘x.x.x.x,y.y.y.y’</cite>. If there are no IPs to exclude, just pass <cite>false</cite> as a value.</p></li>
+</ul>
 </section>
-<table class="domainindex-table">
-  <tr class="pcap">
-    <td></td><td>&#160;</td><td></td>
-  </tr>
-  <tr class="cap" id="cap-p">
-    <td></td><td><strong>p</strong></td><td></td>
-  </tr>
-  <tr>
-    <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-    <td>
-        <code class="xref">pyduino</code></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="_autosummary/pyduino.data_parser.html#module-pyduino.data_parser"><code class="xref">pyduino.data_parser</code></a></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="_autosummary/pyduino.log.html#module-pyduino.log"><code class="xref">pyduino.log</code></a></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="_autosummary/pyduino.pyduino2.html#module-pyduino.pyduino2"><code class="xref">pyduino.pyduino2</code></a></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="_autosummary/pyduino.slave.html#module-pyduino.slave"><code class="xref">pyduino.slave</code></a></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="_autosummary/pyduino.spectra.html#module-pyduino.spectra"><code class="xref">pyduino.spectra</code></a></td><td>
-    <em></em></td>
-  </tr>
-  <tr class="cg-1">
-    <td></td>
-    <td>&#160;&#160;&#160;
-        <a href="_autosummary/pyduino.utils.html#module-pyduino.utils"><code class="xref">pyduino.utils</code></a></td><td>
-    <em></em></td>
-  </tr>
-</table>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="_autosummary/pyduino.data_parser.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">pyduino.data_parser</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="quickstart.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Quickstart</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -320,8 +301,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Configuration Files</a><ul>
+<li><a class="reference internal" href="#slave-parameters">Slave Parameters</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
