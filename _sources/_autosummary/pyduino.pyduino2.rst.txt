@@ -29,6 +29,7 @@
       :toctree:                                          
       :template: custom-class-template.rst               
    
+      Paths
       Reactor
       ReactorManager
    

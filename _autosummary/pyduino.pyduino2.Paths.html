@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.utils.TriangleWave" href="pyduino.utils.TriangleWave.html" /><link rel="prev" title="pyduino.utils.get_servers" href="pyduino.utils.get_servers.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.pyduino2.Reactor" href="pyduino.pyduino2.Reactor.html" /><link rel="prev" title="pyduino.pyduino2.set_in_chunks" href="pyduino.pyduino2.set_in_chunks.html" />
 
     <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
-        <title>pyduino.utils.yaml_get - Pyduino documentation</title>
+        <title>pyduino.pyduino2.Paths - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -173,12 +173,12 @@
 <li class="toctree-l2"><a class="reference internal" href="pyduino.log.log.html">pyduino.log.log</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.pyduino2.html">pyduino.pyduino2</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="pyduino.pyduino2.html">pyduino.pyduino2</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.chunks.html">pyduino.pyduino2.chunks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.reboot_wrapper.html">pyduino.pyduino2.reboot_wrapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.send_wrapper.html">pyduino.pyduino2.send_wrapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.set_in_chunks.html">pyduino.pyduino2.set_in_chunks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.Paths.html">pyduino.pyduino2.Paths</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.pyduino2.Paths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.Reactor.html">pyduino.pyduino2.Reactor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.pyduino2.ReactorManager.html">pyduino.pyduino2.ReactorManager</a></li>
 </ul>
@@ -196,10 +196,10 @@
 <li class="toctree-l2"><a class="reference internal" href="pyduino.spectra.Spectra.html">pyduino.spectra.Spectra</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="pyduino.utils.html">pyduino.utils</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="pyduino.utils.html">pyduino.utils</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.ReLUP.html">pyduino.utils.ReLUP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.get_servers.html">pyduino.utils.get_servers</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">pyduino.utils.yaml_get</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyduino.utils.yaml_get.html">pyduino.utils.yaml_get</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.TriangleWave.html">pyduino.utils.TriangleWave</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pyduino.utils.bcolors.html">pyduino.utils.bcolors</a></li>
 </ul>
@@ -237,12 +237,30 @@
           </label>
         </div>
         <article role="main">
-          <section id="pyduino-utils-yaml-get">
-<h1>pyduino.utils.yaml_get<a class="headerlink" href="#pyduino-utils-yaml-get" title="Permalink to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyduino.utils.yaml_get">
-<span class="sig-prename descclassname"><span class="pre">pyduino.utils.</span></span><span class="sig-name descname"><span class="pre">yaml_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.utils.yaml_get" title="Permalink to this definition">#</a></dt>
-<dd><p>Loads hyperparameters from a YAML file.</p>
+          <section id="pyduino-pyduino2-paths">
+<h1>pyduino.pyduino2.Paths<a class="headerlink" href="#pyduino-pyduino2-paths" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyduino.pyduino2.Paths">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyduino.pyduino2.</span></span><span class="sig-name descname"><span class="pre">Paths</span></span><a class="headerlink" href="#pyduino.pyduino2.Paths" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyduino.pyduino2.Paths.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyduino.pyduino2.Paths.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyduino.pyduino2.Paths.__init__" title="pyduino.pyduino2.Paths.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code>(config_path)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </dd></dl>
 
 </section>
@@ -252,23 +270,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="pyduino.utils.TriangleWave.html">
+          <a class="next-page" href="pyduino.pyduino2.Reactor.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">pyduino.utils.TriangleWave</div>
+                <div class="title">pyduino.pyduino2.Reactor</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="pyduino.utils.get_servers.html">
+          <a class="prev-page" href="pyduino.pyduino2.set_in_chunks.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">pyduino.utils.get_servers</div>
+                <div class="title">pyduino.pyduino2.set_in_chunks</div>
                 
               </div>
             </a>
