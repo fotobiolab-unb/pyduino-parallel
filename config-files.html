@@ -241,10 +241,9 @@
           <section id="configuration-files">
 <h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this heading">#</a></h1>
 <p>The configuration files are in YAML format and are divided in four sections: hyperparameters, slave, system and dash. By default, <cite>init_spectra.py</cite> will look for the default confguration file <cite>config.yaml</cite> located inside the <cite>pyduino</cite> folder. In order to specify a custom file, pass the flag <cite>–config</cite> along with the path. So, for a file named <cite>custom_config_file.yaml</cite>, the syntax will be</p>
-<p>:: python</p>
-<blockquote>
-<div><p>run init_spectra.py –config custom_config_file.yaml</p>
-</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">run</span> <span class="n">init_spectra</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">config</span> <span class="n">custom_config_file</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
 <section id="slave-parameters">
 <h2>Slave Parameters<a class="headerlink" href="#slave-parameters" title="Permalink to this heading">#</a></h2>
 <p>The slave section gets parameters which are responsible to deal with the connection with the reactors. As the newtork search is done with Nmap, you can use the same conventions in the inputs.</p>

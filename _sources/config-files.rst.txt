@@ -3,9 +3,7 @@ Configuration Files
 
 The configuration files are in YAML format and are divided in four sections: hyperparameters, slave, system and dash. By default, `init_spectra.py` will look for the default confguration file `config.yaml` located inside the `pyduino` folder. In order to specify a custom file, pass the flag `--config` along with the path. So, for a file named `custom_config_file.yaml`, the syntax will be
 
-:: python
-
-    run init_spectra.py --config custom_config_file.yaml
+>>> run init_spectra.py --config custom_config_file.yaml
 
 
 Slave Parameters
