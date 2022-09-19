@@ -59,8 +59,9 @@ hyperparameters:
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"
+  exclude: "192.168.1.112"
 system:
-  initial_state: "preset_state.csv"
+  initial_state: "preset_state.d/no4.csv"
   reboot_wait_time: 5 #Time in seconds to wait after a reboot.
   relevant_parameters:
     # - brilho

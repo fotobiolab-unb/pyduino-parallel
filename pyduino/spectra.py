@@ -1,5 +1,5 @@
 from gapy.gapy2 import GA
-from pyduino.pyduino2 import ReactorManager, chunks, SYSTEM_PARAMETERS, INITIAL_STATE_PATH, REACTOR_PARAMETERS, RELEVANT_PARAMETERS, SCHEMA
+from pyduino.pyduino2 import ReactorManager, chunks, PATHS
 import numpy as np
 from functools import partial
 import json
@@ -94,13 +94,13 @@ class Spectra(RangeParser,ReactorManager,GA):
             self.spectrum = json.loads(jfile.read())
         
         #assert os.path.exists(PARAM_PATH)
-        self.parameters = SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
+        self.parameters = PATHS.SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
         self.titled_parameters = list(map(lambda x: x.title(),self.parameters))
 
         RangeParser.__init__(self,ranges,self.parameters)
 
         #assert os.path.exists(IRRADIANCE_PATH)
-        self.irradiance = SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
+        self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
         #self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
         self.irradiance = pd.Series(self.irradiance)
 
@@ -266,7 +266,8 @@ class Spectra(RangeParser,ReactorManager,GA):
                     #GA
                     if run_ga:
                         #self.p = softmax(self.fitness/100)
-                        self.p = ReLUP(self.fitness*self.fitness*self.fitness)
+                        #self.p = ReLUP(self.fitness*self.fitness*self.fitness)
+                        self.p = ReLUP(self.fitness*self.fitness)
                         #Hotfix for elitism
                         print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
                         self.data.loc['p',:] = self.p.copy()
