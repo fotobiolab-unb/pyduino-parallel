@@ -14,6 +14,7 @@ Welcome to Pyduino's documentation!
    :maxdepth: 2
 
    quickstart
+   config-files
 
 .. rubric:: Modules
 
