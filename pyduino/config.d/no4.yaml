@@ -1,0 +1,228 @@
+hyperparameters:
+  reset_density: true #Whether or not to use gotod
+  log_name: "pre_free2400_branco_4" #Log folder name (delete to use the default)
+  f_param: efficiency #Parameter to read as fitness from the reactors
+  density_param: DensidadeAtual #Parameter name for density counts
+  mutation_probability: 0.025
+  maximize: true
+  resolution: 8 #Number of bits used for each parameter
+  elitism: true #Whether or not to use elitism
+  do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
+  rng_seed: 3 #Random seed for genetic algorithm
+  ranges:
+    # brilho:
+    #   - 0
+    #   - 100
+    branco:
+      - 0
+      - 100
+      #- 19
+    full:
+      - 0
+      - 100
+      #- 17
+    "440":
+      - 0
+      - 100
+      #- 26
+    "470":
+      - 0
+      - 100
+      #- 24
+    "495":
+      - 0
+      - 100
+      #- 24
+    "530":
+      - 0
+      - 100
+      #- 24
+    "595":
+      - 0
+      - 100
+      #- 92
+    "634":
+      - 0
+      - 100
+      #- 58
+    "660":
+      - 0
+      - 100
+      #- 44
+    "684":
+      - 0
+      - 100
+      #- 35                                          
+    #others:
+      #- 0
+      #- 100
+slave:
+  port: "5000" #Must be a string
+  network: "192.168.1.1/24"
+  exclude: "192.168.1.112"
+system:
+  initial_state: "preset_state.d/no4.csv"
+  reboot_wait_time: 5 #Time in seconds to wait after a reboot.
+  relevant_parameters:
+    # - brilho
+    - branco
+    - full
+    - "440"
+    - "470"
+    - "495"
+    - "530"
+    - "595"
+    - "634"
+    - "660"
+    - "684"
+  irradiance:
+    #brilho: 12
+    "branco": 10.35
+    "full": 11.50
+    "440": 7.72
+    "470": 8.50
+    "495": 8.30
+    "530": 8.56
+    "595": 2.17
+    "634": 3.44
+    "660": 4.52
+    "684": 5.74
+  standard_parameters:
+    #brilho: float
+    branco: float
+    full: float
+    "440": float
+    "470": float
+    "495": float
+    "530": float
+    "595": float
+    "634": float
+    "660": float
+    "684": float
+    cor: int
+    modopainel: int
+    brilho: float
+    bomdia: int
+    boanoite: int
+    tau: int
+    step: int
+    modotemp: int
+    temp: int
+    densidade: float
+    mododil: int
+    ar: int
+    ima: int
+    modoco2: int
+    co2: int
+    dtco2: int
+dash:
+  glob: "./log/pre_free2400_branco_4/*.csv"
+  plot:
+    - 
+      name: Temperature
+      cols:
+        Temp:
+        SetTemp:
+          dash: "dot"
+    -
+      name: pH
+      cols:
+        pH:
+    -
+      name: Density
+      cols:
+        DensidadeAtual:
+    -
+      name: Efficiency
+      cols:
+        efficiency:
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: GrowthRate
+      cols:
+        growth_rate:
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: power
+      cols:
+        power:
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: CO2
+      cols:
+        CO2:
+        SetCO2:
+          dash: "dash"
+    -
+      name: Branco
+      cols:
+        Branco:
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: Full
+      cols:
+        Full:
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: 440
+      cols:
+        "440":
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: 470
+      cols:
+        "470":
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: 495
+      cols:
+        "495":
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: 530
+      cols:
+        "530":
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: 595
+      cols:
+        "595":
+          growing_only: true
+          #mode: 'lines+markers'                                          
+    -
+      name: 634
+      cols:
+        "634":
+          growing_only: true
+          #mode: 'lines+markers'
+    -
+      name: 660
+      cols:
+        "660":
+          growing_only: true
+          #mode: 'lines+markers'         
+    -
+      name: 684
+      cols:
+        "684":
+          growing_only: true
+          #mode: 'lines+markers'           
+  x_col: 'elapsed_time_hours'
+  sep: "\t"
+  tail: 128
+  display_cols: 3
+  theme: cyborg
+  subplot_height: 200
+  cumulative: false
+  update_time: 300000 #In miliseconds
+  max_points: 300 #Maximum number of points to display at once
+  vspace: 0.02

@@ -23,13 +23,26 @@ STEP = 1/8
 HEADER_DELAY = 5
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 CACHEPATH = "cache.csv"
-CONFIG_PATH = os.path.join(__location__,"config.yaml")
-SYSTEM_PARAMETERS = yaml_get(CONFIG_PATH)['system']
-SLAVE_PARAMETERS = yaml_get(CONFIG_PATH)['slave']
-RELEVANT_PARAMETERS = SYSTEM_PARAMETERS['relevant_parameters']
-INITIAL_STATE_PATH = os.path.join(__location__,SYSTEM_PARAMETERS['initial_state'])
-SCHEMA = SYSTEM_PARAMETERS["standard_parameters"]
-REACTOR_PARAMETERS = list(SCHEMA.keys())
+# CONFIG_PATH = os.path.join(__location__,"config.yaml")
+# SYSTEM_PARAMETERS = yaml_get(CONFIG_PATH)['system']
+# SLAVE_PARAMETERS = yaml_get(CONFIG_PATH)['slave']
+# RELEVANT_PARAMETERS = SYSTEM_PARAMETERS['relevant_parameters']
+# INITIAL_STATE_PATH = os.path.join(__location__,SYSTEM_PARAMETERS['initial_state'])
+# SCHEMA = SYSTEM_PARAMETERS["standard_parameters"]
+# REACTOR_PARAMETERS = list(SCHEMA.keys())
+
+class Paths():
+    def read(self,config_path):
+        self.CONFIG_PATH = config_path
+        self.SYSTEM_PARAMETERS = yaml_get(self.CONFIG_PATH)['system']
+        self.SLAVE_PARAMETERS = yaml_get(self.CONFIG_PATH)['slave']
+        self.RELEVANT_PARAMETERS = self.SYSTEM_PARAMETERS['relevant_parameters']
+        self.INITIAL_STATE_PATH = os.path.join(__location__,self.SYSTEM_PARAMETERS['initial_state'])
+        self.SCHEMA = self.SYSTEM_PARAMETERS["standard_parameters"]
+        self.REACTOR_PARAMETERS = list(self.SCHEMA.keys())
+
+PATHS = Paths()
+PATHS.read(os.path.join(__location__,"config.yaml"))
 
 #From https://stackoverflow.com/a/312464/6451772
 def chunks(lst, n):
@@ -156,7 +169,7 @@ def send_wrapper(reactor,command,delay,await_response):
 
 def reboot_wrapper(reactor):
     id,reactor = reactor
-    reactor.reboot(retry_time=SYSTEM_PARAMETERS["reboot_wait_time"])
+    reactor.reboot(retry_time=PATHS.SYSTEM_PARAMETERS["reboot_wait_time"])
     return True
 
 def set_in_chunks(X):
@@ -166,10 +179,12 @@ def set_in_chunks(X):
 class ReactorManager:
     pinged = False
     def __init__(self):
-        self.network = SLAVE_PARAMETERS["network"]
-        self.port = SLAVE_PARAMETERS["port"]
+        self.network = PATHS.SLAVE_PARAMETERS["network"]
+        self.port = PATHS.SLAVE_PARAMETERS["port"]
+        self.exclude = PATHS.SLAVE_PARAMETERS["exclude"]
+        self.exclude = self.exclude if self.exclude else None
         logging.debug(f"Searching for devices on {self.network}")
-        servers = get_servers(self.network,self.port)
+        servers = get_servers(self.network,self.port,self.exclude)
         logging.debug(f"Found {len(servers)} devices")
         self.reactors = {}
 
@@ -267,7 +282,7 @@ class ReactorManager:
                     self.reactors[i].reset()
                     self.reactors[i].connect()
                 print("Recovering last state")
-                self.set_preset_state(path=INITIAL_STATE_PATH)
+                self.set_preset_state(path=PATHS.INITIAL_STATE_PATH)
                 self.set_preset_state(path=CACHEPATH)
                 sleep(10)
                 print("Done"+bcolors.ENDC)
@@ -297,7 +312,7 @@ class ReactorManager:
             self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
         return rows
     
-    def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4, params=REACTOR_PARAMETERS, **kwargs):
+    def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4, params=PATHS.REACTOR_PARAMETERS, **kwargs):
         """
         Prepare Arduinos with preset parameters from a csv file.
         Args:
@@ -313,13 +328,13 @@ class ReactorManager:
             cols = list(set(df.columns)&set(params))
             df = df.loc[:,cols]
         #Setting schema
-        schema = set(df.columns)&SCHEMA.keys()
-        schema = {k:SCHEMA[k] for k in schema}
+        schema = set(df.columns)&PATHS.SCHEMA.keys()
+        schema = {k:PATHS.SCHEMA[k] for k in schema}
         df = df.astype(schema)
         with Pool(7) as p:
             p.map(set_in_chunks,map(lambda x: (self.reactors[x[0]],x[1],chunksize),df.to_dict(orient="index").items()))
         #Saving relevant parameters' values
-        cols = list(set(df.columns)&set(RELEVANT_PARAMETERS))
+        cols = list(set(df.columns)&set(PATHS.RELEVANT_PARAMETERS))
         self.preset_state = df.loc[:,cols]
         self.payload = self.preset_state.to_dict('index').copy()
 

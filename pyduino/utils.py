@@ -38,9 +38,10 @@ def ReLUP(x):
     else:
         return x_relu/x_relu.sum()
 
-def get_servers(net="192.168.0.1/24",port="5000"):
+def get_servers(net="192.168.0.1/24",port="5000",exclude=None):
     port_scanner = PortScanner()
-    results = port_scanner.scan(net,port,"--open",timeout=60)
+    args = "--open" if exclude is None else f"--open --exclude {exclude}"
+    results = port_scanner.scan(net,port,arguments=args,timeout=60)
     hosts = list(map(lambda x: f"http://{x}:{str(port)}",results["scan"].keys()))
     servers = []
     for host in hosts:
