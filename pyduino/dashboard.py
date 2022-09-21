@@ -17,7 +17,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import yaml
-from pyduino.pyduino2 import PATHS.RELEVANT_PARAMETERS, CACHEPATH
+from pyduino.pyduino2 import CACHEPATH
 from pyduino.utils import yaml_get
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
