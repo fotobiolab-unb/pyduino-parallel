@@ -1,4 +1,4 @@
-from pyduino.spectra import Spectra, hyperparameters, PATHS
+from pyduino.spectra import Spectra, PATHS
 import argparse
 import os
 
@@ -12,4 +12,4 @@ if args.config:
     PATHS.read(SPECTRUM_PATH)
 
 if __name__=="__main__":
-    g = Spectra(**hyperparameters)
+    g = Spectra(**PATHS.HYPERPARAMETERS)
