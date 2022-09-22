@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime
 import io
 from glob import glob
+from uuid import uuid1
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 config_file = os.path.join(__location__,"config.yaml")
@@ -57,7 +58,7 @@ class log:
 
         self.paths = list(map(lambda x: os.path.join(self.prefix,x),self.subdir))
 
-        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp}.yaml"),'w') as wfile:
+        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp}-{str(uuid1())}.yaml"),'w') as wfile:
             wfile.write(cfile.read())
 
 
