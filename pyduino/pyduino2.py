@@ -37,6 +37,7 @@ class Paths():
         self.SYSTEM_PARAMETERS = yaml_get(self.CONFIG_PATH)['system']
         self.SLAVE_PARAMETERS = yaml_get(self.CONFIG_PATH)['slave']
         self.RELEVANT_PARAMETERS = self.SYSTEM_PARAMETERS['relevant_parameters']
+        self.HYPERPARAMETERS = yaml_get(self.CONFIG_PATH)['hyperparameters']
         self.INITIAL_STATE_PATH = os.path.join(__location__,self.SYSTEM_PARAMETERS['initial_state'])
         self.SCHEMA = self.SYSTEM_PARAMETERS["standard_parameters"]
         self.REACTOR_PARAMETERS = list(self.SCHEMA.keys())

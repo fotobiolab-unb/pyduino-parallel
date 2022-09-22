@@ -22,8 +22,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
 
 #Path to hyperparameters for the genetic algorithm
-SYS_PARAM = os.path.join(__location__,"config.yaml")
-hyperparameters = yaml_get(SYS_PARAM)['hyperparameters']
+hyperparameters = PATHS.HYPERPARAMETERS
 
 #Path to irradiance values
 IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
