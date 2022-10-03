@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="pyduino.spectra" href="pyduino.spectra.html" /><link rel="prev" title="pyduino.slave" href="pyduino.slave.html" />
 
-    <meta name="generator" content="sphinx-5.1.1, furo 2022.09.15"/>
+    <meta name="generator" content="sphinx-5.2.3, furo 2022.09.29"/>
         <title>pyduino.slave.ReactorServer - Pyduino documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=9ec31e2665bf879c1d47d93a8ec4893870ee1e45" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -135,7 +135,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -224,7 +224,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -232,7 +233,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -2638,8 +2639,160 @@ start the response.</p></li>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">pyduino.slave.ReactorServer</a><ul>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer"><code class="docutils literal notranslate"><span class="pre">ReactorServer</span></code></a><ul>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.__init__"><code class="docutils literal notranslate"><span class="pre">ReactorServer.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.aborter"><code class="docutils literal notranslate"><span class="pre">ReactorServer.aborter</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.aborter_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.aborter_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.add_template_filter"><code class="docutils literal notranslate"><span class="pre">ReactorServer.add_template_filter()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.add_template_global"><code class="docutils literal notranslate"><span class="pre">ReactorServer.add_template_global()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.add_template_test"><code class="docutils literal notranslate"><span class="pre">ReactorServer.add_template_test()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.add_url_rule"><code class="docutils literal notranslate"><span class="pre">ReactorServer.add_url_rule()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.after_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.after_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.after_request_funcs"><code class="docutils literal notranslate"><span class="pre">ReactorServer.after_request_funcs</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.app_context"><code class="docutils literal notranslate"><span class="pre">ReactorServer.app_context()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.app_ctx_globals_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.app_ctx_globals_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.async_to_sync"><code class="docutils literal notranslate"><span class="pre">ReactorServer.async_to_sync()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.auto_find_instance_path"><code class="docutils literal notranslate"><span class="pre">ReactorServer.auto_find_instance_path()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.before_first_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.before_first_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.before_first_request_funcs"><code class="docutils literal notranslate"><span class="pre">ReactorServer.before_first_request_funcs</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.before_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.before_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.before_request_funcs"><code class="docutils literal notranslate"><span class="pre">ReactorServer.before_request_funcs</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.blueprints"><code class="docutils literal notranslate"><span class="pre">ReactorServer.blueprints</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.cli"><code class="docutils literal notranslate"><span class="pre">ReactorServer.cli</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.close"><code class="docutils literal notranslate"><span class="pre">ReactorServer.close()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.config"><code class="docutils literal notranslate"><span class="pre">ReactorServer.config</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.config_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.config_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.connect"><code class="docutils literal notranslate"><span class="pre">ReactorServer.connect()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.context_processor"><code class="docutils literal notranslate"><span class="pre">ReactorServer.context_processor()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.create_global_jinja_loader"><code class="docutils literal notranslate"><span class="pre">ReactorServer.create_global_jinja_loader()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.create_jinja_environment"><code class="docutils literal notranslate"><span class="pre">ReactorServer.create_jinja_environment()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.create_url_adapter"><code class="docutils literal notranslate"><span class="pre">ReactorServer.create_url_adapter()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.debug"><code class="docutils literal notranslate"><span class="pre">ReactorServer.debug</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.default_config"><code class="docutils literal notranslate"><span class="pre">ReactorServer.default_config</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.delete"><code class="docutils literal notranslate"><span class="pre">ReactorServer.delete()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.dispatch_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.dispatch_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.do_teardown_appcontext"><code class="docutils literal notranslate"><span class="pre">ReactorServer.do_teardown_appcontext()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.do_teardown_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.do_teardown_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.endpoint"><code class="docutils literal notranslate"><span class="pre">ReactorServer.endpoint()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.ensure_sync"><code class="docutils literal notranslate"><span class="pre">ReactorServer.ensure_sync()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.env"><code class="docutils literal notranslate"><span class="pre">ReactorServer.env</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.error_handler_spec"><code class="docutils literal notranslate"><span class="pre">ReactorServer.error_handler_spec</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.errorhandler"><code class="docutils literal notranslate"><span class="pre">ReactorServer.errorhandler()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.extensions"><code class="docutils literal notranslate"><span class="pre">ReactorServer.extensions</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.finalize_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.finalize_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.full_dispatch_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.full_dispatch_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.get"><code class="docutils literal notranslate"><span class="pre">ReactorServer.get()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.get_send_file_max_age"><code class="docutils literal notranslate"><span class="pre">ReactorServer.get_send_file_max_age()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.got_first_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.got_first_request</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.handle_exception"><code class="docutils literal notranslate"><span class="pre">ReactorServer.handle_exception()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.handle_http_exception"><code class="docutils literal notranslate"><span class="pre">ReactorServer.handle_http_exception()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.handle_url_build_error"><code class="docutils literal notranslate"><span class="pre">ReactorServer.handle_url_build_error()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.handle_user_exception"><code class="docutils literal notranslate"><span class="pre">ReactorServer.handle_user_exception()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.has_static_folder"><code class="docutils literal notranslate"><span class="pre">ReactorServer.has_static_folder</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.import_name"><code class="docutils literal notranslate"><span class="pre">ReactorServer.import_name</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.inject_url_defaults"><code class="docutils literal notranslate"><span class="pre">ReactorServer.inject_url_defaults()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.instance_path"><code class="docutils literal notranslate"><span class="pre">ReactorServer.instance_path</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.iter_blueprints"><code class="docutils literal notranslate"><span class="pre">ReactorServer.iter_blueprints()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.jinja_env"><code class="docutils literal notranslate"><span class="pre">ReactorServer.jinja_env</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.jinja_environment"><code class="docutils literal notranslate"><span class="pre">ReactorServer.jinja_environment</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.jinja_loader"><code class="docutils literal notranslate"><span class="pre">ReactorServer.jinja_loader</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.jinja_options"><code class="docutils literal notranslate"><span class="pre">ReactorServer.jinja_options</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.json"><code class="docutils literal notranslate"><span class="pre">ReactorServer.json</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.json_decoder"><code class="docutils literal notranslate"><span class="pre">ReactorServer.json_decoder</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.json_encoder"><code class="docutils literal notranslate"><span class="pre">ReactorServer.json_encoder</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.json_provider_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.json_provider_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.log_exception"><code class="docutils literal notranslate"><span class="pre">ReactorServer.log_exception()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.logger"><code class="docutils literal notranslate"><span class="pre">ReactorServer.logger</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.make_aborter"><code class="docutils literal notranslate"><span class="pre">ReactorServer.make_aborter()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.make_config"><code class="docutils literal notranslate"><span class="pre">ReactorServer.make_config()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.make_default_options_response"><code class="docutils literal notranslate"><span class="pre">ReactorServer.make_default_options_response()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.make_response"><code class="docutils literal notranslate"><span class="pre">ReactorServer.make_response()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.make_shell_context"><code class="docutils literal notranslate"><span class="pre">ReactorServer.make_shell_context()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.name"><code class="docutils literal notranslate"><span class="pre">ReactorServer.name</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.open_instance_resource"><code class="docutils literal notranslate"><span class="pre">ReactorServer.open_instance_resource()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.open_resource"><code class="docutils literal notranslate"><span class="pre">ReactorServer.open_resource()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.patch"><code class="docutils literal notranslate"><span class="pre">ReactorServer.patch()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.permanent_session_lifetime"><code class="docutils literal notranslate"><span class="pre">ReactorServer.permanent_session_lifetime</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.post"><code class="docutils literal notranslate"><span class="pre">ReactorServer.post()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.preprocess_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.preprocess_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.process_response"><code class="docutils literal notranslate"><span class="pre">ReactorServer.process_response()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.propagate_exceptions"><code class="docutils literal notranslate"><span class="pre">ReactorServer.propagate_exceptions</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.put"><code class="docutils literal notranslate"><span class="pre">ReactorServer.put()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.redirect"><code class="docutils literal notranslate"><span class="pre">ReactorServer.redirect()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.register_blueprint"><code class="docutils literal notranslate"><span class="pre">ReactorServer.register_blueprint()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.register_error_handler"><code class="docutils literal notranslate"><span class="pre">ReactorServer.register_error_handler()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.request_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.request_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.request_context"><code class="docutils literal notranslate"><span class="pre">ReactorServer.request_context()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.reset"><code class="docutils literal notranslate"><span class="pre">ReactorServer.reset()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.response_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.response_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.root_path"><code class="docutils literal notranslate"><span class="pre">ReactorServer.root_path</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.route"><code class="docutils literal notranslate"><span class="pre">ReactorServer.route()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.run"><code class="docutils literal notranslate"><span class="pre">ReactorServer.run()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.secret_key"><code class="docutils literal notranslate"><span class="pre">ReactorServer.secret_key</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.select_jinja_autoescape"><code class="docutils literal notranslate"><span class="pre">ReactorServer.select_jinja_autoescape()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.send"><code class="docutils literal notranslate"><span class="pre">ReactorServer.send()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.send_file_max_age_default"><code class="docutils literal notranslate"><span class="pre">ReactorServer.send_file_max_age_default</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.send_static_file"><code class="docutils literal notranslate"><span class="pre">ReactorServer.send_static_file()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.session_cookie_name"><code class="docutils literal notranslate"><span class="pre">ReactorServer.session_cookie_name</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.session_interface"><code class="docutils literal notranslate"><span class="pre">ReactorServer.session_interface</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.set"><code class="docutils literal notranslate"><span class="pre">ReactorServer.set()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.shell_context_processor"><code class="docutils literal notranslate"><span class="pre">ReactorServer.shell_context_processor()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.shell_context_processors"><code class="docutils literal notranslate"><span class="pre">ReactorServer.shell_context_processors</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.should_ignore_error"><code class="docutils literal notranslate"><span class="pre">ReactorServer.should_ignore_error()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.static_folder"><code class="docutils literal notranslate"><span class="pre">ReactorServer.static_folder</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.static_url_path"><code class="docutils literal notranslate"><span class="pre">ReactorServer.static_url_path</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_appcontext"><code class="docutils literal notranslate"><span class="pre">ReactorServer.teardown_appcontext()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_appcontext_funcs"><code class="docutils literal notranslate"><span class="pre">ReactorServer.teardown_appcontext_funcs</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_request"><code class="docutils literal notranslate"><span class="pre">ReactorServer.teardown_request()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.teardown_request_funcs"><code class="docutils literal notranslate"><span class="pre">ReactorServer.teardown_request_funcs</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.template_context_processors"><code class="docutils literal notranslate"><span class="pre">ReactorServer.template_context_processors</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.template_filter"><code class="docutils literal notranslate"><span class="pre">ReactorServer.template_filter()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.template_folder"><code class="docutils literal notranslate"><span class="pre">ReactorServer.template_folder</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.template_global"><code class="docutils literal notranslate"><span class="pre">ReactorServer.template_global()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.template_test"><code class="docutils literal notranslate"><span class="pre">ReactorServer.template_test()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.templates_auto_reload"><code class="docutils literal notranslate"><span class="pre">ReactorServer.templates_auto_reload</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.test_cli_runner"><code class="docutils literal notranslate"><span class="pre">ReactorServer.test_cli_runner()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.test_cli_runner_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.test_cli_runner_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.test_client"><code class="docutils literal notranslate"><span class="pre">ReactorServer.test_client()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.test_client_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.test_client_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.test_request_context"><code class="docutils literal notranslate"><span class="pre">ReactorServer.test_request_context()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.testing"><code class="docutils literal notranslate"><span class="pre">ReactorServer.testing</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.trap_http_exception"><code class="docutils literal notranslate"><span class="pre">ReactorServer.trap_http_exception()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.update_template_context"><code class="docutils literal notranslate"><span class="pre">ReactorServer.update_template_context()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_build_error_handlers"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_build_error_handlers</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_default_functions"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_default_functions</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_defaults"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_defaults()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_for"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_for()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_map"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_map</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_map_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_map_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_rule_class"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_rule_class</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_value_preprocessor"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_value_preprocessor()</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.url_value_preprocessors"><code class="docutils literal notranslate"><span class="pre">ReactorServer.url_value_preprocessors</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.use_x_sendfile"><code class="docutils literal notranslate"><span class="pre">ReactorServer.use_x_sendfile</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.view_functions"><code class="docutils literal notranslate"><span class="pre">ReactorServer.view_functions</span></code></a></li>
+<li><a class="reference internal" href="#pyduino.slave.ReactorServer.wsgi_app"><code class="docutils literal notranslate"><span class="pre">ReactorServer.wsgi_app()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -2649,6 +2802,7 @@ start the response.</p></li>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
