@@ -147,7 +147,8 @@ class Spectra(RangeParser,ReactorManager,GA):
             #self.growth_rate = (f_1-f_0)/self.dt
             self.growth_rate = (f_1/f_0-1)/self.dt
             #self.efficiency = self.growth_rate/(self.power+1)
-            self.efficiency = self.growth_rate*np.exp(-self.power)
+            #self.efficiency = 1000000*self.growth_rate*np.exp(-self.power/5)
+            self.efficiency = 1000000*self.growth_rate*np.exp(-(self.power-7)*(self.power-7)/(2*1.5*1.5))
         else:
             self.growth_rate = self.power*np.nan
             self.efficiency = self.power*np.nan

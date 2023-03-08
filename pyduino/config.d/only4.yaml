@@ -1,11 +1,11 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "pre_free2400_branco_4" #Log folder name (delete to use the default)
+  log_name: "pre_dcte2400_branco_13" #Log folder name (delete to use the default)
   f_param: efficiency #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.025
   maximize: true
-  resolution: 8 #Number of bits used for each parameter
+  resolution: 4 #Number of bits used for each parameter
   elitism: true #Whether or not to use elitism
   do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
   rng_seed: 3 #Random seed for genetic algorithm
@@ -116,7 +116,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/pre_free2400_branco_4/*.csv"
+  glob: "./log/ga_dcte2400_branco_6/*.csv"
   plot:
     - 
       name: Temperature

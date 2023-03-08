@@ -1,66 +1,67 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "pre_free2400_branco_4" #Log folder name (delete to use the default)
+  log_name: "ga_dcte2400_branco_15" #Log folder name (delete to use the default)
   f_param: efficiency #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
-  mutation_probability: 0.025
+  mutation_probability: 0.01 #0.15
   maximize: true
-  resolution: 8 #Number of bits used for each parameter
+  resolution: 4 #Number of bits used for each parameter
   elitism: true #Whether or not to use elitism
   do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
-  rng_seed: 3 #Random seed for genetic algorithm
+  rng_seed: 2 #Random seed for genetic algorithm
   ranges:
     # brilho:
     #   - 0
     #   - 100
     branco:
-      - 0
-      - 100
-      #- 19
+      - 1
+      #- 100
+      - 19
     full:
       - 0
-      - 100
-      #- 17
+      #- 100
+      - 17
     "440":
       - 0
-      - 100
-      #- 26
+      #- 100
+      - 26
     "470":
       - 0
-      - 100
-      #- 24
+      #- 100
+      - 24
     "495":
       - 0
-      - 100
-      #- 24
+      #- 100
+      - 24
     "530":
       - 0
-      - 100
-      #- 24
+      #- 100
+      - 24
     "595":
       - 0
-      - 100
-      #- 92
+      #- 100
+      - 92
     "634":
       - 0
-      - 100
-      #- 58
+      #- 100
+      - 58
     "660":
       - 0
-      - 100
-      #- 44
+      #- 100
+      - 44
     "684":
       - 0
-      - 100
-      #- 35                                          
-    #others:
-      #- 0
       #- 100
+      - 35                                          
+    #others:
+    #  - 0
+    #  - 100
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"
+  exclude: "192.168.1.112"
 system:
-  initial_state: "preset_state.csv"
+  initial_state: "preset_state.d/no4.csv"
   reboot_wait_time: 5 #Time in seconds to wait after a reboot.
   relevant_parameters:
     # - brilho
@@ -115,7 +116,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/pre_free2400_branco_4/*.csv"
+  glob: "./log/pre_free1212_branco_3/*.csv"
   plot:
     - 
       name: Temperature
@@ -222,6 +223,6 @@ dash:
   theme: cyborg
   subplot_height: 200
   cumulative: false
-  update_time: 300000 #In miliseconds
+  update_time: 3000000 #In miliseconds
   max_points: 300 #Maximum number of points to display at once
   vspace: 0.02
