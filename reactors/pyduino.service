@@ -8,6 +8,9 @@ Restart=on-failure
 RestartSec=5
 WorkingDirectory=/home/pi/pyduino-parallel
 ExecStart=/usr/bin/python3 init_slave.py
+StandardOutput=journal
+StandardError=journal
+LogLevelMax=debug
 User=pi
 [Install]
 WantedBy=multi-user.target
