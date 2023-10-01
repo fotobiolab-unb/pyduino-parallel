@@ -1,0 +1,61 @@
+---
+- name: Setup Arduino Environment
+  hosts: reactors
+  become: yes
+  gather_facts: yes
+  vars_prompt:
+    - name: "GH_TOKEN"
+      prompt: "GitHub Token"
+      private: true
+  vars:
+    library_version: 0.1
+
+  tasks:
+    - name: Ensure required packages are installed
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git
+        - unzip
+        - python3
+        - python3-pip
+      when: ansible_os_family == 'Debian'
+
+    - name: Download repository
+      get_url:
+        url: https://github.com/fotobiolab-unb/pyduino-parallel/archive/v{{ library_version }}.zip
+        dest: /home/pi/pyduino-parallel.zip
+        headers:
+          Authorization: "token {{ GH_TOKEN }}"
+      when: ansible_os_family == 'Debian'
+
+    - name: Unzip repository
+      block:
+
+        - name: Delete folder if exists
+          file:
+            path: /home/pi/pyduino-parallel
+            state: absent
+
+        - name: Extract and move
+          unarchive:
+            remote_src: yes
+            src: /home/pi/pyduino-parallel.zip
+            dest: /home/pi
+
+    - name: Install Python Libraries
+      command: pip3 install -r /home/pi/pyduino-parallel/requirements.txt
+
+    - name: Moving unit file to Systemd
+      block:
+
+        - name: Delete file if exists
+          file:
+            path: /etc/systemd/system/pyduino.service
+            state: absent
+        
+        - name: Copy file
+          copy:
+            src: /home/pi/pyduino-parallel/reactors/pyduino.service
+            dest: /etc/systemd/system/pyduino.service
