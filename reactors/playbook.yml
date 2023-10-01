@@ -1,5 +1,5 @@
 ---
-- name: Setup Arduino Environment
+- name: Install Pyduino Parallel
   hosts: reactors
   become: yes
   gather_facts: yes
@@ -8,7 +8,7 @@
       prompt: "GitHub Token"
       private: true
   vars:
-    library_version: 0.1
+    library_version: master
 
   tasks:
     - name: Ensure required packages are installed
@@ -20,11 +20,12 @@
         - unzip
         - python3
         - python3-pip
+        - python3-pandas
       when: ansible_os_family == 'Debian'
 
     - name: Download repository
       get_url:
-        url: https://github.com/fotobiolab-unb/pyduino-parallel/archive/v{{ library_version }}.zip
+        url: https://github.com/fotobiolab-unb/pyduino-parallel/archive/{{ library_version }}.zip
         dest: /home/pi/pyduino-parallel.zip
         headers:
           Authorization: "token {{ GH_TOKEN }}"
@@ -35,6 +36,7 @@
 
         - name: Delete folder if exists
           file:
+            remote_src: yes
             path: /home/pi/pyduino-parallel
             state: absent
 
@@ -47,18 +49,54 @@
         - name: Renaming folver
           command: mv /home/pi/pyduino-parallel-{{ library_version }} /home/pi/pyduino-parallel
 
+        - name: Make Writeable
+          file:
+            path: /home/pi/pyduino-parallel
+            mode: 0777
+            recurse: yes
+
     - name: Install Python Libraries
-      command: pip3 install -r /home/pi/pyduino-parallel/requirements.txt
+      block:
+
+        - name: Install requirements
+          command: pip3 install -r /home/pi/pyduino-parallel/requirements.txt
 
     - name: Moving unit file to Systemd
       block:
 
         - name: Delete file if exists
           file:
+            remote_src: yes
             path: /etc/systemd/system/pyduino.service
             state: absent
         
         - name: Copy file
           copy:
+            remote_src: yes
             src: /home/pi/pyduino-parallel/reactors/pyduino.service
             dest: /etc/systemd/system/pyduino.service
+
+    - name: Deploying and Testing
+      block:
+
+        - name: Daemon Reload
+          shell: systemctl daemon-reload
+
+        - name: Enable Service
+          shell: systemctl enable pyduino.service
+
+        - name: Start Service
+          shell: systemctl start pyduino.service
+
+        - name: Wait for Service
+          wait_for:
+            port: 5000
+            delay: 5
+            timeout: 500
+
+        - name: GET port 5000
+          uri:
+            url: http://localhost:5000
+            method: GET
+            return_content: yes
+          register: result
