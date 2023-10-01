@@ -124,7 +124,7 @@ class ReactorServer(Flask):
             delay (float, optional): Delay in seconds before sending the initial command.
         """
         sleep(HEADER_DELAY)
-        self._recv()
+        self.serial.flush()
         self._send("quiet_connect")
         self.connected = True
 
