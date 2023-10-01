@@ -93,7 +93,7 @@
           shell: systemctl enable pyduino.service
 
         - name: Start Service
-          shell: systemctl start pyduino.service
+          shell: systemctl restart pyduino.service
 
         - name: Wait for Service
           wait_for:
