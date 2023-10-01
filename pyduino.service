@@ -1,0 +1,10 @@
+[Unit]
+Description=Pyduino Daemon
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/pyduino-parallel
+ExecStart=/usr/bin/python3 /home/pi/pyduino-parallel/init_slave.py
+
+[Install]
+WantedBy=multi-user.target
