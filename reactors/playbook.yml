@@ -44,6 +44,9 @@
             src: /home/pi/pyduino-parallel.zip
             dest: /home/pi
 
+        - name: Renaming folver
+          command: mv /home/pi/pyduino-parallel-{{ library_version }} /home/pi/pyduino-parallel
+
     - name: Install Python Libraries
       command: pip3 install -r /home/pi/pyduino-parallel/requirements.txt
 
