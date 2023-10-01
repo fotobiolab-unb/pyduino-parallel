@@ -12,8 +12,6 @@ import os
 import socket
 from typing import Any, Optional, Dict
 
-logging.basicConfig(filename='/var/log/pyduino/slave.log', filemode='w', level=logging.DEBUG)
-
 STEP = 1/8.0
 HEADER_DELAY = 5
 
