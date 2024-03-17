@@ -44,14 +44,11 @@ class NelderMead(Optimizer):
         """
         return self.invlinmap(x)
     
-    def ask_oracle(self) -> callable:
+    def ask_oracle(self, X: np.ndarray) -> np.ndarray:
         return super().ask_oracle()
-    
-    def set_oracle(self, X: np.ndarray):
-        return super().set_oracle(X)
 
     def init_oracle(self):
-        return self.set_oracle(self.view(self.population))
+        return self.ask_oracle(self.view_g())
 
     def step(self):
         """
@@ -59,9 +56,8 @@ class NelderMead(Optimizer):
         """
         
         # Sort the population by the value of the oracle
-        self.set_oracle(self.view(self.population))
-        y = self.ask_oracle()
-        idx = np.argsort(y)
+        self.y = self.ask_oracle(self.view_g())
+        idx = np.argsort(self.y)
         self.population = self.population[idx]
 
         # Compute the centroid of the population
@@ -72,41 +68,37 @@ class NelderMead(Optimizer):
 
         # Evaluate the reflected point
         
-        self.set_oracle(self.view(reflected.reshape(1,-1)))
-        y_reflected = self.ask_oracle()
+        y_reflected = self.ask_oracle(self.view(reflected.reshape(1,-1)))
 
         # If the reflected point is better than the second worst, but not better than the best, then expand
         
-        if y_reflected < y[-2] and y_reflected > y[0]:
+        if y_reflected < self.y[-2] and y_reflected > self.y[0]:
             expanded = centroid + (reflected - centroid)
-            self.set_oracle(self.view(expanded.reshape(1,-1)))
-            y_expanded = self.ask_oracle()
+            y_expanded = self.ask_oracle(self.view(expanded.reshape(1,-1)))
             if y_expanded < y_reflected:
                 self.population[-1] = expanded
             else:
                 self.population[-1] = reflected
         # If the reflected point is better than the best, then expand
-        elif y_reflected < y[0]:
+        elif y_reflected < self.y[0]:
             expanded = centroid + 2 * (reflected - centroid)
-            self.set_oracle(self.view(expanded.reshape(1,-1)))
-            y_expanded = self.ask_oracle()
+            y_expanded = self.ask_oracle(self.view(expanded.reshape(1,-1)))
             if y_expanded < y_reflected:
                 self.population[-1] = expanded
             else:
                 self.population[-1] = reflected
         # If the reflected point is worse than the second worst, then contract
-        elif y_reflected > y[-2]:
+        elif y_reflected > self.y[-2]:
             contracted = centroid + 0.5 * (self.population[-1] - centroid)
-            self.set_oracle(self.view(contracted.reshape(1,-1)))
-            y_contracted = self.ask_oracle()
-            if y_contracted < y[-1]:
+            y_contracted = self.ask_oracle(self.view(contracted.reshape(1,-1)))
+            if y_contracted < self.y[-1]:
                 self.population[-1] = contracted
             else:
                 for i in range(1, len(self.population)):
                     self.population[i] = 0.5 * (self.population[i] + self.population[0])
         # If the reflected point is worse than the worst, then shrink
-        elif y_reflected > y[-1]:
+        elif y_reflected > self.y[-1]:
             for i in range(1, len(self.population)):
                 self.population[i] = 0.5 * (self.population[i] + self.population[0])
 
-        return self.view(self.population)
+        return self.view_g()

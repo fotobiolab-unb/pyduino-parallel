@@ -46,11 +46,7 @@ class Optimizer(ABC):
 
     @abstractmethod
     def ask_oracle(self) -> np.ndarray:
-        raise NotImplementedError("The oracle getter must be implemented.")
-    
-    @abstractmethod
-    def set_oracle(self, X: np.ndarray):
-        raise NotImplementedError("The oracle setter must be implemented.")
+        raise NotImplementedError("The oracle must be implemented.")
 
     @abstractmethod
     def init_oracle(self):
