@@ -122,9 +122,9 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.maximize = maximize
         self.dt = np.nan
         self.elitism = elitism
-    def dictfy(self, x):
+    def assign_to_reactors(self, x):
         """
-        Converts the given input into an ordered dictionary.
+        Assigns a list of parameters to the reactors.
 
         Parameters:
         x (list): The input list to be converted.
@@ -148,7 +148,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         """
         Converts genome matrix into an appropriate format to send to the reactors.
         """
-        return self.dictfy(self.population)
+        return self.assign_to_reactors(self.population)
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -240,7 +240,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         partitions = np.array_split(X, len(self.reactors))
 
         for partition in partitions:
-            payload = self.dictfy(partition)
+            payload = self.assign_to_reactors(partition)
             reactors = payload.keys()
 
             self.gotod()
