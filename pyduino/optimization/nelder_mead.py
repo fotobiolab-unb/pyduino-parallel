@@ -1,9 +1,9 @@
 import numpy as np
-from typing import Callable
+from typing import Callable, List
 from . import Optimizer, linmap
 
 class NelderMead(Optimizer):
-    def __init__(self, population_size: int, ranges: list[float], rng_seed: int = 0):
+    def __init__(self, population_size: int, ranges: List[float], rng_seed: int = 0):
         """
         This Nelder-Mead algorithm assumes that the optimization function 'f' is to be minimized and time independent.
 
