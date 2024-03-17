@@ -143,7 +143,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                 )
             )
         )
-    @property.getter
+    @property
     def population_as_dict(self):
         """
         Converts genome matrix into an appropriate format to send to the reactors.

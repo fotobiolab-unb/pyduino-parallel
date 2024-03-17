@@ -1,9 +1,9 @@
-from typing import Callable
+from typing import Callable, List, Tuple
 from abc import ABC, abstractmethod
 import warnings
 import numpy as np
 
-def linmap(domain: list[tuple[float, float]], codomain: list[tuple[float, float]]) -> Callable[[np.ndarray], np.ndarray]:
+def linmap(domain: List[Tuple[float, float]], codomain: List[Tuple[float, float]]) -> Callable[[np.ndarray], np.ndarray]:
     """
     Linear mapping from domain to codomain.
     domain list of pairs:
