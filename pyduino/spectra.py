@@ -1,4 +1,4 @@
-from gapy.gapy2 import GA
+from pyduino.optimization.nelder_mead import NelderMead
 from pyduino.pyduino2 import ReactorManager, chunks, PATHS
 import numpy as np
 from functools import partial
@@ -78,7 +78,7 @@ def parse_dados(X,param):
     """
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
-class Spectra(RangeParser,ReactorManager,GA):
+class Spectra(RangeParser,ReactorManager,NelderMead):
     def __init__(self,elitism,f_param,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
@@ -100,23 +100,20 @@ class Spectra(RangeParser,ReactorManager,GA):
 
         RangeParser.__init__(self,ranges,self.parameters)
 
-        #assert os.path.exists(IRRADIANCE_PATH)
         self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
-        #self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
         self.irradiance = pd.Series(self.irradiance)
 
         ReactorManager.__init__(self)
-        GA.__init__(
+        NelderMead.__init__(
             self,
             population_size=len(self.reactors),
             ranges=self.ranges_as_list(),
-            generations=0,
-            **kwargs
-            )
+            rng_seed=kwargs.get('rng_seed',0)
+        )
         self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)        
-        self.payload = self.G_as_keyed() if self.payload is None else self.payload
+        self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
         self.fparam = f_param
@@ -125,38 +122,33 @@ class Spectra(RangeParser,ReactorManager,GA):
         self.maximize = maximize
         self.dt = np.nan
         self.elitism = elitism
-    def G_as_keyed(self):
+    def dictfy(self, x):
         """
-        Converts genome matrix into an appropriate format to send to the reactors.
+        Converts the given input into an ordered dictionary.
+
+        Parameters:
+        x (list): The input list to be converted.
+
+        Returns:
+        OrderedDict: An ordered dictionary where the keys are the IDs and the values are the ranges.
+
         """
+        ids = self.ids[:len(x)]
         return OrderedDict(
             zip(
-                self.ids,
+                ids,
                 map(
                     lambda u: self.ranges_as_keyed(u),
-                    list(np.round(self.view(self.G,self.linmap),2))
+                    list(np.round(self.view(x),2))
                 )
             )
         )
-    def f_map(self,x_1,x_0):
+    @property.getter
+    def population_as_dict(self):
         """
-        Computation for the fitness function.
+        Converts genome matrix into an appropriate format to send to the reactors.
         """
-        f_1 = x_1.loc[self.density_param].astype(float)
-        self.power = ((pd.DataFrame(self.G_as_keyed()).T*self.irradiance).sum(axis=1))/100
-        if (self.dt is not np.nan) and (self.iteration_counter>0):
-            f_0 = x_0.loc[self.density_param].astype(float)
-            #self.growth_rate = (f_1-f_0)/self.dt
-            self.growth_rate = (f_1/f_0-1)/self.dt
-            #self.efficiency = self.growth_rate/(self.power+1)
-            #self.efficiency = 1000000*self.growth_rate*np.exp(-self.power/5)
-            self.efficiency = 1000000*self.growth_rate*np.exp(-(self.power-7)*(self.power-7)/(2*1.5*1.5))
-        else:
-            self.growth_rate = self.power*np.nan
-            self.efficiency = self.power*np.nan
-        x_1.loc['power',:] = self.power.copy()
-        x_1.loc['efficiency',:] = self.efficiency.copy()
-        x_1.loc['growth_rate',:] = self.growth_rate.copy()
+        return self.dictfy(self.population)
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -188,6 +180,7 @@ class Spectra(RangeParser,ReactorManager,GA):
             x (:obj:`dict` of :obj:`dict`): Dictionary having reactor id as keys
             and a dictionary of parameters and their values as values.
         """
+
         for _id,params in x.items():
             for chk in chunks(list(params.items()),3):
                 self.reactors[_id].set(dict(chk))
@@ -201,11 +194,11 @@ class Spectra(RangeParser,ReactorManager,GA):
 
     def set_preset_state_spectra(self,*args,**kwargs):
         self.set_preset_state(*args,**kwargs)
-        self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+        self.population = self.inverse_view(self.payload_to_matrix()).astype(int)
     
     def update_fitness(self,X):
         #Get and return parameter chosen for fitness
-        self.fitness = ((-1)**(1+self.maximize))*X.loc[self.fparam].astype(float).to_numpy()
+        self.fitness = ((-1)**(self.maximize))*X.loc[self.fparam].astype(float).to_numpy()
         return self.fitness
     
     def GET(self,tag):
@@ -215,47 +208,82 @@ class Spectra(RangeParser,ReactorManager,GA):
         print("[INFO]","GET",datetime.now().strftime("%c"))
         self.past_data = self.data.copy() if self.data is not None else pd.DataFrame(self.payload)
         self.data = pd.DataFrame(self.F_get())
-        self.f_map(self.data,self.past_data)
         self.log.log_many_rows(self.data,tags={'growth_state':tag})
         self.log.log_optimal(column=self.fparam,maximum=self.maximize,tags={'growth_state':tag})   
         self.log.log_average(tags={'growth_state':tag})   
 
-    def gotod(self,deltaTgotod):
+    def gotod(self):
         self.t_gotod_1 = datetime.now()
         self.send("gotod",await_response=False)
         print("[INFO] gotod sent")
-        time.sleep(deltaTgotod)
+        time.sleep(self.deltaTgotod)
         self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
         print("[INFO] gotod DT", self.dt)
         self.GET("gotod")
 
+    # === Optimizer methods ===
+    
+    def ask_oracle(self, X) -> np.ndarray:
+        """
+        Asks the oracle for the fitness of the given input.
+
+        Parameters:
+        X (np.ndarray): The input for which the fitness is to be calculated. Must be already mapped to codomain.
+
+        Returns:
+        np.ndarray: The fitness value calculated by the oracle.
+        """
+        y = []
+
+        assert X.shape[1] == len(self.parameters)
+        assert len(X.shape) == 2, "X must be a 2D array."
+        partitions = np.array_split(X, len(self.reactors))
+
+        for partition in partitions:
+            payload = self.dictfy(partition)
+            reactors = payload.keys()
+
+            self.gotod()
+            data0 = pd.DataFrame(self.F_get())
+            f0 = data0.loc[reactors,self.density_param]
+
+            self.F_set(payload)
+            time.sleep(self.deltaT)
+            data = pd.DataFrame(self.F_get())
+            f = data.loc[reactors,self.density_param]
+            
+            alpha = np.log(f/f0)/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
+
+            y += list(alpha)
+        return np.array(y)    
+    # === * ===
+
     def run(
         self,
-        deltaT: int,
-        run_ga: bool = True,
+        deltaT: float,
+        run_optim: bool = True,
         deltaTgotod: int = None
         ):
         """
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT`.
 
         Args:
-            deltaT (int): Amount of time in seconds to wait in each iteration.
-            run_ga (bool): Whether or not execute a step in the genetic algorithm.
+            deltaT (float): Amount of time in seconds to wait in each iteration.
+            run_optim (bool): Whether or not to use the optimizer.
             deltaTgotod (int, optional): Time to wait after sending `gotod` command.
         """
 
         #Checking if gotod time is at least five minutes
-        if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
-        if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
+        if run_optim and (deltaTgotod is None or deltaTgotod <= 300): raise ValueError("deltaTgotod must be at least 5 minutes.")
 
+        self.deltaT = deltaT
+        self.deltaTgotod = deltaTgotod
         self.iteration_counter = 1
-
         self.GET("growing")
 
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
             try:
-                self.deltaT = deltaT
                 print("START")
                 while True:
                     #growing
@@ -265,34 +293,18 @@ class Spectra(RangeParser,ReactorManager,GA):
                     print("[INFO]","DT",self.dt)
                     self.GET("growing")
                     self.update_fitness(self.data)
-                    #GA
-                    if run_ga:
-                        #self.p = softmax(self.fitness/100)
-                        #self.p = ReLUP(self.fitness*self.fitness*self.fitness)
-                        self.p = ReLUP(self.fitness*self.fitness)
-                        #Hotfix for elitism
-                        print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
-                        self.data.loc['p',:] = self.p.copy()
-                        print(f"{bcolors.BOLD}{self.data.T.loc[:,self.titled_parameters+['power','efficiency','growth_rate','p']]}{bcolors.ENDC}")
-                        if self.elitism:
-                            self.elite_ix = self.ids[self.p.argmax()]
-                            self.anti_elite_ix = self.ids[self.p.argmin()]
-                            self.elite = self.G[self.p.argmax()].copy()
-                        self.crossover()
-                        self.mutation()
-                        if self.elitism:
-                            self.G[self.p.argmin()] = self.elite.copy()
-                        self.payload = self.G_as_keyed()
+                    print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
+                    print(f"{bcolors.BOLD}{self.data.T.loc[:,self.titled_parameters+['power','efficiency','growth_rate','p']]}{bcolors.ENDC}")
+                    #Optimizer
+                    if run_optim:
+                        self.step()
                     else:
                         df = self.data.T
                         df.columns = df.columns.str.lower()
                         self.payload = df[self.parameters].T.to_dict()
-                        self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+                        self.population = self.inverse_view(self.payload_to_matrix()).astype(int)
+                        self.gotod()
                     print("[INFO]","SET",datetime.now().strftime("%c"))
-                    self.F_set(self.payload) if run_ga else None
-                    #gotod
-                    if self.do_gotod:
-                        self.gotod(deltaTgotod)
                     self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)
@@ -358,7 +370,7 @@ class Spectra(RangeParser,ReactorManager,GA):
 
                     df.columns = df.columns.str.lower()
                     self.payload = df[self.parameters].T.to_dict()
-                    self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
+                    self.population = self.inverse_view(self.payload_to_matrix()).astype(int)
                     print("[INFO]","SET",self.t1.strftime("%c"))
                     self.F_set(self.payload)
                     time.sleep(max(2,deltaT))
