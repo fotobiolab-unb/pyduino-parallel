@@ -160,10 +160,10 @@ class Reactor:
         self._send("horacerta")
 
 
-def send_wrapper(reactor,command,delay,await_response):
+def send_wrapper(reactor,command,await_response):
     id, reactor = reactor
     if await_response:
-        return (id,reactor.send(command,delay))
+        return (id,reactor.send(command))
     else:
         return (id,reactor._send(command))
 
@@ -214,7 +214,7 @@ class ReactorManager:
     def send_parallel(self,command,delay,await_response=True):
         out = []
         with Pool(7) as p:
-            out = p.map(partial(send_wrapper,command=command,delay=delay,await_response=await_response),list(self.reactors.items()))
+            out = p.map(partial(send_wrapper,command=command,await_response=await_response),list(self.reactors.items()))
         return out
 
     def set(self, data=None, **kwargs):
