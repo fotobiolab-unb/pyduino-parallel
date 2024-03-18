@@ -216,7 +216,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         time.sleep(self.deltaTgotod)
         self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
         print("[INFO] gotod DT", self.dt)
-        self.GET("gotod")
 
     # === Optimizer methods ===
     
