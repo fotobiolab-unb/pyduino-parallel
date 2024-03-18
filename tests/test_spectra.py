@@ -1,6 +1,7 @@
 import sys
 import os
 import numpy as np
+import pandas as pd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pyduino.spectra import Spectra, PATHS
@@ -21,9 +22,8 @@ class TestSpectra:
         assert len(assigned[keys[0]]) == len(self.g.parameters)
     def test_oracle(self):
         data = self.g.F_get()
-        for k in data.keys():
-            data[k][self.g.fparam] = '0'
         df = self.g.pretty_print_dict(data)
+        assert isinstance(df, pd.DataFrame)
         y = self.g.ask_oracle(self.g.population)
         self.g.update_fitness(y)
     def test_logger(self):
