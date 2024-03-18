@@ -170,16 +170,16 @@ class ReactorServer(Flask):
 
     def _recv(self) -> str:
         """
-        Reads from the serial port until it finds an EOT ASCII token.
+        Reads from the serial port until it finds an End-of-Text ASCII token.
 
         Returns:
             str: The response received from the reactor.
         """
-        response = self.serial.read_until(b'\x04') \
+        response = self.serial.read_until(b'\x03') \
             .decode('ascii') \
             .strip("\n") \
             .strip("\r") \
-            .strip("\x04")
+            .strip("\x03")
         return response
 
     

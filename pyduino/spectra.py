@@ -1,12 +1,10 @@
 from pyduino.optimization.nelder_mead import NelderMead
 from pyduino.pyduino2 import ReactorManager, chunks, PATHS
 import numpy as np
-from functools import partial
 import json
 import os
 import pandas as pd
 import numpy as np
-from typing import Union
 import time
 from datetime import date, datetime
 from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
@@ -166,7 +164,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         df.index = df.index.str.lower()
         df = df.loc[self.parameters,:]
         df.loc['fitness'] = self.fitness
-        df.loc['probs'] = 100*self.p
         return df.round(decimals=2)
     def F_get(self):
         """
