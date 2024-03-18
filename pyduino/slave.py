@@ -82,7 +82,7 @@ class ReactorServer(Flask):
             content = request.json
             logging.info(f"Received request: {content['command']}")
             if content['await_response']:
-                response = self.send(content["command"], delay=content["delay"])
+                response = self.send(content["command"])
             else:
                 response = self._send(content["command"])
             return jsonify({"response": response}), 200
@@ -123,6 +123,7 @@ class ReactorServer(Flask):
         """
         sleep(HEADER_DELAY)
         self.serial.flush()
+        self.serial.reset_input_buffer()
         self._send("quiet_connect")
         self.connected = True
 
@@ -140,22 +141,23 @@ class ReactorServer(Flask):
         Interrupts the connection with the reactor.
         """
         if self.serial.is_open:
+            self.serial.reset_input_buffer()
             self.send("fim")
             self.serial.close()
 
-    def send(self, msg: str, delay: float = 0) -> str:
+    def send(self, msg: str) -> str:
         """
         Sends a command to the reactor and receives the response.
 
         Args:
             msg (str): The command to send to the reactor.
-            delay (float, optional): Delay in seconds before sending the command.
 
         Returns:
             str: The response received from the reactor.
         """
         if not self.connected:
             self.connect()
+        self.serial.reset_input_buffer()
         self._send(msg)
         return self._recv()
 
