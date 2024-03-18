@@ -19,13 +19,12 @@ class TestSpectra:
         keys = list(assigned.keys())
         assert len(keys)==len(self.g.ids)
         assert len(assigned[keys[0]]) == len(self.g.parameters)
-    def test_update_fitness(self):
-        self.g.update_fitness()
     def test_oracle(self):
         data = self.g.F_get()
         for k in data.keys():
             data[k][self.g.fparam] = '0'
         df = self.g.pretty_print_dict(data)
         y = self.g.ask_oracle(self.g.population)
+        self.g.update_fitness(y)
     def test_logger(self):
         self.g.GET("test")
