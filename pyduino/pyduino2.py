@@ -71,11 +71,10 @@ class Reactor:
     def http_get(self,route):
         return requests.get(urljoin(self.url,route))
     
-    def http_post(self,route,command,await_response,delay):
+    def http_post(self,route,command,await_response):
         return requests.post(urljoin(self.url,route),json={
             "command": command,
-            "await_response": await_response,
-            "delay": delay
+            "await_response": await_response
         })
 
     def connect(self):
@@ -113,11 +112,11 @@ class Reactor:
         """
         self.http_post("send","fim",False,0)
 
-    def send(self, msg, delay=5):
+    def send(self, msg):
         """
         Sends command and awaits for a response
         """
-        resp = self.http_post("send",msg,True,delay)
+        resp = self.http_post("send",msg,True)
         return resp.json()["response"]
 
     def _send(self, msg):
