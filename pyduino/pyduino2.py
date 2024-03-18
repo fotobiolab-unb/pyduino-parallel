@@ -123,7 +123,7 @@ class Reactor:
         """
         Sends command and doesn't await for a response
         """
-        resp = self.http_post("send",msg,False,0)
+        resp = self.http_post("send",msg,False)
         return resp.ok
     
     def set_in_chunks(self,params,chunksize=4):
