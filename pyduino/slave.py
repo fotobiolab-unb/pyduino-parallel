@@ -12,7 +12,7 @@ import os
 import socket
 from typing import Any, Optional, Dict
 
-STEP = 1/8.0
+TIMEOUT = 60
 HEADER_DELAY = 5
 
 class ReactorServer(Flask):
@@ -111,10 +111,10 @@ class ReactorServer(Flask):
             self.available_ports = list_ports.comports()
             self.available_ports = list(filter(lambda x: (x.vid,x.pid) in {(1027,24577),(9025,16),(6790,29987)},self.available_ports))
             self.port = self.available_ports[0].device
-        self.serial = Serial(self.port, baudrate=self.baudrate, timeout=STEP)
+        self.serial = Serial(self.port, baudrate=self.baudrate, timeout=TIMEOUT)
         logging.info(f"Connected to serial port {self.serial}.")
 
-    def connect(self, delay: float = STEP):
+    def connect(self):
         """
         Begins the connection to the reactor.
 
@@ -175,11 +175,11 @@ class ReactorServer(Flask):
         Returns:
             str: The response received from the reactor.
         """
-        response = self.serial.read_until(b'\x03') \
+        response = self.serial.read_until(b'\x04') \
             .decode('ascii') \
             .strip("\n") \
             .strip("\r") \
-            .strip("\x03")
+            .strip("\x04")
         return response
 
     
