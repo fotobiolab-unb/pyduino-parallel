@@ -202,7 +202,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.data = self.F_get()
         self.log.log_many_rows(pd.DataFrame(self.data),tags={'growth_state':tag})
         self.log.log_optimal(column=self.density_param,maximum=self.maximize,tags={'growth_state':tag})   
-        self.log.log_average(tags={'growth_state':tag})   
+        self.log.log_average(tags={'growth_state':tag}, cols=[self.density_param])   
 
     def gotod(self):
         self.t_gotod_1 = datetime.now()
