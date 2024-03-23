@@ -242,13 +242,13 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             self.gotod()
             data0 = self.F_get()
             f0 = get_param(data0, self.density_param, reactors)
-            f0 = np.array(list(f0.values()))
+            f0 = np.array(list(f0.values())).astype(float)
 
             self.F_set(payload)
             time.sleep(self.deltaT)
             data = self.F_get()
             f = get_param(data, self.density_param, reactors)
-            f = np.array(list(f.values()))
+            f = np.array(list(f.values())).astype(float)
 
             alpha = (np.log(f) - np.log(f0))/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
 
