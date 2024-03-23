@@ -7,14 +7,11 @@ import pandas as pd
 import numpy as np
 import time
 from datetime import date, datetime
-from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
+from pyduino.data_parser import RangeParser
 from collections import OrderedDict
-from scipy.special import softmax
 from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
 from pyduino.log import datetime_to_str
 import traceback
-
-# asd
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -114,9 +111,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
-        self.fparam = f_param
+        self.density_param = f_param
         self.density_param = density_param
-        self.fitness = np.nan * np.ones(len(self.reactors))
         self.maximize = maximize
         self.dt = np.nan
         self.elitism = elitism
@@ -163,7 +159,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         df = pd.DataFrame(D)
         df.index = df.index.str.lower()
         df = df.loc[self.parameters,:]
-        df.loc['fitness'] = self.fitness
+        df.loc['fitness'] = self.y
         return df.round(decimals=2)
     def F_get(self):
         """
@@ -191,12 +187,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
 
     def set_preset_state_spectra(self,*args,**kwargs):
         self.set_preset_state(*args,**kwargs)
-        self.population = self.inverse_view(self.payload_to_matrix()).astype(int)
-    
-    def update_fitness(self,X):
-        #Get and return parameter chosen for fitness
-        self.fitness = ((-1)**(self.maximize))*X.loc[self.fparam].astype(float).to_numpy()
-        return self.fitness
+        self.population = self.inverse_view(self.payload_to_matrix()).astype(int)   
     
     def GET(self,tag):
         """
@@ -204,9 +195,9 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         """
         print("[INFO]","GET",datetime.now().strftime("%c"))
         self.past_data = self.data.copy() if self.data is not None else pd.DataFrame(self.payload)
-        self.data = pd.DataFrame(self.F_get())
-        self.log.log_many_rows(self.data,tags={'growth_state':tag})
-        self.log.log_optimal(column=self.fparam,maximum=self.maximize,tags={'growth_state':tag})   
+        self.data = self.F_get()
+        self.log.log_many_rows(pd.DataFrame(self.data),tags={'growth_state':tag})
+        self.log.log_optimal(column=self.density_param,maximum=self.maximize,tags={'growth_state':tag})   
         self.log.log_average(tags={'growth_state':tag})   
 
     def gotod(self):
@@ -218,7 +209,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         print("[INFO] gotod DT", self.dt)
 
     # === Optimizer methods ===
-    
     def ask_oracle(self, X) -> np.ndarray:
         """
         Asks the oracle for the fitness of the given input.
@@ -233,7 +223,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
 
         assert X.shape[1] == len(self.parameters)
         assert len(X.shape) == 2, "X must be a 2D array."
-        partitions = np.array_split(X, len(self.reactors))
+        n_partitions = len(X) // len(self.reactors) + (len(X) % len(self.reactors) > 0)
+        partitions = np.array_split(X, n_partitions)
 
         for partition in partitions:
             payload = self.assign_to_reactors(partition)
@@ -253,7 +244,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             alpha = (np.log(f) - np.log(f0))/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
 
             y = np.append(y,alpha)
-        return y   
+        return -y   
     # === * ===
 
     def run(
@@ -290,16 +281,10 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                     self.dt = (datetime.now()-self.t_grow_1).total_seconds()
                     print("[INFO]","DT",self.dt)
                     self.GET("growing")
-                    self.update_fitness(self.data)
                     #Optimizer
                     if run_optim:
                         self.step()
-                    else:
-                        df = self.data.T
-                        df.columns = df.columns.str.lower()
-                        self.payload = df[self.parameters].T.to_dict()
-                        self.population = self.inverse_view(self.payload_to_matrix()).astype(int)
-                        self.gotod()
+                    self.gotod()
                     print("[INFO]","SET",datetime.now().strftime("%c"))
                     self.iteration_counter += 1
             except Exception as e:
@@ -316,6 +301,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             bounds:list = [100,0]
             ):
         """
+        OBSOLETE
+
         Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
         periodically on an interval given by `deltaClockHours`.
 
@@ -345,7 +332,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                 while True:
                     self.t1 = datetime.now()
                     self.GET("growing")
-                    self.update_fitness(self.data)
                     #gotod
                     if self.do_gotod:
                         self.send("gotod",await_response=False)
