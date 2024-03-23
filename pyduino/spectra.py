@@ -110,7 +110,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
-        self.density_param = f_param
         self.density_param = density_param
         self.maximize = maximize
         self.dt = np.nan
