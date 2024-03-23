@@ -138,7 +138,7 @@ class log:
         """
         df = self.data_frames.copy()
         df.elapsed_time_hours = df.elapsed_time_hours.round(decimals=2)
-        self.df_avg = df.loc[:, cols].groupby("elapsed_time_hours").mean().reset_index()
+        self.df_avg = df.loc[:, cols + ['elapsed_time_hours']].groupby("elapsed_time_hours").mean().reset_index()
         self.log_rows(rows=self.df_avg, subdir='avg', sep='\t', **kwargs)
 
     def cache_data(self,rows,path="./cache.csv",**kwargs):
