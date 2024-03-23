@@ -1,7 +1,6 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
   log_name: "ga_dcte2400_branco_15" #Log folder name (delete to use the default)
-  f_param: efficiency #Parameter to read as fitness from the reactors
   density_param: DensidadeAtual #Parameter name for density counts
   mutation_probability: 0.01 #0.15
   maximize: true
