@@ -74,10 +74,9 @@ def parse_dados(X,param):
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,NelderMead):
-    def __init__(self,elitism,f_param,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
+    def __init__(self,elitism,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
-            f_param (str): Parameter name to be extracted from `ReactorManager.log_dados`.
             ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
                 its minimum and maximum attainable values respectively.
             reset_density (bool): Whether or not to reset density values on the reactors at each iteration.
