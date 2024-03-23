@@ -176,6 +176,12 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             for chk in chunks(list(params.items()),3):
                 self.reactors[_id].set(dict(chk))
                 time.sleep(1)
+    def init(self):
+        """
+        Sets payload to the reactors.
+        """
+        self.F_set(self.payload)
+
     def set_spectrum(self,preset):
         """
         Sets all reactors with a preset spectrum contained in `SPECTRUM_PATH`.
