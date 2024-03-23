@@ -25,6 +25,9 @@ class NelderMead(Optimizer):
 
         # Initialize the population (random position and initial momentum)
         self.population = self.rng_seed.random((self.population_size, len(self.ranges)))
+        
+        # Initialize y as vector of nans
+        self.y = np.full(self.population_size, np.nan)
 
     def view(self, x):
         """

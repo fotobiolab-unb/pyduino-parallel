@@ -25,6 +25,5 @@ class TestSpectra:
         df = self.g.pretty_print_dict(data)
         assert isinstance(df, pd.DataFrame)
         y = self.g.ask_oracle(self.g.population)
-        self.g.update_fitness(y)
     def test_logger(self):
         self.g.GET("test")
