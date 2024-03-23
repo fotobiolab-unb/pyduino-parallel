@@ -12,3 +12,4 @@ PyYAML
 requests
 scipy
 tailer
+python-dotenv

@@ -10,7 +10,7 @@ from datetime import date, datetime
 from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
 from collections import OrderedDict
 from scipy.special import softmax
-from pyduino.utils import yaml_get, bcolors, TriangleWave, ReLUP
+from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
 from pyduino.log import datetime_to_str
 import traceback
 
@@ -229,7 +229,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         Returns:
         np.ndarray: The fitness value calculated by the oracle.
         """
-        y = []
+        y = np.array([])
 
         assert X.shape[1] == len(self.parameters)
         assert len(X.shape) == 2, "X must be a 2D array."
@@ -240,18 +240,20 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             reactors = payload.keys()
 
             self.gotod()
-            data0 = pd.DataFrame(self.F_get())
-            f0 = data0.loc[reactors,self.density_param]
+            data0 = self.F_get()
+            f0 = get_param(data0, self.density_param, reactors)
+            f0 = np.array(f0.values())
 
             self.F_set(payload)
             time.sleep(self.deltaT)
-            data = pd.DataFrame(self.F_get())
-            f = data.loc[reactors,self.density_param]
-            
+            data = self.F_get()
+            f = get_param(data, self.density_param, reactors)
+            f = np.array(f.values())
+
             alpha = np.log(f/f0)/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
 
-            y += list(alpha)
-        return np.array(y)    
+            y = np.append(y,alpha)
+        return y   
     # === * ===
 
     def run(
