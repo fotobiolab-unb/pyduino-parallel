@@ -128,14 +128,18 @@ class log:
         self.df_opt = self.data_frames.iloc[i,:]
         self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',sep='\t',**kwargs)
     
-    def log_average(self,**kwargs):
+    def log_average(self, cols: list, **kwargs):
         """
-        Logs average of all rows into a single file.
+        Calculate the average values of specified columns in the data frames and log the results.
+
+        Parameters:
+        - cols (list): A list of column names to calculate the average for.
+        - **kwargs: Additional keyword arguments to customize the logging process.
         """
         df = self.data_frames.copy()
         df.elapsed_time_hours = df.elapsed_time_hours.round(decimals=2)
-        self.df_avg = df.groupby("elapsed_time_hours").mean().reset_index()
-        self.log_rows(rows=self.df_avg,subdir='avg',sep='\t',**kwargs)
+        self.df_avg = df.loc[:, cols].groupby("elapsed_time_hours").mean().reset_index()
+        self.log_rows(rows=self.df_avg, subdir='avg', sep='\t', **kwargs)
 
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """
