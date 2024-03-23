@@ -10,6 +10,8 @@ class TestSpectra:
     g = Spectra(**PATHS.HYPERPARAMETERS)
     g.deltaTgotod = 1
     g.deltaT = 1
+    g.init()
+    
     def test_functions(self):
         assert len(self.g.reactors) != 0
         assert len(self.g.ids) == self.g.population_size

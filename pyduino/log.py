@@ -124,7 +124,7 @@ class log:
         """
         Logs optima of all rows into a single file.
         """
-        i=self.data_frames.loc[:,column].argmax() if maximum else self.data_frames.loc[:,column].argmin()
+        i=self.data_frames.loc[:,column].astype(float).argmax() if maximum else self.data_frames.loc[:,column].astype(float).argmin()
         self.df_opt = self.data_frames.iloc[i,:]
         self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',sep='\t',**kwargs)
     
