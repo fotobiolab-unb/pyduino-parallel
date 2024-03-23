@@ -137,6 +137,7 @@ class log:
         - **kwargs: Additional keyword arguments to customize the logging process.
         """
         df = self.data_frames.copy()
+        df.loc[:, cols] = df.loc[:, cols].astype(float)
         df.elapsed_time_hours = df.elapsed_time_hours.round(decimals=2)
         self.df_avg = df.loc[:, cols + ['elapsed_time_hours']].groupby("elapsed_time_hours").mean().reset_index()
         self.log_rows(rows=self.df_avg, subdir='avg', sep='\t', **kwargs)
