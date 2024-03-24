@@ -40,7 +40,7 @@ NCOLSDF = None
 NROWSDF = y["tail"]
 if len(LOG_PATH)!=0:
     with open(LOG_PATH[0]) as file:
-        HEAD = pd.read_csv(io.StringIO(''.join([file.readline() for _ in range(2)])),sep=SEP)
+        HEAD = pd.read_csv(io.StringIO(''.join([file.readline() for _ in range(1)])),sep=SEP)
         print(HEAD)
         HEAD = HEAD.columns
 else:

@@ -1,12 +1,8 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "ga_dcte2400_branco_15" #Log folder name (delete to use the default)
+  log_name: "nelder_mead_power_test" #Log folder name (delete to use the default)
   density_param: DensidadeAtual #Parameter name for density counts
-  mutation_probability: 0.01 #0.15
-  maximize: true
-  resolution: 4 #Number of bits used for each parameter
-  elitism: true #Whether or not to use elitism
-  do_crossover: false #Whether or not to perform crossover when the genetic algorithm is enabled
+  maximize: false
   rng_seed: 2 #Random seed for genetic algorithm
   ranges:
     # brilho:
@@ -60,7 +56,7 @@ slave:
   network: "192.168.1.1/24"
   exclude: #"192.168.1.112"
 system:
-  initial_state: "preset_state.d/no4.csv"
+  initial_state: "preset_state.d/all.csv"
   reboot_wait_time: 5 #Time in seconds to wait after a reboot.
   relevant_parameters:
     # - brilho
@@ -115,7 +111,7 @@ system:
     co2: int
     dtco2: int
 dash:
-  glob: "./log/pre_free1212_branco_3/*.csv"
+  glob: "./log/nelder_mead_power_test/*.csv"
   plot:
     - 
       name: Temperature
@@ -131,18 +127,18 @@ dash:
       name: Density
       cols:
         DensidadeAtual:
-    -
-      name: Efficiency
-      cols:
-        efficiency:
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: GrowthRate
-      cols:
-        growth_rate:
-          growing_only: true
-          #mode: 'lines+markers'
+    # -
+    #   name: Efficiency
+    #   cols:
+    #     efficiency:
+    #       growing_only: true
+    #       #mode: 'lines+markers'
+    # -
+    #   name: GrowthRate
+    #   cols:
+    #     growth_rate:
+    #       growing_only: true
+    #       #mode: 'lines+markers'
     -
       name: power
       cols:
