@@ -75,7 +75,7 @@ def parse_dados(X,param):
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,NelderMead):
-    def __init__(self,elitism,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
+    def __init__(self,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
             ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
@@ -100,7 +100,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         ReactorManager.__init__(self)
         NelderMead.__init__(
             self,
-            population_size=len(self.reactors),
+            population_size=len(self.parameters),
             ranges=self.ranges_as_list(),
             rng_seed=kwargs.get('rng_seed',0)
         )
@@ -113,7 +113,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.density_param = density_param
         self.maximize = maximize
         self.dt = np.nan
-        self.elitism = elitism
     def assign_to_reactors(self, x):
         """
         Assigns a list of parameters to the reactors.
@@ -252,8 +251,9 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             
             fitness = np.array([self.power[id] for id in reactors]).astype(float)
 
-            y = np.append(y,fitness)
-        return -y   
+            y = np.append(y,((-1)**(self.maximize))*(fitness))
+
+        return y   
     # === * ===
 
     def run(
