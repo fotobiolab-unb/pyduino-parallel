@@ -242,18 +242,15 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             self.gotod()
             data0 = self.F_get()
             f0 = get_param(data0, self.density_param, reactors)
-            f0 = np.array(list(f0.values())).astype(float)
 
             self.F_set(self.payload)
             time.sleep(self.deltaT)
             data = self.F_get()
             f = get_param(data, self.density_param, reactors)
-            f = np.array(list(f.values())).astype(float)
 
-            #alpha = (np.log(f) - np.log(f0))/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
-            yield_rate = (f/f0 - 1)/self.deltaT #Yield rate (not growth rate)
+            #yield_rate = np.array([(float(f[id])/float(f[id]) - 1)/self.deltaT/self.power[id] for id in reactors]).astype(float)
             
-            fitness = yield_rate/self.power
+            fitness = np.array([self.power[id] for id in reactors]).astype(float)
 
             y = np.append(y,fitness)
         return -y   
