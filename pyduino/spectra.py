@@ -95,8 +95,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
 
         RangeParser.__init__(self,ranges,self.parameters)
 
-        self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
-        self.irradiance = pd.Series(self.irradiance)
+        self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']
 
         ReactorManager.__init__(self)
         NelderMead.__init__(
@@ -142,6 +141,11 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         Converts genome matrix into an appropriate format to send to the reactors.
         """
         return self.assign_to_reactors(self.population)
+    
+    @property
+    def power(self):
+        return {reactor_ids: sum(vals[key]*self.irradiance[key] for key in self.irradiance.keys()) for reactor_ids, vals in self.payload.items()}
+
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -232,24 +236,26 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         partitions = np.array_split(X, n_partitions)
 
         for partition in partitions:
-            payload = self.assign_to_reactors(partition)
-            reactors = payload.keys()
+            self.payload = self.assign_to_reactors(partition)
+            reactors = self.payload.keys()
 
             self.gotod()
             data0 = self.F_get()
             f0 = get_param(data0, self.density_param, reactors)
             f0 = np.array(list(f0.values())).astype(float)
 
-            self.F_set(payload)
+            self.F_set(self.payload)
             time.sleep(self.deltaT)
             data = self.F_get()
             f = get_param(data, self.density_param, reactors)
             f = np.array(list(f.values())).astype(float)
 
             #alpha = (np.log(f) - np.log(f0))/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
-            alpha = (f/f0 - 1)/self.deltaT #Yield rate (not growth rate)
+            yield_rate = (f/f0 - 1)/self.deltaT #Yield rate (not growth rate)
+            
+            fitness = yield_rate/self.power
 
-            y = np.append(y,alpha)
+            y = np.append(y,fitness)
         return -y   
     # === * ===
 
