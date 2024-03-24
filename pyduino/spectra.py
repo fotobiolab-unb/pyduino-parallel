@@ -245,7 +245,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             f = get_param(data, self.density_param, reactors)
             f = np.array(list(f.values())).astype(float)
 
-            alpha = (np.log(f) - np.log(f0))/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
+            #alpha = (np.log(f) - np.log(f0))/self.deltaT #Growth Rate $f=f_0 exp(alpha T)$
+            alpha = (f/f0 - 1)/self.deltaT #Yield rate (not growth rate)
 
             y = np.append(y,alpha)
         return -y   
