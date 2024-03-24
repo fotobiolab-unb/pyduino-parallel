@@ -12,6 +12,7 @@ from collections import OrderedDict
 from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
 from pyduino.log import datetime_to_str
 import traceback
+import warnings
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -268,7 +269,10 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         """
 
         #Checking if gotod time is at least five minutes
-        if run_optim and (deltaTgotod is None or deltaTgotod <= 300): raise ValueError("deltaTgotod must be at least 5 minutes.")
+        if isinstance(deltaTgotod, int):
+            if run_optim and deltaTgotod <= 300: warnings.warn("deltaTgotod should be at least 5 minutes.")
+        else:
+            raise ValueError("deltaTgotod must be an integer")
 
         self.deltaT = deltaT
         self.deltaTgotod = deltaTgotod
@@ -295,82 +299,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
-
-    def run_incremental(
-            self,
-            deltaT: int,
-            parameter: str,
-            deltaTgotod: int = None,
-            N: int = 1,
-            M: int = 1,
-            bounds:list = [100,0]
-            ):
-        """
-        OBSOLETE
-
-        Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
-        periodically on an interval given by `deltaClockHours`.
-
-        Args:
-            deltaT (int): Amount of time in seconds to wait in each iteration.
-            parameter (str): Name of the parameters to be updated.
-            deltaTgotod (int, optional): Time to wait after sending `gotod` command.
-            N (int): Number of iteration groups to wait to trigger a parameter update.
-            M (int): Number of iterations to wait to increment `N`.
-            bounds: Starts on `bounds[0]` and goes towards `bounds[1]`. Then, the other way around.
-        """
-
-        #Initialize stepping
-        df = pd.DataFrame(self.payload).T
-        self.triangles = list(map(lambda x: TriangleWave(x,bounds[0],bounds[1],N),df.loc[:,parameter].to_list()))
-        self.triangle_wave_state = 1 if bounds[1] >= bounds[0] else -1
-        c = 0
-        m = 0
-
-        #Checking if gotod time is at least five minutes
-        if deltaTgotod is not None and deltaTgotod < 5*60: print(bcolors.WARNING,"[WARNING]","deltaTgotod should be at least 5 minutes.",bcolors.ENDC)
-
-        with open("error_traceback.log","w") as log_file:
-            log_file.write(datetime_to_str(self.log.timestamp)+'\n')
-            try:
-                self.deltaT = deltaT
-                while True:
-                    self.t1 = datetime.now()
-                    self.GET("growing")
-                    #gotod
-                    if self.do_gotod:
-                        self.send("gotod",await_response=False)
-                        print("[INFO] gotod sent")
-                        time.sleep(deltaTgotod)
-                        self.dt = (datetime.now()-self.t1).total_seconds()
-                        print("[INFO] gotod DT", self.dt)
-                        self.GET("gotod")
-                        self.t1 = datetime.now()
-                    
-                    # Pick up original parameters from preset state and increment them with `parameter_increment`.
-                    df = pd.DataFrame(self.data).T
-                    df.loc[:,parameter] = list(map(lambda T: T.y(c),self.triangles))
-                    print("[INFO]","WAVE","UP" if self.triangle_wave_state > 0 else "DOWN", "COUNTER", str(m), "LEVEL", str(c))
-                    if c%N==0:
-                        self.triangle_wave_state *= -1
-                    # ---------------------------
-
-                    df.columns = df.columns.str.lower()
-                    self.payload = df[self.parameters].T.to_dict()
-                    self.population = self.inverse_view(self.payload_to_matrix()).astype(int)
-                    print("[INFO]","SET",self.t1.strftime("%c"))
-                    self.F_set(self.payload)
-                    time.sleep(max(2,deltaT))
-                    m+=1
-                    if (m%M)==0:
-                        c += 1
-                    self.t2 = datetime.now()
-                    self.dt = (self.t2-self.t1).total_seconds()
-                    print("[INFO]","DT",self.dt)
-            except Exception as e:
-                traceback.print_exc(file=log_file)
-                raise(e)
-
 
 if __name__ == "__main__":
     g = Spectra(**hyperparameters)
