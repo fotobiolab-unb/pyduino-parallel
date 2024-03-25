@@ -2,8 +2,13 @@ import numpy as np
 from typing import Callable, List
 from . import Optimizer, linmap
 
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+def logit(x, inf=100):
+    return np.where(x==0, -inf, np.where(x==1, inf, np.log(x) - np.log(1-x)))
+
 class NelderMead(Optimizer):
-    def __init__(self, population_size: int, ranges: List[float], rng_seed: int = 0):
+    def __init__(self, population_size: int, ranges: List[float], rng_seed: int = 0, hypercube_radius = 100):
         """
         This Nelder-Mead algorithm assumes that the optimization function 'f' is to be minimized and time independent.
 
@@ -20,8 +25,9 @@ class NelderMead(Optimizer):
         self.rng_seed = np.random.default_rng(rng_seed)
 
         # Derived attributes
-        self.invlinmap = linmap(self.ranges, np.array([[0, 1]] * len(self.ranges)))
-        self.linmap = linmap(np.array([[0, 1]] * len(self.ranges)), self.ranges)
+        self.a = 1/hypercube_radius
+        self.backward = lambda x: logit(linmap(self.ranges, np.array([[0, 1]] * len(self.ranges)))(x))/self.a
+        self.forward = lambda x: linmap(np.array([[0, 1]] * len(self.ranges)), self.ranges)(sigmoid(self.a * x))
 
         # Initialize the population (random position and initial momentum)
         self.population = self.rng_seed.random((self.population_size, len(self.ranges)))
@@ -33,19 +39,19 @@ class NelderMead(Optimizer):
         """
         Maps the input from the domain to the codomain.
         """
-        return self.linmap(x)
+        return self.forward(x)
     
     def view_g(self):
         """
         Maps the input from the domain to the codomain.
         """
-        return self.linmap(self.population)
+        return self.forward(self.population)
 
     def inverse_view(self, x):
         """
         Maps the input from the codomain to the domain.
         """
-        return self.invlinmap(x)
+        return self.backward(x)
     
     def ask_oracle(self, X: np.ndarray) -> np.ndarray:
         return super().ask_oracle()
