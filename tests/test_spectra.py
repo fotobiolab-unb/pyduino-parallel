@@ -2,6 +2,9 @@ import sys
 import os
 import numpy as np
 import pandas as pd
+import dotenv
+dotenv.load_dotenv()
+dotenv.load_dotenv(dotenv_path=".env.local")
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pyduino.spectra import Spectra, PATHS

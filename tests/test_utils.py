@@ -2,6 +2,9 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from pyduino.utils import get_param
+import dotenv
+dotenv.load_dotenv()
+dotenv.load_dotenv(dotenv_path=".env.local")
 
 def test_get_param():
     # Test case 1: No IDs provided
