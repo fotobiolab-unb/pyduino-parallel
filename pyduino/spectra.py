@@ -220,6 +220,10 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             self.writer.add_scalar(f'fitness/{k}', v, i)
             for j, u in enumerate(self.parameters):
                 self.writer.add_scalar(f'{u}/{k}', self.population[k][j], i)
+        if self.maximize:
+            self.writer.add_scalar('optima', max(self.y), i)
+        else:
+            self.writer.add_scalar('optima', min(self.y), i)
 
     def gotod(self):
         self.t_gotod_1 = datetime.now()
