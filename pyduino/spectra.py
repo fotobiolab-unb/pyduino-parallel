@@ -214,6 +214,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
 
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
+        print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
         for j, params in enumerate(self.view_g()):
             for param_name, param in zip(self.parameters,params):
                 self.writer.add_scalar(f"{param_name}/{j}", param, i)
