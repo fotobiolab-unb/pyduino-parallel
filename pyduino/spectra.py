@@ -293,7 +293,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.deltaT = deltaT
         self.deltaTgotod = deltaTgotod
         self.iteration_counter = 1
-        self.GET("growing")
 
         with open("error_traceback.log","w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp)+'\n')
@@ -305,7 +304,6 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                     time.sleep(max(2,deltaT))
                     self.dt = (datetime.now()-self.t_grow_1).total_seconds()
                     print("[INFO]","DT",self.dt)
-                    self.GET("growing")
                     #Optimizer
                     if run_optim:
                         self.step()
