@@ -217,9 +217,9 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         """
         print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
         for k, v in enumerate(self.y):
-            self.writer.add_scalar(f'fitness/{self.ids[k]}', v, i)
+            self.writer.add_scalar(f'fitness/{k}', v, i)
             for j, u in enumerate(self.parameters):
-                self.writer.add_scalar(f'{u}/{self.ids[k]}', self.population[k][j], i)
+                self.writer.add_scalar(f'{u}/{k}', self.population[k][j], i)
 
     def gotod(self):
         self.t_gotod_1 = datetime.now()
