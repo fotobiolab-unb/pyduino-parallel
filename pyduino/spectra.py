@@ -216,10 +216,11 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
         print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
+        P = self.view_g()
         for k, v in enumerate(self.y):
             self.writer.add_scalar(f'fitness/{k}', v, i)
             for j, u in enumerate(self.parameters):
-                self.writer.add_scalar(f'{u}/{k}', self.population[k][j], i)
+                self.writer.add_scalar(f'{u}/{k}', P[k][j], i)
         if self.maximize:
             self.writer.add_scalar('optima', max(self.y), i)
         else:
