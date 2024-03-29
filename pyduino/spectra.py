@@ -108,8 +108,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)
-        self.writer = SummaryWriter(self.log.path)    
-        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.log.path,bcolors.ENDC)  
+        self.writer = SummaryWriter(self.log.prefix)    
+        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.log.prefix, bcolors.ENDC)  
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
