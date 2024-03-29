@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import numpy as np
 import time
+from tensorboardX import SummaryWriter
 from datetime import date, datetime
 from pyduino.data_parser import RangeParser
 from collections import OrderedDict
@@ -106,7 +107,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         )
         self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
-        self.log_init(name=log_name)        
+        self.log_init(name=log_name)
+        self.writer = SummaryWriter(self.log.path)      
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
@@ -205,8 +207,17 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.past_data = self.data.copy() if self.data is not None else pd.DataFrame(self.payload)
         self.data = self.F_get()
         self.log.log_many_rows(pd.DataFrame(self.data),tags={'growth_state':tag})
-        self.log.log_optimal(column=self.density_param,maximum=self.maximize,tags={'growth_state':tag})   
-        self.log.log_average(tags={'growth_state':tag}, cols=[self.density_param])   
+
+    def log_tensor(self, i):
+        """
+        Logs the tensor values and fitness scores.
+
+        This method iterates over the tensor values and fitness scores and logs them using the writer object.
+        """
+        for j, params in enumerate(self.view_g()):
+            for param_name, param in zip(self.parameters,params):
+                self.writer.add_scalar(f"{param_name}/{j}", param, i)
+            self.writer.add_scalar(f'Fitness/{j}', self.y[j], i)
 
     def gotod(self):
         self.t_gotod_1 = datetime.now()
@@ -253,6 +264,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
 
             y = np.append(y,((-1)**(self.maximize))*(fitness))
 
+        self.y = y
         return y   
     # === * ===
 
@@ -298,6 +310,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                         self.step()
                     self.gotod()
                     print("[INFO]","SET",datetime.now().strftime("%c"))
+                    self.log_tensor(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)
