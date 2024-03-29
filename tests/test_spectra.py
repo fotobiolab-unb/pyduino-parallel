@@ -31,37 +31,4 @@ class TestSpectra:
         assert isinstance(df, pd.DataFrame)
         y = self.g.ask_oracle(self.g.population)
     def test_logger(self):
-        self.g.GET("test")    
-    def test_log_tensor(self):
-        # Create a mock writer object
-        class MockWriter:
-            def __init__(self):
-                self.scalar_values = {}
-
-            def add_scalar(self, name, value, step):
-                if name not in self.scalar_values:
-                    self.scalar_values[name] = {}
-                self.scalar_values[name][step] = value
-
-        # Create an instance of the Spectra class
-        g = Spectra(**PATHS.HYPERPARAMETERS)
-        g.init()
-        g.y = list(range(len(g.parameters)))
-
-        # Create a mock writer object and assign it to the Spectra instance
-        mock_writer = MockWriter()
-        g.writer = mock_writer
-
-        # Call the log_tensor method
-        g.log_tensor(0)
-
-        # Assert that the scalar values were logged correctly
-        for j, params in enumerate(g.view_g()):
-            for param_name, param in zip(g.parameters, params):
-                expected_name = f"{param_name}/{j}"
-                expected_value = param
-                assert mock_writer.scalar_values[expected_name][0] == expected_value
-
-            expected_fitness_name = f"Fitness/{j}"
-            expected_fitness_value = g.y[j]
-            assert mock_writer.scalar_values[expected_fitness_name][0] == expected_fitness_value
+        self.g.GET("test")

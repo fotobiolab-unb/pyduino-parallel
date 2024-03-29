@@ -108,7 +108,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)
-        self.writer = SummaryWriter(self.log.prefix)    
+        self.writer = SummaryWriter(self.log.prefix)
         print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.log.prefix, bcolors.ENDC)  
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
@@ -216,10 +216,10 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
         print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
-        for j, params in enumerate(self.view_g()):
-            for param_name, param in zip(self.parameters,params):
-                self.writer.add_scalar(f"{param_name}/{j}", param, i)
-            self.writer.add_scalar(f'Fitness/{j}', self.y[j], i)
+        for k, v in enumerate(self.y):
+            self.writer.add_scalar(f'fitness/{self.ids[k]}', v, i)
+            for j, u in enumerate(self.parameters):
+                self.writer.add_scalar(f'{u}/{self.ids[k]}', self.population[k][j], i)
 
     def gotod(self):
         self.t_gotod_1 = datetime.now()
