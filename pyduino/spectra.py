@@ -289,20 +289,14 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             mode (str, optional): The mode of operation. Defaults to 'optimize'.
             deltaTgotod (int, optional): The time interval for performing optimization. Defaults to None.
 
-        Raises:
-            ValueError: If deltaTgotod is not an integer.
-
         Notes:
             - If mode is 'optimize' and deltaTgotod is less than or equal to 300, a warning will be raised.
             - If mode is 'free', the number of rows in X must be equal to the number of reactors.
 
         """
         # Checking if gotod time is at least five minutes
-        if isinstance(deltaTgotod, int):
-            if mode == "optimize" and deltaTgotod <= 300:
-                warnings.warn("deltaTgotod should be at least 5 minutes.")
-        else:
-            raise ValueError("deltaTgotod must be an integer")
+        if mode == "optimize" and deltaTgotod <= 300:
+            warnings.warn("deltaTgotod should be at least 5 minutes.")
 
         if mode == "free":
             assert self.population.shape[0] == len(self.reactors), "X must have the same number of rows as reactors in free mode."
