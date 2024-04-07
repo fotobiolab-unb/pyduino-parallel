@@ -305,7 +305,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             raise ValueError("deltaTgotod must be an integer")
 
         if mode == "free":
-            assert X.shape[0] == len(self.reactors), "X must have the same number of rows as reactors in free mode."
+            assert self.population.shape[0] == len(self.reactors), "X must have the same number of rows as reactors in free mode."
 
         self.deltaT = deltaT
         self.deltaTgotod = deltaTgotod
