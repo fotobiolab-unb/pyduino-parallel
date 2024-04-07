@@ -287,13 +287,13 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         Args:
             deltaT (float): The time step for the simulation.
             mode (str, optional): The mode of operation. Defaults to 'optimize'.
-            deltaTgotod (int, optional): The time interval for the 'gotod' operation. Defaults to None.
+            deltaTgotod (int, optional): The time interval for performing optimization. Defaults to None.
 
         Raises:
             ValueError: If deltaTgotod is not an integer.
 
         Notes:
-            - If mode is 'optimize' and deltaTgotod is less than or equal to 300, a warning is raised.
+            - If mode is 'optimize' and deltaTgotod is less than or equal to 300, a warning will be raised.
             - If mode is 'free', the number of rows in X must be equal to the number of reactors.
 
         """
