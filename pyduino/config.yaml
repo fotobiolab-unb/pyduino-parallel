@@ -3,7 +3,7 @@ hyperparameters:
   log_name: "nelder_mead_power_test" #Log folder name (delete to use the default)
   density_param: DensidadeAtual #Parameter name for density counts
   maximize: false
-  rng_seed: 2 #Random seed for genetic algorithm
+  rng_seed: 2 #Random seed parameter initialization
   ranges:
     # brilho:
     #   - 0
