@@ -229,7 +229,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         data = self.F_get()
 
         # Log the DataFrame as a table in text format
-        self.writer.add_text(to_markdown_table(data), i)
+        self.writer.add_text("reactor_state", text_string=to_markdown_table(data), global_step=i)
 
         self.log.log_many_rows(data,tags=tags)
 
