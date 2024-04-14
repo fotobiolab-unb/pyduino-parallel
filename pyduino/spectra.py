@@ -11,7 +11,7 @@ from datetime import date, datetime
 from pyduino.data_parser import RangeParser
 from collections import OrderedDict
 from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
-from pyduino.log import datetime_to_str
+from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
 import warnings
 
@@ -229,7 +229,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         data = self.F_get()
 
         # Log the DataFrame as a table in text format
-        self.writer.add_text(self.log.to_markdown_table(data), i)
+        self.writer.add_text(to_markdown_table(data), i)
 
         self.log.log_many_rows(data,tags=tags)
 
@@ -331,7 +331,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                         data = self.F_get()
                         self.y = get_param(data, self.density_param, self.reactors)
                     print("[INFO]", "SET", datetime.now().strftime("%c"))
-                    self.log_tensor(self.iteration_counter)
+                    print("[DEBUG]", "Y-VALUES", y_to_table(self.y))
+                    self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)
