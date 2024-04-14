@@ -285,45 +285,53 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
     def run(
         self,
         deltaT: float,
-        run_optim: bool = True,
+        mode: str = 'optimize',
         deltaTgotod: int = None
-        ):
+    ):
         """
-        Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT`.
+        Run the bioreactor simulation.
 
         Args:
-            deltaT (float): Amount of time in seconds to wait in each iteration.
-            run_optim (bool): Whether or not to use the optimizer.
-            deltaTgotod (int, optional): Time to wait after sending `gotod` command.
-        """
+            deltaT (float): The time step for the simulation.
+            mode (str, optional): The mode of operation. Defaults to 'optimize'.
+            deltaTgotod (int, optional): The time interval for performing optimization. Defaults to None.
 
-        #Checking if gotod time is at least five minutes
-        if isinstance(deltaTgotod, int):
-            if run_optim and deltaTgotod <= 300: warnings.warn("deltaTgotod should be at least 5 minutes.")
-        else:
-            raise ValueError("deltaTgotod must be an integer")
+        Notes:
+            - If mode is 'optimize' and deltaTgotod is less than or equal to 300, a warning will be raised.
+            - If mode is 'free', the number of rows in X must be equal to the number of reactors.
+
+        """
+        # Checking if gotod time is at least five minutes
+        if mode == "optimize" and deltaTgotod <= 300:
+            warnings.warn("deltaTgotod should be at least 5 minutes.")
+
+        if mode == "free":
+            assert self.population.shape[0] == len(self.reactors), "X must have the same number of rows as reactors in free mode."
 
         self.deltaT = deltaT
         self.deltaTgotod = deltaTgotod
         self.iteration_counter = 1
 
-        with open("error_traceback.log","w") as log_file:
-            log_file.write(datetime_to_str(self.log.timestamp)+'\n')
+        with open("error_traceback.log", "w") as log_file:
+            log_file.write(datetime_to_str(self.log.timestamp) + '\n')
             try:
                 print("START")
                 while True:
-                    #growing
+                    # growing
                     self.t_grow_1 = datetime.now()
-                    time.sleep(max(2,deltaT))
-                    self.dt = (datetime.now()-self.t_grow_1).total_seconds()
-                    print("[INFO]","DT",self.dt)
-                    #Optimizer
-                    if run_optim:
+                    time.sleep(max(2, deltaT))
+                    self.dt = (datetime.now() - self.t_grow_1).total_seconds()
+                    print("[INFO]", "DT", self.dt)
+                    # Optimizer
+                    if mode == "optimize":
                         self.step()
-                    self.gotod()
-                    print("[INFO]","SET",datetime.now().strftime("%c"))
-                    print("[DEBUG]", "y VALUES:", self.y)
-                    self.log_data(self.iteration_counter)
+                        if isinstance(self.deltaTgotod, int):
+                            self.gotod()
+                    elif mode == "free":
+                        data = self.F_get()
+                        self.y = get_param(data, self.density_param, self.reactors)
+                    print("[INFO]", "SET", datetime.now().strftime("%c"))
+                    self.log_tensor(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)

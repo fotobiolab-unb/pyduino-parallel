@@ -1,56 +1,19 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "nelder_mead_power_test" #Log folder name (delete to use the default)
+  log_name: "free_growth_test_2024_04_07" #Log folder name (delete to use the default)
   density_param: DensidadeAtual #Parameter name for density counts
   maximize: false
-  rng_seed: 2 #Random seed for genetic algorithm
+  rng_seed: 2 #Random seed parameter initialization
   ranges:
     # brilho:
     #   - 0
     #   - 100
     branco:
       - 1
-      #- 100
-      - 19
-    full:
+      - 100                                     
+    others:
       - 0
-      #- 100
-      - 17
-    "440":
-      - 0
-      #- 100
-      - 26
-    "470":
-      - 0
-      #- 100
-      - 24
-    "495":
-      - 0
-      #- 100
-      - 24
-    "530":
-      - 0
-      #- 100
-      - 24
-    "595":
-      - 0
-      #- 100
-      - 92
-    "634":
-      - 0
-      #- 100
-      - 58
-    "660":
-      - 0
-      #- 100
-      - 44
-    "684":
-      - 0
-      #- 100
-      - 35                                          
-    #others:
-    #  - 0
-    #  - 100
+      - 100
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"

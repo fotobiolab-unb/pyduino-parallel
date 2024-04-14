@@ -166,3 +166,5 @@ cython_debug/
 cache.csv
 log/
 calibrate/
+experiment.py
+nohup.out
