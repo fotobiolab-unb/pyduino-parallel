@@ -12,3 +12,6 @@ PyYAML
 requests
 scipy
 tailer
+python-dotenv
+tensorboardX==2.6.2.2
+tabulate

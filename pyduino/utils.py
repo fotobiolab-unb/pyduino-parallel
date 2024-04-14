@@ -2,6 +2,7 @@ import yaml
 from nmap import PortScanner
 import requests
 import numpy as np
+from collections import OrderedDict
 
 class bcolors:
     HEADER = '\033[95m'
@@ -13,6 +14,26 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+def get_param(data, key: str, ids: set = False) -> OrderedDict:
+
+    """
+    Retrieve a specific parameter from a dictionary of data.
+
+    Parameters:
+    - data: The dictionary containing the data.
+    - key: The key of the parameter to retrieve.
+    - ids: (optional) A set of IDs to filter the data. If not provided, all data will be returned.
+
+    Returns:
+    - An ordered dictionary containing the filtered data.
+
+    """
+    filtered = OrderedDict(list(map(lambda x: (x[0], x[1][key]), data.items())))
+    if not ids:
+        return filtered
+    else:
+        return OrderedDict(filter(lambda x: x[0] in ids,filtered.items()))
 
 def yaml_get(filename):
     """

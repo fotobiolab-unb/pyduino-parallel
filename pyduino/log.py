@@ -5,6 +5,9 @@ from datetime import datetime
 import io
 from glob import glob
 from uuid import uuid1
+from tabulate import tabulate
+from collections import OrderedDict
+from datetime import datetime
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 config_file = os.path.join(__location__,"config.yaml")
@@ -14,6 +17,25 @@ def datetime_from_str(x):
 
 def datetime_to_str(x):
     return x.strftime("%Y%m%d%H%M%S")
+
+def to_markdown_table(data: OrderedDict) -> str:
+    """
+    Converts the given data into a markdown table format.
+
+    Args:
+        data (OrderedDict[OrderedDict]): The data to be converted into a markdown table.
+
+    Returns:
+        str: The markdown table representation of the data.
+    """
+    rows = []
+    for rid, rdata in data.items():
+        rdata = OrderedDict({"ID": rid, **rdata})
+        rows.append(rdata)
+    return tabulate(rows, headers="keys", tablefmt="pipe")
+
+def y_to_table(y):
+    return tabulate(list(y.items()), tablefmt="pipe")
 
 class log:
     @property
@@ -32,7 +54,7 @@ class log:
         Example:
             log_obj = log(['reactor_0','reactor_1'],path='./log',name='experiment_0')
 
-            log/
+            log/YEAR/MONTH/
             ├─ experiment_0/
             │  ├─ reactor_0.csv
             │  ├─ reactor_1.csv
@@ -42,8 +64,25 @@ class log:
             path (str): Save path for the logs.
             name (str): Name given for this particular instance. If none will name it with the current timestamp.
         """
-        self.path = path
+        self.today = datetime.now()
+        self.path = os.path.join(path, self.today.strftime("%Y"), self.today.strftime("%m"))
         self.start_timestamp = datetime_to_str(self.timestamp) if name is None else name
+        self.log_name = name
+        Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
+        if isinstance(subdir,str):
+            self.subdir = list(map(os.path.basename,glob(os.path.join(self.prefix,subdir))))
+        elif isinstance(subdir,list):
+            self.subdir = subdir
+        else:
+            raise ValueError("Invalid type for subdir. Must be either a list of strings or a glob string.")
+        self.subdir = list(map(lambda x: str(x)+".csv" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
+        self.first_timestamp = None
+        self.data_frames = {}
+
+        self.paths = list(map(lambda x: os.path.join(self.prefix,x),self.subdir))
+
+        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp.replace('/','-')}-{str(uuid1())}.yaml"),'w') as wfile:
+            wfile.write(cfile.read())
         self.log_name = name
         Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
         if isinstance(subdir,str):
@@ -124,18 +163,23 @@ class log:
         """
         Logs optima of all rows into a single file.
         """
-        i=self.data_frames.loc[:,column].argmax() if maximum else self.data_frames.loc[:,column].argmin()
+        i=self.data_frames.loc[:,column].astype(float).argmax() if maximum else self.data_frames.loc[:,column].astype(float).argmin()
         self.df_opt = self.data_frames.iloc[i,:]
         self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',sep='\t',**kwargs)
     
-    def log_average(self,**kwargs):
+    def log_average(self, cols: list, **kwargs):
         """
-        Logs average of all rows into a single file.
+        Calculate the average values of specified columns in the data frames and log the results.
+
+        Parameters:
+        - cols (list): A list of column names to calculate the average for.
+        - **kwargs: Additional keyword arguments to customize the logging process.
         """
         df = self.data_frames.copy()
+        df.loc[:, cols] = df.loc[:, cols].astype(float)
         df.elapsed_time_hours = df.elapsed_time_hours.round(decimals=2)
-        self.df_avg = df.groupby("elapsed_time_hours").mean().reset_index()
-        self.log_rows(rows=self.df_avg,subdir='avg',sep='\t',**kwargs)
+        self.df_avg = df.loc[:, cols + ['elapsed_time_hours']].groupby("elapsed_time_hours").mean().reset_index()
+        self.log_rows(rows=self.df_avg, subdir='avg', sep='\t', **kwargs)
 
     def cache_data(self,rows,path="./cache.csv",**kwargs):
         """

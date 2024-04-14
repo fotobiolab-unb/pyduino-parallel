@@ -1,22 +1,19 @@
-from gapy.gapy2 import GA
+from pyduino.optimization.nelder_mead import NelderMead
 from pyduino.pyduino2 import ReactorManager, chunks, PATHS
 import numpy as np
-from functools import partial
 import json
 import os
 import pandas as pd
 import numpy as np
-from typing import Union
 import time
+from tensorboardX import SummaryWriter
 from datetime import date, datetime
-from pyduino.data_parser import yaml_genetic_algorithm, RangeParser, get_datetimes
+from pyduino.data_parser import RangeParser
 from collections import OrderedDict
-from scipy.special import softmax
-from pyduino.utils import yaml_get, bcolors, TriangleWave, ReLUP
-from pyduino.log import datetime_to_str
+from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
+from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
-
-# asd
+import warnings
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -78,11 +75,10 @@ def parse_dados(X,param):
     """
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
-class Spectra(RangeParser,ReactorManager,GA):
-    def __init__(self,elitism,f_param,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
+class Spectra(RangeParser,ReactorManager,NelderMead):
+    def __init__(self,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
-            f_param (str): Parameter name to be extracted from `ReactorManager.log_dados`.
             ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
                 its minimum and maximum attainable values respectively.
             reset_density (bool): Whether or not to reset density values on the reactors at each iteration.
@@ -100,63 +96,58 @@ class Spectra(RangeParser,ReactorManager,GA):
 
         RangeParser.__init__(self,ranges,self.parameters)
 
-        #assert os.path.exists(IRRADIANCE_PATH)
-        self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']#yaml_get(IRRADIANCE_PATH)
-        #self.irradiance = np.array([self.irradiance[u] for u in self.keyed_ranges.keys()])
-        self.irradiance = pd.Series(self.irradiance)
+        self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']
 
         ReactorManager.__init__(self)
-        GA.__init__(
+        NelderMead.__init__(
             self,
-            population_size=len(self.reactors),
+            population_size=len(self.parameters),
             ranges=self.ranges_as_list(),
-            generations=0,
-            **kwargs
-            )
+            rng_seed=kwargs.get('rng_seed',0)
+        )
         self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
-        self.log_init(name=log_name)        
-        self.payload = self.G_as_keyed() if self.payload is None else self.payload
+        self.log_init(name=log_name)
+        self.writer = SummaryWriter(self.log.prefix)
+        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.log.prefix, bcolors.ENDC)  
+        self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
-        self.fparam = f_param
         self.density_param = density_param
-        self.fitness = np.nan * np.ones(len(self.reactors))
         self.maximize = maximize
         self.dt = np.nan
-        self.elitism = elitism
-    def G_as_keyed(self):
+    def assign_to_reactors(self, x):
         """
-        Converts genome matrix into an appropriate format to send to the reactors.
+        Assigns a list of parameters to the reactors.
+
+        Parameters:
+        x (list): The input list to be converted.
+
+        Returns:
+        OrderedDict: An ordered dictionary where the keys are the IDs and the values are the ranges.
+
         """
+        ids = self.ids[:len(x)]
         return OrderedDict(
             zip(
-                self.ids,
+                ids,
                 map(
                     lambda u: self.ranges_as_keyed(u),
-                    list(np.round(self.view(self.G,self.linmap),2))
+                    list(np.round(self.view(x),2))
                 )
             )
         )
-    def f_map(self,x_1,x_0):
+    @property
+    def population_as_dict(self):
         """
-        Computation for the fitness function.
+        Converts genome matrix into an appropriate format to send to the reactors.
         """
-        f_1 = x_1.loc[self.density_param].astype(float)
-        self.power = ((pd.DataFrame(self.G_as_keyed()).T*self.irradiance).sum(axis=1))/100
-        if (self.dt is not np.nan) and (self.iteration_counter>0):
-            f_0 = x_0.loc[self.density_param].astype(float)
-            #self.growth_rate = (f_1-f_0)/self.dt
-            self.growth_rate = (f_1/f_0-1)/self.dt
-            #self.efficiency = self.growth_rate/(self.power+1)
-            #self.efficiency = 1000000*self.growth_rate*np.exp(-self.power/5)
-            self.efficiency = 1000000*self.growth_rate*np.exp(-(self.power-7)*(self.power-7)/(2*1.5*1.5))
-        else:
-            self.growth_rate = self.power*np.nan
-            self.efficiency = self.power*np.nan
-        x_1.loc['power',:] = self.power.copy()
-        x_1.loc['efficiency',:] = self.efficiency.copy()
-        x_1.loc['growth_rate',:] = self.growth_rate.copy()
+        return self.assign_to_reactors(self.population)
+    
+    @property
+    def power(self):
+        return {reactor_ids: sum(vals[key]*self.irradiance[key] for key in self.irradiance.keys()) for reactor_ids, vals in self.payload.items()}
+
     def payload_to_matrix(self):
         return np.nan_to_num(
             np.array(
@@ -173,8 +164,7 @@ class Spectra(RangeParser,ReactorManager,GA):
         df = pd.DataFrame(D)
         df.index = df.index.str.lower()
         df = df.loc[self.parameters,:]
-        df.loc['fitness'] = self.fitness
-        df.loc['probs'] = 100*self.p
+        df.loc['fitness'] = self.y
         return df.round(decimals=2)
     def F_get(self):
         """
@@ -188,10 +178,17 @@ class Spectra(RangeParser,ReactorManager,GA):
             x (:obj:`dict` of :obj:`dict`): Dictionary having reactor id as keys
             and a dictionary of parameters and their values as values.
         """
+
         for _id,params in x.items():
             for chk in chunks(list(params.items()),3):
                 self.reactors[_id].set(dict(chk))
                 time.sleep(1)
+    def init(self):
+        """
+        Sets payload to the reactors.
+        """
+        self.F_set(self.payload)
+
     def set_spectrum(self,preset):
         """
         Sets all reactors with a preset spectrum contained in `SPECTRUM_PATH`.
@@ -201,12 +198,7 @@ class Spectra(RangeParser,ReactorManager,GA):
 
     def set_preset_state_spectra(self,*args,**kwargs):
         self.set_preset_state(*args,**kwargs)
-        self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
-    
-    def update_fitness(self,X):
-        #Get and return parameter chosen for fitness
-        self.fitness = ((-1)**(1+self.maximize))*X.loc[self.fparam].astype(float).to_numpy()
-        return self.fitness
+        self.population = self.inverse_view(self.payload_to_matrix()).astype(int)   
     
     def GET(self,tag):
         """
@@ -214,164 +206,137 @@ class Spectra(RangeParser,ReactorManager,GA):
         """
         print("[INFO]","GET",datetime.now().strftime("%c"))
         self.past_data = self.data.copy() if self.data is not None else pd.DataFrame(self.payload)
-        self.data = pd.DataFrame(self.F_get())
-        self.f_map(self.data,self.past_data)
-        self.log.log_many_rows(self.data,tags={'growth_state':tag})
-        self.log.log_optimal(column=self.fparam,maximum=self.maximize,tags={'growth_state':tag})   
-        self.log.log_average(tags={'growth_state':tag})   
+        self.data = self.F_get()
+        self.log.log_many_rows(pd.DataFrame(self.data),tags={'growth_state':tag})
 
-    def gotod(self,deltaTgotod):
+    def log_data(self, i, tags={}):
+        """
+        Logs the tensor values and fitness scores.
+
+        This method iterates over the tensor values and fitness scores and logs them using the writer object.
+        """
+        print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
+        P = self.view_g()
+        for k,(rid, ry) in enumerate(self.y.items()):
+            self.writer.add_scalar(f'reactor_{rid}/y', float(ry), i)
+            for r_param_id, rparam in enumerate(self.parameters):
+                self.writer.add_scalar(f'reactor_{rid}/{rparam}', float(P[k][r_param_id]), i)
+        if self.maximize:
+            self.writer.add_scalar('optima', max(self.y), i)
+        else:
+            self.writer.add_scalar('optima', min(self.y), i)
+
+        data = self.F_get()
+
+        # Log the DataFrame as a table in text format
+        self.writer.add_text("reactor_state", text_string=to_markdown_table(data), global_step=i)
+
+        self.log.log_many_rows(data,tags=tags)
+
+    def gotod(self):
         self.t_gotod_1 = datetime.now()
         self.send("gotod",await_response=False)
         print("[INFO] gotod sent")
-        time.sleep(deltaTgotod)
+        time.sleep(self.deltaTgotod)
         self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
         print("[INFO] gotod DT", self.dt)
-        self.GET("gotod")
+
+    # === Optimizer methods ===
+    def ask_oracle(self, X) -> np.ndarray:
+        """
+        Asks the oracle for the fitness of the given input.
+
+        Parameters:
+        X (np.ndarray): The input for which the fitness is to be calculated. Must be already mapped to codomain.
+
+        Returns:
+        np.ndarray: The fitness value calculated by the oracle.
+        """
+        y = np.array([])
+
+        assert X.shape[1] == len(self.parameters)
+        assert len(X.shape) == 2, "X must be a 2D array."
+        n_partitions = len(X) // len(self.reactors) + (len(X) % len(self.reactors) > 0)
+        partitions = np.array_split(X, n_partitions)
+
+        for partition in partitions:
+            self.payload = self.assign_to_reactors(partition)
+            reactors = self.payload.keys()
+
+            self.gotod()
+            data0 = self.F_get()
+            f0 = get_param(data0, self.density_param, reactors)
+
+            self.F_set(self.payload)
+            time.sleep(self.deltaT)
+            data = self.F_get()
+            f = get_param(data, self.density_param, reactors)
+
+            #yield_rate = np.array([(float(f[id])/float(f[id]) - 1)/self.deltaT/self.power[id] for id in reactors]).astype(float)
+            
+            fitness = np.array([self.power[id] for id in reactors]).astype(float)
+
+            y = np.append(y,((-1)**(self.maximize))*(fitness))
+
+        self.y = y
+        return y   
+    # === * ===
 
     def run(
         self,
-        deltaT: int,
-        run_ga: bool = True,
+        deltaT: float,
+        mode: str = 'optimize',
         deltaTgotod: int = None
-        ):
+    ):
         """
-        Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT`.
+        Run the bioreactor simulation.
 
         Args:
-            deltaT (int): Amount of time in seconds to wait in each iteration.
-            run_ga (bool): Whether or not execute a step in the genetic algorithm.
-            deltaTgotod (int, optional): Time to wait after sending `gotod` command.
+            deltaT (float): The time step for the simulation.
+            mode (str, optional): The mode of operation. Defaults to 'optimize'.
+            deltaTgotod (int, optional): The time interval for performing optimization. Defaults to None.
+
+        Notes:
+            - If mode is 'optimize' and deltaTgotod is less than or equal to 300, a warning will be raised.
+            - If mode is 'free', the number of rows in X must be equal to the number of reactors.
+
         """
+        # Checking if gotod time is at least five minutes
+        if mode == "optimize" and deltaTgotod <= 300:
+            warnings.warn("deltaTgotod should be at least 5 minutes.")
 
-        #Checking if gotod time is at least five minutes
-        if run_ga and deltaTgotod is None: raise ValueError("deltaTgotod must be at least 5 minutes.")
-        if run_ga and deltaTgotod <= 5*60: raise ValueError("deltaTgotod must be at least 5 minutes.")
+        if mode == "free":
+            assert self.population.shape[0] == len(self.reactors), "X must have the same number of rows as reactors in free mode."
 
+        self.deltaT = deltaT
+        self.deltaTgotod = deltaTgotod
         self.iteration_counter = 1
 
-        self.GET("growing")
-
-        with open("error_traceback.log","w") as log_file:
-            log_file.write(datetime_to_str(self.log.timestamp)+'\n')
+        with open("error_traceback.log", "w") as log_file:
+            log_file.write(datetime_to_str(self.log.timestamp) + '\n')
             try:
-                self.deltaT = deltaT
                 print("START")
                 while True:
-                    #growing
+                    # growing
                     self.t_grow_1 = datetime.now()
-                    time.sleep(max(2,deltaT))
-                    self.dt = (datetime.now()-self.t_grow_1).total_seconds()
-                    print("[INFO]","DT",self.dt)
-                    self.GET("growing")
-                    self.update_fitness(self.data)
-                    #GA
-                    if run_ga:
-                        #self.p = softmax(self.fitness/100)
-                        #self.p = ReLUP(self.fitness*self.fitness*self.fitness)
-                        self.p = ReLUP(self.fitness*self.fitness)
-                        #Hotfix for elitism
-                        print(f"{bcolors.OKCYAN}self.data{bcolors.ENDC}")
-                        self.data.loc['p',:] = self.p.copy()
-                        print(f"{bcolors.BOLD}{self.data.T.loc[:,self.titled_parameters+['power','efficiency','growth_rate','p']]}{bcolors.ENDC}")
-                        if self.elitism:
-                            self.elite_ix = self.ids[self.p.argmax()]
-                            self.anti_elite_ix = self.ids[self.p.argmin()]
-                            self.elite = self.G[self.p.argmax()].copy()
-                        self.crossover()
-                        self.mutation()
-                        if self.elitism:
-                            self.G[self.p.argmin()] = self.elite.copy()
-                        self.payload = self.G_as_keyed()
-                    else:
-                        df = self.data.T
-                        df.columns = df.columns.str.lower()
-                        self.payload = df[self.parameters].T.to_dict()
-                        self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
-                    print("[INFO]","SET",datetime.now().strftime("%c"))
-                    self.F_set(self.payload) if run_ga else None
-                    #gotod
-                    if self.do_gotod:
-                        self.gotod(deltaTgotod)
+                    time.sleep(max(2, deltaT))
+                    self.dt = (datetime.now() - self.t_grow_1).total_seconds()
+                    print("[INFO]", "DT", self.dt)
+                    # Optimizer
+                    if mode == "optimize":
+                        self.step()
+                        if isinstance(self.deltaTgotod, int):
+                            self.gotod()
+                    elif mode == "free":
+                        data = self.F_get()
+                        self.y = get_param(data, self.density_param, self.reactors)
+                    print("[INFO]", "SET", datetime.now().strftime("%c"))
+                    print("[DEBUG]", "Y-VALUES", y_to_table(self.y))
+                    self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)
                 raise(e)
-
-    def run_incremental(
-            self,
-            deltaT: int,
-            parameter: str,
-            deltaTgotod: int = None,
-            N: int = 1,
-            M: int = 1,
-            bounds:list = [100,0]
-            ):
-        """
-        Runs reading and wiriting operations in an infinite loop on intervals given by `deltaT` and increments parameters
-        periodically on an interval given by `deltaClockHours`.
-
-        Args:
-            deltaT (int): Amount of time in seconds to wait in each iteration.
-            parameter (str): Name of the parameters to be updated.
-            deltaTgotod (int, optional): Time to wait after sending `gotod` command.
-            N (int): Number of iteration groups to wait to trigger a parameter update.
-            M (int): Number of iterations to wait to increment `N`.
-            bounds: Starts on `bounds[0]` and goes towards `bounds[1]`. Then, the other way around.
-        """
-
-        #Initialize stepping
-        df = pd.DataFrame(self.payload).T
-        self.triangles = list(map(lambda x: TriangleWave(x,bounds[0],bounds[1],N),df.loc[:,parameter].to_list()))
-        self.triangle_wave_state = 1 if bounds[1] >= bounds[0] else -1
-        c = 0
-        m = 0
-
-        #Checking if gotod time is at least five minutes
-        if deltaTgotod is not None and deltaTgotod < 5*60: print(bcolors.WARNING,"[WARNING]","deltaTgotod should be at least 5 minutes.",bcolors.ENDC)
-
-        with open("error_traceback.log","w") as log_file:
-            log_file.write(datetime_to_str(self.log.timestamp)+'\n')
-            try:
-                self.deltaT = deltaT
-                while True:
-                    self.t1 = datetime.now()
-                    self.GET("growing")
-                    self.update_fitness(self.data)
-                    #gotod
-                    if self.do_gotod:
-                        self.send("gotod",await_response=False)
-                        print("[INFO] gotod sent")
-                        time.sleep(deltaTgotod)
-                        self.dt = (datetime.now()-self.t1).total_seconds()
-                        print("[INFO] gotod DT", self.dt)
-                        self.GET("gotod")
-                        self.t1 = datetime.now()
-                    
-                    # Pick up original parameters from preset state and increment them with `parameter_increment`.
-                    df = pd.DataFrame(self.data).T
-                    df.loc[:,parameter] = list(map(lambda T: T.y(c),self.triangles))
-                    print("[INFO]","WAVE","UP" if self.triangle_wave_state > 0 else "DOWN", "COUNTER", str(m), "LEVEL", str(c))
-                    if c%N==0:
-                        self.triangle_wave_state *= -1
-                    # ---------------------------
-
-                    df.columns = df.columns.str.lower()
-                    self.payload = df[self.parameters].T.to_dict()
-                    self.G = self.inverse_view(self.payload_to_matrix()).astype(int)
-                    print("[INFO]","SET",self.t1.strftime("%c"))
-                    self.F_set(self.payload)
-                    time.sleep(max(2,deltaT))
-                    m+=1
-                    if (m%M)==0:
-                        c += 1
-                    self.t2 = datetime.now()
-                    self.dt = (self.t2-self.t1).total_seconds()
-                    print("[INFO]","DT",self.dt)
-            except Exception as e:
-                traceback.print_exc(file=log_file)
-                raise(e)
-
 
 if __name__ == "__main__":
     g = Spectra(**hyperparameters)

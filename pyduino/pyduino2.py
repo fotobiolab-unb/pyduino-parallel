@@ -71,11 +71,10 @@ class Reactor:
     def http_get(self,route):
         return requests.get(urljoin(self.url,route))
     
-    def http_post(self,route,command,await_response,delay):
+    def http_post(self,route,command,await_response):
         return requests.post(urljoin(self.url,route),json={
             "command": command,
-            "await_response": await_response,
-            "delay": delay
+            "await_response": await_response
         })
 
     def connect(self):
@@ -113,18 +112,18 @@ class Reactor:
         """
         self.http_post("send","fim",False,0)
 
-    def send(self, msg, delay=5):
+    def send(self, msg):
         """
         Sends command and awaits for a response
         """
-        resp = self.http_post("send",msg,True,delay)
+        resp = self.http_post("send",msg,True)
         return resp.json()["response"]
 
     def _send(self, msg):
         """
         Sends command and doesn't await for a response
         """
-        resp = self.http_post("send",msg,False,0)
+        resp = self.http_post("send",msg,False)
         return resp.ok
     
     def set_in_chunks(self,params,chunksize=4):
@@ -161,10 +160,10 @@ class Reactor:
         self._send("horacerta")
 
 
-def send_wrapper(reactor,command,delay,await_response):
+def send_wrapper(reactor,command,await_response):
     id, reactor = reactor
     if await_response:
-        return (id,reactor.send(command,delay))
+        return (id,reactor.send(command))
     else:
         return (id,reactor._send(command))
 
@@ -215,7 +214,7 @@ class ReactorManager:
     def send_parallel(self,command,delay,await_response=True):
         out = []
         with Pool(7) as p:
-            out = p.map(partial(send_wrapper,command=command,delay=delay,await_response=await_response),list(self.reactors.items()))
+            out = p.map(partial(send_wrapper,command=command,await_response=await_response),list(self.reactors.items()))
         return out
 
     def set(self, data=None, **kwargs):
