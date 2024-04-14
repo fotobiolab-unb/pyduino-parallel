@@ -331,7 +331,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                         data = self.F_get()
                         self.y = get_param(data, self.density_param, self.reactors)
                     print("[INFO]", "SET", datetime.now().strftime("%c"))
-                    print("[DEBUG]", "Y-VALUES", y_to_table(self.y))
+                    print("[DEBUG]", "Y-VALUES")
+                    print(y_to_table(self.y))
                     self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:
