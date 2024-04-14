@@ -7,6 +7,7 @@ from glob import glob
 from uuid import uuid1
 from tabulate import tabulate
 from collections import OrderedDict
+from datetime import datetime
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 config_file = os.path.join(__location__,"config.yaml")
@@ -53,7 +54,7 @@ class log:
         Example:
             log_obj = log(['reactor_0','reactor_1'],path='./log',name='experiment_0')
 
-            log/
+            log/YEAR/MONTH/
             ├─ experiment_0/
             │  ├─ reactor_0.csv
             │  ├─ reactor_1.csv
@@ -63,8 +64,25 @@ class log:
             path (str): Save path for the logs.
             name (str): Name given for this particular instance. If none will name it with the current timestamp.
         """
-        self.path = path
+        self.today = datetime.now()
+        self.path = os.path.join(path, self.today.strftime("%Y"), self.today.strftime("%m"))
         self.start_timestamp = datetime_to_str(self.timestamp) if name is None else name
+        self.log_name = name
+        Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
+        if isinstance(subdir,str):
+            self.subdir = list(map(os.path.basename,glob(os.path.join(self.prefix,subdir))))
+        elif isinstance(subdir,list):
+            self.subdir = subdir
+        else:
+            raise ValueError("Invalid type for subdir. Must be either a list of strings or a glob string.")
+        self.subdir = list(map(lambda x: str(x)+".csv" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
+        self.first_timestamp = None
+        self.data_frames = {}
+
+        self.paths = list(map(lambda x: os.path.join(self.prefix,x),self.subdir))
+
+        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp.replace('/','-')}-{str(uuid1())}.yaml"),'w') as wfile:
+            wfile.write(cfile.read())
         self.log_name = name
         Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
         if isinstance(subdir,str):
