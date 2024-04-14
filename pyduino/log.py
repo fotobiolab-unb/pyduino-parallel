@@ -18,7 +18,7 @@ def datetime_from_str(x):
 def datetime_to_str(x):
     return x.strftime("%Y%m%d%H%M%S")
 
-def to_markdown_table(data: OrderedDict[OrderedDict]) -> str:
+def to_markdown_table(data: OrderedDict) -> str:
     """
     Converts the given data into a markdown table format.
 
