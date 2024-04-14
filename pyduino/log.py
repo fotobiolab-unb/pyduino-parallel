@@ -5,6 +5,8 @@ from datetime import datetime
 import io
 from glob import glob
 from uuid import uuid1
+from tabulate import tabulate
+from collections import OrderedDict
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 config_file = os.path.join(__location__,"config.yaml")
@@ -14,6 +16,22 @@ def datetime_from_str(x):
 
 def datetime_to_str(x):
     return x.strftime("%Y%m%d%H%M%S")
+
+def to_markdown_table(data: OrderedDict[OrderedDict]) -> str:
+    """
+    Converts the given data into a markdown table format.
+
+    Args:
+        data (OrderedDict[OrderedDict]): The data to be converted into a markdown table.
+
+    Returns:
+        str: The markdown table representation of the data.
+    """
+    rows = []
+    for rid, rdata in data.items():
+        rdata = OrderedDict({"ID": rid, **rdata})
+        rows.append(rdata)
+    return tabulate(rows, headers="keys", tablefmt="pipe")
 
 class log:
     @property
