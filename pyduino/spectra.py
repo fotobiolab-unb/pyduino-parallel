@@ -14,6 +14,7 @@ from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
 from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
 import warnings
+from datetime import datetime
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -25,6 +26,8 @@ hyperparameters = PATHS.HYPERPARAMETERS
 
 #Path to irradiance values
 IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
+
+CONFIG = yaml_get(os.path.join(__location__,"config.yaml"))
 
 def update_dict(D,A,key):
     """
@@ -90,8 +93,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         with open(SPECTRUM_PATH) as jfile:
             self.spectrum = json.loads(jfile.read())
         
-        #assert os.path.exists(PARAM_PATH)
-        self.parameters = PATHS.SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
+        self.parameters = PATHS.SYSTEM_PARAMETERS['relevant_parameters']
         self.titled_parameters = list(map(lambda x: x.title(),self.parameters))
 
         RangeParser.__init__(self,ranges,self.parameters)
@@ -108,8 +110,9 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)
-        self.writer = SummaryWriter(self.log.prefix)
-        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.log.prefix, bcolors.ENDC)  
+        self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+        self.writer = SummaryWriter(self.tensorboard_path)
+        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.tensorboard_path, bcolors.ENDC)  
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
@@ -216,17 +219,27 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
         print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
+        data = self.F_get()
+        additional_parameters = {}
+        if "tensorboard" in CONFIG and "additional_parameters" in CONFIG["tensorboard"]:
+            additional_parameters_source = CONFIG["tensorboard"]["additional_parameters"]
+            for param in additional_parameters_source:
+                additional_parameters[param] = get_param(data, param, self.reactors.keys())
+
+        print("[DEBUG]", "ADDITIONAL PARAMETERS" , additional_parameters)
+        
         P = self.view_g()
+        #Log main parameters
         for k,(rid, ry) in enumerate(self.y.items()):
             self.writer.add_scalar(f'reactor_{rid}/y', float(ry), i)
             for r_param_id, rparam in enumerate(self.parameters):
                 self.writer.add_scalar(f'reactor_{rid}/{rparam}', float(P[k][r_param_id]), i)
+            for param, value in additional_parameters.items():
+                self.writer.add_scalar(f'reactor_{rid}/{param}', float(value[rid]), i)
         if self.maximize:
             self.writer.add_scalar('optima', max(self.y), i)
         else:
             self.writer.add_scalar('optima', min(self.y), i)
-
-        data = self.F_get()
 
         # Log the DataFrame as a table in text format
         self.writer.add_text("reactor_state", text_string=to_markdown_table(data), global_step=i)
@@ -331,7 +344,6 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                         data = self.F_get()
                         self.y = get_param(data, self.density_param, self.reactors)
                     print("[INFO]", "SET", datetime.now().strftime("%c"))
-                    print("[DEBUG]", "Y-VALUES")
                     print(y_to_table(self.y))
                     self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
