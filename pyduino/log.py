@@ -33,6 +33,9 @@ def to_markdown_table(data: OrderedDict[OrderedDict]) -> str:
         rows.append(rdata)
     return tabulate(rows, headers="keys", tablefmt="pipe")
 
+def y_to_table(y):
+    return tabulate(list(y.items()), tablefmt="pipe")
+
 class log:
     @property
     def timestamp(self):
