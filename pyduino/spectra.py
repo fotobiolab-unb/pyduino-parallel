@@ -217,10 +217,10 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         """
         print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
         P = self.view_g()
-        for rid, ry in self.y.items():
+        for k,(rid, ry) in enumerate(self.y.items()):
             self.writer.add_scalar(f'reactor_{rid}/y', float(ry), i)
             for r_param_id, rparam in enumerate(self.parameters):
-                self.writer.add_scalar(f'reactor_{rid}/{rparam}', float(P[rid][r_param_id]), i)
+                self.writer.add_scalar(f'reactor_{rid}/{rparam}', float(P[k][r_param_id]), i)
         if self.maximize:
             self.writer.add_scalar('optima', max(self.y), i)
         else:
