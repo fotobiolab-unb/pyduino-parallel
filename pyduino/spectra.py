@@ -209,7 +209,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.data = self.F_get()
         self.log.log_many_rows(pd.DataFrame(self.data),tags={'growth_state':tag})
 
-    def log_tensor(self, i):
+    def log_data(self, i, tags={}):
         """
         Logs the tensor values and fitness scores.
 
@@ -217,14 +217,21 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         """
         print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
         P = self.view_g()
-        for k, v in enumerate(self.y):
-            self.writer.add_scalar(f'fitness/{k}', v, i)
-            for j, u in enumerate(self.parameters):
-                self.writer.add_scalar(f'{u}/{k}', P[k][j], i)
+        for rid, ry in self.y.items():
+            self.writer.add_scalar(f'reactor_{rid}/y', ry, i)
+            for r_param_id, rparam in enumerate(self.parameters):
+                self.writer.add_scalar(f'reactor_{rid}/{rparam}', P[rid][r_param_id], i)
         if self.maximize:
             self.writer.add_scalar('optima', max(self.y), i)
         else:
             self.writer.add_scalar('optima', min(self.y), i)
+
+        data = self.F_get()
+
+        # Log the DataFrame as a table in text format
+        self.writer.add_text(self.log.to_markdown_table(data), i)
+
+        self.log.log_many_rows(data,tags=tags)
 
     def gotod(self):
         self.t_gotod_1 = datetime.now()
@@ -315,7 +322,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                         self.step()
                     self.gotod()
                     print("[INFO]","SET",datetime.now().strftime("%c"))
-                    self.log_tensor(self.iteration_counter)
+                    print("[DEBUG]", "y VALUES:", self.y)
+                    self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:
                 traceback.print_exc(file=log_file)
