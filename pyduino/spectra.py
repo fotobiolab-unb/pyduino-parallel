@@ -1,4 +1,4 @@
-from pyduino.optimization.nelder_mead import NelderMead
+from pyduino.optimization.nelder_mead import NelderMeadBounded
 from pyduino.pyduino2 import ReactorManager, chunks, PATHS
 import numpy as np
 import json
@@ -75,7 +75,7 @@ def parse_dados(X,param):
     """
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
-class Spectra(RangeParser,ReactorManager,NelderMead):
+class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
     def __init__(self,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
@@ -99,7 +99,7 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']
 
         ReactorManager.__init__(self)
-        NelderMead.__init__(
+        NelderMeadBounded.__init__(
             self,
             population_size=len(self.parameters),
             ranges=self.ranges_as_list(),
