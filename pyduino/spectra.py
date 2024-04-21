@@ -383,7 +383,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                                 self.step()
                             else:
                                 logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
-                        if isinstance(self.deltaTgotod, int):
+                        if self.deltaTgotod is not None and isinstance(self.deltaTgotod, int):
                             self.gotod()
                     elif mode == "free":
                         data = self.F_get()
