@@ -15,19 +15,29 @@ from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
 import warnings
 from datetime import datetime
+import logging
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 #Path to spectrum.json
 SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
-
 #Path to hyperparameters for the genetic algorithm
 hyperparameters = PATHS.HYPERPARAMETERS
-
 #Path to irradiance values
 IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
-
 CONFIG = yaml_get(os.path.join(__location__,"config.yaml"))
+
+# === Logging ===
+# Instantiate a logger to the terminal
+log_level = CONFIG.get("log_level", "INFO")
+logger = logging.getLogger()
+logger.setLevel(log_level)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(log_level)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
 
 def update_dict(D,A,key):
     """
@@ -79,7 +89,7 @@ def parse_dados(X,param):
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
-    def __init__(self,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
+    def __init__(self,ranges,density_param,brilho_param=None,maximize=True,log_name=None,reset_density=False,**kwargs):
         """
         Args:
             ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
@@ -112,11 +122,12 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         self.log_init(name=log_name)
         self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
         self.writer = SummaryWriter(self.tensorboard_path)
-        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.tensorboard_path, bcolors.ENDC)  
+        logger.info(f"{bcolors.OKGREEN}[INFO]{bcolors.ENDC} Created tensorboard log at {self.tensorboard_path}")
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
         self.density_param = density_param
+        self.brilho_param = brilho_param #When nonzero, will be used to turn optimization on or off.
         self.maximize = maximize
         self.dt = np.nan
     def assign_to_reactors(self, x):
@@ -218,7 +229,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
 
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
-        print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
+        logger.info(f"LOGGING {datetime.now().strftime('%c')}")
         data = self.F_get()
         additional_parameters = {}
         if "tensorboard" in CONFIG and "additional_parameters" in CONFIG["tensorboard"]:
@@ -226,7 +237,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             for param in additional_parameters_source:
                 additional_parameters[param] = get_param(data, param, self.reactors.keys())
 
-        print("[DEBUG]", "ADDITIONAL PARAMETERS" , additional_parameters)
+        logger.debug(f"ADDITIONAL PARAMETERS {additional_parameters}")
         
         P = self.view_g()
         #Log main parameters
@@ -249,10 +260,10 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
     def gotod(self):
         self.t_gotod_1 = datetime.now()
         self.send("gotod",await_response=False)
-        print("[INFO] gotod sent")
+        logger.debug(f"gotod sent")
         time.sleep(self.deltaTgotod)
         self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
-        print("[INFO] gotod DT", self.dt)
+        logger.debug(f"gotod DT {self.dt}")
 
     # === Optimizer methods ===
     def ask_oracle(self, X) -> np.ndarray:
@@ -328,22 +339,28 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         with open("error_traceback.log", "w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp) + '\n')
             try:
-                print("START")
+                logger.debug("START")
                 while True:
                     # growing
                     self.t_grow_1 = datetime.now()
                     time.sleep(max(2, deltaT))
                     self.dt = (datetime.now() - self.t_grow_1).total_seconds()
-                    print("[INFO]", "DT", self.dt)
+                    logger.debug(f"DT {self.dt}")
                     # Optimizer
                     if mode == "optimize":
-                        self.step()
+                        if self.brilho_param is None:
+                            self.step()
+                        else:
+                            if get_param(self.F_get(), self.brilho_param, self.reactors) > 0:
+                                self.step()
+                            else:
+                                logger.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
                         if isinstance(self.deltaTgotod, int):
                             self.gotod()
                     elif mode == "free":
                         data = self.F_get()
                         self.y = get_param(data, self.density_param, self.reactors)
-                    print("[INFO]", "SET", datetime.now().strftime("%c"))
+                    logger.debug(f"SET {datetime.now().strftime('%c')}")
                     print(y_to_table(self.y))
                     self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
