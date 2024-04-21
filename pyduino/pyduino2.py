@@ -202,6 +202,10 @@ class ReactorManager:
 
         #self.horacerta()
     
+    @property
+    def ids(self) -> list:
+        return list(self.reactors.keys())
+
     def send(self,command,await_response=True,**kwargs):
         out = {}
         for k,r in self.reactors.items():
@@ -321,6 +325,7 @@ class ReactorManager:
             sep (str): Column separator used in the csv.
         """
         df = pd.read_csv(path,sep=sep,index_col='ID',**kwargs)
+        df = df[df.index.isin(self.ids)]
         df.columns = df.columns.str.lower() #Commands must be sent in lowercase
         #Dropping empty columns
         df.dropna(axis=1,inplace=True)
