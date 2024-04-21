@@ -346,14 +346,14 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             - If mode is 'free', the number of rows in X must be equal to the number of reactors.
 
         """
-        if self.thread and self.thread.is_alive():
+        if hasattr(self, 'thread') and self.thread.is_alive():
             self.thread.kill()
         self.thread = threading.Thread(target=self._run, args=(deltaT, mode, deltaTgotod))
         self.thread.start()
     
     def _run(self, deltaT: float, mode: str = 'optimize', deltaTgotod: int = None):
         # Checking if gotod time is at least five minutes
-        if mode == "optimize" and deltaTgotod <= 300:
+        if mode == "optimize" and isinstance(deltaTgotod, int) and deltaTgotod <= 300:
             warnings.warn("deltaTgotod should be at least 5 minutes.")
 
         if mode == "free":
@@ -378,10 +378,14 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                         if self.brilho_param is None:
                             self.step()
                         else:
-                            if get_param(self.F_get(), self.brilho_param, self.reactors) > 0:
+                            brilhos = np.array(list(get_param(self.F_get(), self.brilho_param, self.reactors)))
+                            if np.all(brilhos > 0):
                                 self.step()
-                            else:
+                            elif np.sum(brilhos)==0:
                                 logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
+                            else:
+                                logging.critical(f"{self.brilho_param} is off for some reactors but not all of them. This is not supposed to happen.")
+                                raise ValueError(f"{self.brilho_param} is off for some reactors but not all of them. This is not supposed to happen.")
                         if isinstance(self.deltaTgotod, int):
                             self.gotod()
                     elif mode == "free":
