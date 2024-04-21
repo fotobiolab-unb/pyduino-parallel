@@ -1,6 +1,5 @@
-from importlib.resources import path
+from typing import Union
 import logging
-from operator import attrgetter
 from time import sleep, time
 import pandas as pd
 from collections import OrderedDict
@@ -9,41 +8,25 @@ import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial
 import os
-from pyduino.utils import bcolors, yaml_get, get_servers
+from pyduino.utils import bcolors, get_servers, get_meta
 import requests
 from urllib.parse import urljoin
 import logging
 from datetime import datetime
-
-logging.basicConfig(filename='pyduino.log', filemode='w', level=logging.DEBUG)
+from pyduino.paths import PATHS
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+logging.basicConfig(
+    filename='pyduino.log',
+    filemode='w',
+    level=PATHS.SYSTEM_PARAMETERS.get('log_level', logging.INFO),
+)
+
 
 STEP = 1/8
 HEADER_DELAY = 5
 COLN = 48 #Number of columns to parse from Arduino (used for sanity tests)
 CACHEPATH = "cache.csv"
-# CONFIG_PATH = os.path.join(__location__,"config.yaml")
-# SYSTEM_PARAMETERS = yaml_get(CONFIG_PATH)['system']
-# SLAVE_PARAMETERS = yaml_get(CONFIG_PATH)['slave']
-# RELEVANT_PARAMETERS = SYSTEM_PARAMETERS['relevant_parameters']
-# INITIAL_STATE_PATH = os.path.join(__location__,SYSTEM_PARAMETERS['initial_state'])
-# SCHEMA = SYSTEM_PARAMETERS["standard_parameters"]
-# REACTOR_PARAMETERS = list(SCHEMA.keys())
-
-class Paths():
-    def read(self,config_path):
-        self.CONFIG_PATH = config_path
-        self.SYSTEM_PARAMETERS = yaml_get(self.CONFIG_PATH)['system']
-        self.SLAVE_PARAMETERS = yaml_get(self.CONFIG_PATH)['slave']
-        self.RELEVANT_PARAMETERS = self.SYSTEM_PARAMETERS['relevant_parameters']
-        self.HYPERPARAMETERS = yaml_get(self.CONFIG_PATH)['hyperparameters']
-        self.INITIAL_STATE_PATH = os.path.join(__location__,self.SYSTEM_PARAMETERS['initial_state'])
-        self.SCHEMA = self.SYSTEM_PARAMETERS["standard_parameters"]
-        self.REACTOR_PARAMETERS = list(self.SCHEMA.keys())
-
-PATHS = Paths()
-PATHS.read(os.path.join(__location__,"config.yaml"))
 
 #From https://stackoverflow.com/a/312464/6451772
 def chunks(lst, n):
@@ -59,13 +42,7 @@ class Reactor:
     def __init__(self, url):
         self.connected = False
         self.url = url
-        #Ping
-        resp = requests.get(urljoin(self.url,"ping"))
-        if resp.ok:
-            self.meta = resp.json()
-        else:
-            logging.error(f"Unable to connect to {self.url}")
-            raise ConnectionRefusedError(self.url)
+        self.meta = get_meta(url)
         self.id = self.meta["id"]
 
     def http_get(self,route):
@@ -152,11 +129,10 @@ class Reactor:
         Synchronizes Arduino clock with the client computer.
         """
         now = datetime.now()
-        print("[INFO]", "Set clock on",self.meta['hostname'])
+        logging.info(f"Set clock on {self.meta['hostname']}")
         self.set_in_chunks([["ano",now.year],["mes",now.month],["dia",now.day],["hora",now.hour],["minuto",now.minute]],chunksize=2)
-        #self.set_in_chunks({"ano":now.year,"mes":now.month,"dia":now.day,"hora":now.hour,"minuto":now.minute},chunksize=1)
         sleep(2)
-        print("[INFO]", "horacerta")
+        logging.debug(f"Clock set on {self.meta['hostname']}")
         self._send("horacerta")
 
 
@@ -177,21 +153,59 @@ def set_in_chunks(X):
     reactor.set_in_chunks(list(row.items()),chunksize)
 
 class ReactorManager:
+    """
+    A class that manages multiple reactors.
+
+    Attributes:
+        pinged (bool): Indicates if the reactors have been pinged.
+        network (str): The network address of the reactors.
+        port (int): The port number of the reactors.
+        exclude (list): A list of reactors to exclude.
+        reactors (dict): A dictionary of reactor objects.
+        servers (dict): A dictionary of server addresses.
+        header (list): A list of header values.
+        payload (dict): A dictionary of payload values.
+        connected (bool): Indicates if the reactors are connected.
+        log (log): A log object for logging data.
+
+    Methods:
+        __init__(self, include: dict = None): Initializes the ReactorManager object.
+        ids(self) -> list: Returns a list of reactor IDs.
+        send(self, command, await_response=True, **kwargs): Sends a command to the reactors.
+        send_parallel(self, command, delay, await_response=True): Sends a command to the reactors in parallel.
+        set(self, data=None, **kwargs): Sets data on the reactors.
+        get(self, key=None): Gets data from the reactors.
+        connect(self): Connects to the reactors.
+        reset(self): Resets the reactors.
+        reboot(self): Reboots the reactors.
+        horacerta(self): Updates Arduino clocks with the clock of the current system.
+        log_init(self, **kwargs): Creates log directories for each Arduino.
+        dados(self, save_cache=True): Gets data from the Arduinos.
+        log_dados(self, save_cache=True): Logs output of `dados` in CSV format.
+        set_preset_state(self, path="preset_state.csv", sep="\t", chunksize=4, params=PATHS.REACTOR_PARAMETERS, **kwargs): Prepares Arduinos with preset parameters from a CSV file.
+        calibrate(self, deltaT=120, dir="calibrate"): Runs `curva` and dumps the result into txts.
+    """
+    
     pinged = False
-    def __init__(self):
+    def __init__(self, include: dict = None):
+        """
+        Initializes the ReactorManager object.
+
+        Args:
+            include (dict): A dictionary of reactor IDs and their corresponding server addresses.
+        """
         self.network = PATHS.SLAVE_PARAMETERS["network"]
         self.port = PATHS.SLAVE_PARAMETERS["port"]
-        self.exclude = PATHS.SLAVE_PARAMETERS["exclude"]
-        self.exclude = self.exclude if self.exclude else None
-        logging.debug(f"Searching for devices on {self.network}")
-        servers = get_servers(self.network,self.port,self.exclude)
-        logging.debug(f"Found {len(servers)} devices")
+        self.exclude = PATHS.SLAVE_PARAMETERS.get("exclude", None)
         self.reactors = {}
 
-        for host in servers:
-            reactor = Reactor(host)
-            id = reactor.id
-            self.reactors[id] = reactor
+        if include is None:
+            self.servers = get_servers(self.network,self.port,self.exclude)
+        else:
+            self.servers = include
+
+        for id, host in self.servers.items():
+            self.reactors[id] = Reactor(host)
         
         logging.info("Connection completed")
 
@@ -200,11 +214,9 @@ class ReactorManager:
         self.header = None
         self.payload = None
 
-        #self.horacerta()
-    
-    @property
-    def ids(self) -> list:
-        return list(self.reactors.keys())
+        if PATHS.SYSTEM_PARAMETERS.get("sync_clocks", True):
+            self.horacerta()
+        self.ids = sorted(list(self.reactors.keys()))
 
     def send(self,command,await_response=True,**kwargs):
         out = {}
@@ -357,6 +369,10 @@ class ReactorManager:
             with open(os.path.join(dir,f"reator_{name}.txt"),"w") as f:
                 f.write(out[name].decode('ascii'))
         return out
+    
+    def __repr__(self):
+        return f"{bcolors.OKCYAN}<Manager of reactors {''.join(str(self.ids))}>{bcolors.ENDC}"
+
 
 if __name__ == '__main__':
     r = ReactorManager()
