@@ -1,13 +1,11 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "free_growth_test_2024_04_07" #Log folder name (delete to use the default)
-  density_param: DensidadeAtual #Parameter name for density counts
+  log_name: "parallelism_test" #Log folder name (delete to use the default)
+  density_param: DensidadeAtual #Parameter name for density counts.
+  brilho_param: Brilho #When Brilho = 0, optimization is turned off.
   maximize: false
   rng_seed: 2 #Random seed parameter initialization
   ranges:
-    # brilho:
-    #   - 0
-    #   - 100
     branco:
       - 1
       - 100                                     
@@ -17,8 +15,14 @@ hyperparameters:
 slave:
   port: "5000" #Must be a string
   network: "192.168.1.1/24"
-  exclude: #"192.168.1.112"
+  exclude: #Leave blank if there are none to exclude
 system:
+  #About the partition system (This is done at `init_spectra.py`)
+  #`all` will create a single manager for all reactors.
+  #`single` will create a manager for each reactor.
+  partition: single
+  log_level: "DEBUG" #DEBUG, INFO, WARNING, ERROR, CRITICAL
+  sync_clocks: false #Whether or not to sync the clocks of the slaves.
   initial_state: "preset_state.d/all.csv"
   reboot_wait_time: 5 #Time in seconds to wait after a reboot.
   relevant_parameters:
@@ -73,114 +77,8 @@ system:
     modoco2: int
     co2: int
     dtco2: int
-dash:
-  glob: "./log/nelder_mead_power_test/*.csv"
-  plot:
-    - 
-      name: Temperature
-      cols:
-        Temp:
-        SetTemp:
-          dash: "dot"
-    -
-      name: pH
-      cols:
-        pH:
-    -
-      name: Density
-      cols:
-        DensidadeAtual:
-    # -
-    #   name: Efficiency
-    #   cols:
-    #     efficiency:
-    #       growing_only: true
-    #       #mode: 'lines+markers'
-    # -
-    #   name: GrowthRate
-    #   cols:
-    #     growth_rate:
-    #       growing_only: true
-    #       #mode: 'lines+markers'
-    -
-      name: power
-      cols:
-        power:
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: CO2
-      cols:
-        CO2:
-        SetCO2:
-          dash: "dash"
-    -
-      name: Branco
-      cols:
-        Branco:
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: Full
-      cols:
-        Full:
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: 440
-      cols:
-        "440":
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: 470
-      cols:
-        "470":
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: 495
-      cols:
-        "495":
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: 530
-      cols:
-        "530":
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: 595
-      cols:
-        "595":
-          growing_only: true
-          #mode: 'lines+markers'                                          
-    -
-      name: 634
-      cols:
-        "634":
-          growing_only: true
-          #mode: 'lines+markers'
-    -
-      name: 660
-      cols:
-        "660":
-          growing_only: true
-          #mode: 'lines+markers'         
-    -
-      name: 684
-      cols:
-        "684":
-          growing_only: true
-          #mode: 'lines+markers'           
-  x_col: 'elapsed_time_hours'
-  sep: "\t"
-  tail: 128
-  display_cols: 3
-  theme: cyborg
-  subplot_height: 200
-  cumulative: false
-  update_time: 3000000 #In miliseconds
-  max_points: 300 #Maximum number of points to display at once
-  vspace: 0.02
+tensorboard:
+  additional_parameters:
+    - Brilho
+    - Temp
+    - pH

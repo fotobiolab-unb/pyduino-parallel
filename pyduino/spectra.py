@@ -381,11 +381,8 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                             brilhos = np.array(list(get_param(self.F_get(), self.brilho_param, self.reactors)))
                             if np.all(brilhos > 0):
                                 self.step()
-                            elif np.sum(brilhos)==0:
-                                logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
                             else:
-                                logging.critical(f"{self.brilho_param} is off for some reactors but not all of them. This is not supposed to happen.")
-                                raise ValueError(f"{self.brilho_param} is off for some reactors but not all of them. This is not supposed to happen.")
+                                logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
                         if isinstance(self.deltaTgotod, int):
                             self.gotod()
                     elif mode == "free":
