@@ -10,10 +10,12 @@ from tensorboardX import SummaryWriter
 from datetime import date, datetime
 from pyduino.data_parser import RangeParser
 from collections import OrderedDict
-from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
+from pyduino.utils import bcolors, get_param
+from pyduino.paths import PATHS
 from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
 import warnings
+import threading
 from datetime import datetime
 import logging
 
@@ -21,22 +23,14 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 
 #Path to spectrum.json
 SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
-#Path to hyperparameters for the genetic algorithm
-hyperparameters = PATHS.HYPERPARAMETERS
 #Path to irradiance values
 IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
-CONFIG = yaml_get(os.path.join(__location__,"config.yaml"))
 
-# === Logging ===
-# Instantiate a logger to the terminal
-log_level = CONFIG.get("log_level", "INFO")
-logger = logging.getLogger()
-logger.setLevel(log_level)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(log_level)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
+logging.basicConfig(
+    filename='pyduino.log',
+    filemode='w',
+    level=PATHS.SYSTEM_PARAMETERS.get('log_level', logging.INFO),
+)
 
 
 def update_dict(D,A,key):
@@ -89,45 +83,72 @@ def parse_dados(X,param):
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
 class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
-    def __init__(self,ranges,density_param,brilho_param=None,maximize=True,log_name=None,reset_density=False,**kwargs):
+    def __init__(self,
+        ranges,
+        density_param,
+        brilho_param=None,
+        maximize=True,
+        log_name=None,
+        reset_density=False,
+        **kwargs
+        ):
         """
-        Args:
-            ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
-                its minimum and maximum attainable values respectively.
-            reset_density (bool): Whether or not to reset density values on the reactors at each iteration.
-            maximize (bool): Whether or not to maximize the fitness function.
-            density_param (str): Name of the parameter which will be used as density count.
-        """
+        Initializes the Spectra class.
 
+        Args:
+            ranges (dict): A dictionary of parameters with a two-element list containing the minimum and maximum attainable values for each parameter.
+            density_param (str): The name of the parameter to be used as the density count.
+            brilho_param (float, optional): When nonzero, it will be used to turn optimization on or off. Defaults to None.
+            maximize (bool, optional): Whether to maximize the fitness function. Defaults to True.
+            log_name (str, optional): The name of the log. Defaults to None.
+            reset_density (bool, optional): Whether to reset density values on the reactors at each iteration. Defaults to False.
+            **kwargs: Additional keyword arguments.
+
+        Attributes:
+            spectrum (dict): A dictionary containing the spectrum data.
+            parameters (list): A list of relevant system parameters.
+            titled_parameters (list): A list of relevant system parameters with their titles capitalized.
+            irradiance (str): The irradiance value.
+            ids (list): A list of reactor IDs.
+            sorted_ids (list): A sorted list of reactor IDs.
+            tensorboard_path (str): The path to the tensorboard log.
+            writer (SummaryWriter): The tensorboard summary writer.
+            payload (dict): The payload data.
+            data (None): Placeholder for data.
+            do_gotod (bool): Whether to reset density values.
+            dt (float): The time step value.
+
+        Raises:
+            AssertionError: If the spectrum file does not exist.
+
+        """
         assert os.path.exists(SPECTRUM_PATH)
         with open(SPECTRUM_PATH) as jfile:
             self.spectrum = json.loads(jfile.read())
         
         self.parameters = PATHS.SYSTEM_PARAMETERS['relevant_parameters']
         self.titled_parameters = list(map(lambda x: x.title(),self.parameters))
-
         RangeParser.__init__(self,ranges,self.parameters)
 
         self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']
 
-        ReactorManager.__init__(self)
+        ReactorManager.__init__(self, kwargs.get('include', None))
         NelderMeadBounded.__init__(
             self,
             population_size=len(self.parameters),
             ranges=self.ranges_as_list(),
             rng_seed=kwargs.get('rng_seed',0)
         )
-        self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)
         self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
         self.writer = SummaryWriter(self.tensorboard_path)
-        logger.info(f"{bcolors.OKGREEN}[INFO]{bcolors.ENDC} Created tensorboard log at {self.tensorboard_path}")
+        logging.info(f"{bcolors.OKGREEN}Created tensorboard log at {self.tensorboard_path}{bcolors.ENDC}")
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
         self.density_param = density_param
-        self.brilho_param = brilho_param #When nonzero, will be used to turn optimization on or off.
+        self.brilho_param = brilho_param
         self.maximize = maximize
         self.dt = np.nan
     def assign_to_reactors(self, x):
@@ -229,15 +250,15 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
 
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
-        logger.info(f"LOGGING {datetime.now().strftime('%c')}")
+        logging.info(f"LOGGING {datetime.now().strftime('%c')}")
         data = self.F_get()
         additional_parameters = {}
-        if "tensorboard" in CONFIG and "additional_parameters" in CONFIG["tensorboard"]:
-            additional_parameters_source = CONFIG["tensorboard"]["additional_parameters"]
+        if PATHS.TENSORBOARD is not None and "additional_parameters" in PATHS.TENSORBOARD:
+            additional_parameters_source = PATHS.TENSORBOARD["additional_parameters"]
             for param in additional_parameters_source:
                 additional_parameters[param] = get_param(data, param, self.reactors.keys())
 
-        logger.debug(f"ADDITIONAL PARAMETERS {additional_parameters}")
+        logging.debug(f"ADDITIONAL PARAMETERS {additional_parameters}")
         
         P = self.view_g()
         #Log main parameters
@@ -260,10 +281,10 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
     def gotod(self):
         self.t_gotod_1 = datetime.now()
         self.send("gotod",await_response=False)
-        logger.debug(f"gotod sent")
+        logging.debug(f"gotod sent")
         time.sleep(self.deltaTgotod)
         self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
-        logger.debug(f"gotod DT {self.dt}")
+        logging.debug(f"gotod DT {self.dt}")
 
     # === Optimizer methods ===
     def ask_oracle(self, X) -> np.ndarray:
@@ -325,6 +346,12 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             - If mode is 'free', the number of rows in X must be equal to the number of reactors.
 
         """
+        if self.thread and self.thread.is_alive():
+            self.thread.kill()
+        self.thread = threading.Thread(target=self._run, args=(deltaT, mode, deltaTgotod))
+        self.thread.start()
+    
+    def _run(self, deltaT: float, mode: str = 'optimize', deltaTgotod: int = None):
         # Checking if gotod time is at least five minutes
         if mode == "optimize" and deltaTgotod <= 300:
             warnings.warn("deltaTgotod should be at least 5 minutes.")
@@ -339,13 +366,13 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         with open("error_traceback.log", "w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp) + '\n')
             try:
-                logger.debug("START")
+                logging.debug("START")
                 while True:
                     # growing
                     self.t_grow_1 = datetime.now()
                     time.sleep(max(2, deltaT))
                     self.dt = (datetime.now() - self.t_grow_1).total_seconds()
-                    logger.debug(f"DT {self.dt}")
+                    logging.debug(f"DT {self.dt}")
                     # Optimizer
                     if mode == "optimize":
                         if self.brilho_param is None:
@@ -354,13 +381,13 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                             if get_param(self.F_get(), self.brilho_param, self.reactors) > 0:
                                 self.step()
                             else:
-                                logger.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
+                                logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
                         if isinstance(self.deltaTgotod, int):
                             self.gotod()
                     elif mode == "free":
                         data = self.F_get()
                         self.y = get_param(data, self.density_param, self.reactors)
-                    logger.debug(f"SET {datetime.now().strftime('%c')}")
+                    logging.debug(f"SET {datetime.now().strftime('%c')}")
                     print(y_to_table(self.y))
                     self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
@@ -368,5 +395,34 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                 traceback.print_exc(file=log_file)
                 raise(e)
 
+class SpectraManager():
+    def __init__(self, g:dict):
+        self.g = g
+
+    def call_method(self, method, *args, **kwargs):
+        for s in self.g.values():
+            getattr(s, method)(*args, **kwargs)
+    
+    def get_attr(self, attr):
+        return {k:getattr(v, attr) for k,v in self.g.items()}
+    
+    def run(self, deltaT, mode, deltaTgotod):
+        for s in self.g.values():
+            s.run(deltaT, mode, deltaTgotod)
+    
+    @property
+    def reactors(self):
+        reactors = {}
+        for s in self.g.values():
+            reactors.update(s.reactors)
+        return reactors
+
+    def __repr__(self) -> str:
+        rstr = bcolors.BOLD + bcolors.OKGREEN + "Main Manager\n" + bcolors.ENDC
+        for v in self.g.values():
+            rstr += f"├── {repr(v)}" + "\n"
+        return rstr
+
+
 if __name__ == "__main__":
-    g = Spectra(**hyperparameters)
+    g = Spectra(**PATHS.HYPERPARAMETERS)
