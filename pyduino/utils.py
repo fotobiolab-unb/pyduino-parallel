@@ -59,15 +59,27 @@ def ReLUP(x):
     else:
         return x_relu/x_relu.sum()
 
-def get_servers(net="192.168.0.1/24",port="5000",exclude=None):
+def get_servers(net="192.168.0.1/24", port="5000", exclude=None):
+    """
+    Retrieves a list of servers running on the specified network and port.
+
+    Args:
+        net (str): The network address in CIDR notation (e.g., "192.168.0.1/24").
+        port (str): The port number to scan for servers.
+        exclude (str): Optional. A comma-separated list of IP addresses or ranges to exclude from the scan.
+
+    Returns:
+        list: A list of server URLs in the format "http://<ip_address>:<port>".
+
+    """
     port_scanner = PortScanner()
     args = "--open" if exclude is None else f"--open --exclude {exclude}"
-    results = port_scanner.scan(net,port,arguments=args,timeout=60)
-    hosts = list(map(lambda x: f"http://{x}:{str(port)}",results["scan"].keys()))
+    results = port_scanner.scan(net, port, arguments=args, timeout=60)
+    hosts = list(map(lambda x: f"http://{x}:{str(port)}", results["scan"].keys()))
     servers = []
     for host in hosts:
         try:
-            v = requests.get(host,timeout=2).text == "REACTOR SERVER"
+            v = requests.get(host, timeout=2).text == "REACTOR SERVER"
             if v:
                 servers.append(host)
         except:
