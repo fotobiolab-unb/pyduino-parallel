@@ -308,7 +308,8 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             self.payload = self.assign_to_reactors(partition)
             reactors = self.payload.keys()
 
-            self.gotod()
+            if self.deltaTgotod is not None and isinstance(self.deltaTgotod, int):
+                self.gotod()
             data0 = self.F_get()
             f0 = get_param(data0, self.density_param, reactors)
 
