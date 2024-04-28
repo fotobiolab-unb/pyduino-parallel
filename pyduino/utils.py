@@ -1,8 +1,13 @@
+from pyduino.paths import PATHS
 import yaml
 from nmap import PortScanner
 import requests
 import numpy as np
 from collections import OrderedDict
+from urllib.parse import urljoin
+import logging
+
+logging.basicConfig(filename='pyduino.log', filemode='w', level=logging.DEBUG)
 
 class bcolors:
     HEADER = '\033[95m'
@@ -59,19 +64,48 @@ def ReLUP(x):
     else:
         return x_relu/x_relu.sum()
 
-def get_servers(net="192.168.0.1/24",port="5000",exclude=None):
+def get_meta(url):
+    resp = requests.get(urljoin(url, "ping"))
+    if resp.ok :
+        return resp.json()
+    else:
+        logging.error(f"Unable to connect to {url}")
+        raise ConnectionRefusedError(url)
+
+def get_servers(
+        net=PATHS.SYSTEM_PARAMETERS.get("network", "192.168.1.1/24"),
+        port=PATHS.SYSTEM_PARAMETERS.get("port", 5000),
+        exclude=PATHS.SYSTEM_PARAMETERS.get("exclude", None)
+    )->dict:
+    """
+    Get a dictionary of available servers in the network.
+
+    Args:
+        net (str): The network address range to scan for servers. Default is "192.168.0.1/24".
+        port (str): The port number to scan for servers. Default is "5000".
+        exclude (str): IP addresses to exclude from the scan. Default is None.
+
+    Returns:
+        dict: A dictionary of available servers, where the keys are the server IDs and the values are the server URLs.
+
+    """
+    logging.debug(f"Searching for devices on {net}:{port}")
     port_scanner = PortScanner()
     args = "--open" if exclude is None else f"--open --exclude {exclude}"
-    results = port_scanner.scan(net,port,arguments=args,timeout=60)
-    hosts = list(map(lambda x: f"http://{x}:{str(port)}",results["scan"].keys()))
-    servers = []
+    results = port_scanner.scan(net, str(port), arguments=args, timeout=60)
+    hosts = list(map(lambda x: f"http://{x}:{str(port)}", results["scan"].keys()))
+    servers = {}
     for host in hosts:
         try:
-            v = requests.get(host,timeout=2).text == "REACTOR SERVER"
+            v = requests.get(host, timeout=2).text == "REACTOR SERVER"
+            meta = get_meta(host)
             if v:
-                servers.append(host)
+                if meta["id"] in servers:
+                    logging.warning(f"Duplicate ID found: {meta['id']}")
+                servers[meta["id"]] = host
         except:
             pass
+    logging.debug(f"Found {len(servers)} devices")
     return servers
 
 class TriangleWave:

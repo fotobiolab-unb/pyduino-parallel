@@ -1,4 +1,4 @@
-from pyduino.optimization.nelder_mead import NelderMead
+from pyduino.optimization.nelder_mead import NelderMeadBounded
 from pyduino.pyduino2 import ReactorManager, chunks, PATHS
 import numpy as np
 import json
@@ -10,21 +10,28 @@ from tensorboardX import SummaryWriter
 from datetime import date, datetime
 from pyduino.data_parser import RangeParser
 from collections import OrderedDict
-from pyduino.utils import yaml_get, bcolors, TriangleWave, get_param
+from pyduino.utils import bcolors, get_param
+from pyduino.paths import PATHS
 from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
 import warnings
+import threading
+from datetime import datetime
+import logging
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 #Path to spectrum.json
 SPECTRUM_PATH = os.path.join(__location__,"spectrum.json")
-
-#Path to hyperparameters for the genetic algorithm
-hyperparameters = PATHS.HYPERPARAMETERS
-
 #Path to irradiance values
 IRRADIANCE_PATH = os.path.join(__location__,"irradiance.yaml")
+
+logging.basicConfig(
+    filename='pyduino.log',
+    filemode='w',
+    level=PATHS.SYSTEM_PARAMETERS.get('log_level', logging.INFO),
+)
+
 
 def update_dict(D,A,key):
     """
@@ -75,45 +82,78 @@ def parse_dados(X,param):
     """
     return np.array(list(map(seval,map(lambda x: x[1].get(param,0),sorted(X.items(),key=lambda x: x[0])))))
 
-class Spectra(RangeParser,ReactorManager,NelderMead):
-    def __init__(self,ranges,density_param,maximize=True,log_name=None,reset_density=False,**kwargs):
+class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
+    def __init__(self,
+        ranges,
+        density_param,
+        brilho_param=None,
+        maximize=True,
+        log_name=None,
+        reset_density=False,
+        summary_writer=None,
+        **kwargs
+        ):
         """
-        Args:
-            ranges (:obj:dict of :obj:list): Dictionary of parameters with a two element list containing the
-                its minimum and maximum attainable values respectively.
-            reset_density (bool): Whether or not to reset density values on the reactors at each iteration.
-            maximize (bool): Whether or not to maximize the fitness function.
-            density_param (str): Name of the parameter which will be used as density count.
-        """
+        Initializes the Spectra class.
 
+        Args:
+            ranges (dict): A dictionary of parameters with a two-element list containing the minimum and maximum attainable values for each parameter.
+            density_param (str): The name of the parameter to be used as the density count.
+            brilho_param (float, optional): When nonzero, it will be used to turn optimization on or off. Defaults to None.
+            maximize (bool, optional): Whether to maximize the fitness function. Defaults to True.
+            log_name (str, optional): The name of the log. Defaults to None.
+            reset_density (bool, optional): Whether to reset density values on the reactors at each iteration. Defaults to False.
+            **kwargs: Additional keyword arguments.
+
+        Attributes:
+            spectrum (dict): A dictionary containing the spectrum data.
+            parameters (list): A list of relevant system parameters.
+            titled_parameters (list): A list of relevant system parameters with their titles capitalized.
+            irradiance (str): The irradiance value.
+            ids (list): A list of reactor IDs.
+            sorted_ids (list): A sorted list of reactor IDs.
+            tensorboard_path (str): The path to the tensorboard log.
+            writer (SummaryWriter): The tensorboard summary writer.
+            payload (dict): The payload data.
+            data (None): Placeholder for data.
+            do_gotod (bool): Whether to reset density values.
+            dt (float): The time step value.
+
+        Raises:
+            AssertionError: If the spectrum file does not exist.
+
+        """
         assert os.path.exists(SPECTRUM_PATH)
         with open(SPECTRUM_PATH) as jfile:
             self.spectrum = json.loads(jfile.read())
         
-        #assert os.path.exists(PARAM_PATH)
-        self.parameters = PATHS.SYSTEM_PARAMETERS['relevant_parameters']#yaml_get(PARAM_PATH)
+        self.parameters = PATHS.SYSTEM_PARAMETERS['relevant_parameters']
         self.titled_parameters = list(map(lambda x: x.title(),self.parameters))
-
         RangeParser.__init__(self,ranges,self.parameters)
 
         self.irradiance = PATHS.SYSTEM_PARAMETERS['irradiance']
 
-        ReactorManager.__init__(self)
-        NelderMead.__init__(
+        ReactorManager.__init__(self, kwargs.get('include', None))
+        NelderMeadBounded.__init__(
             self,
             population_size=len(self.parameters),
             ranges=self.ranges_as_list(),
             rng_seed=kwargs.get('rng_seed',0)
         )
-        self.ids = list(self.reactors.keys())
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)
-        self.writer = SummaryWriter(self.log.prefix)
-        print(bcolors.OKGREEN,"[INFO]", "Created tensorboard log at", self.log.prefix, bcolors.ENDC)  
+        if summary_writer is None:
+            self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+            self.writer = SummaryWriter(self.tensorboard_path)
+            logging.info(f"{bcolors.OKGREEN}Created tensorboard log at {self.tensorboard_path}{bcolors.ENDC}")
+        else:
+            self.writer = summary_writer
+            self.tensorboard_path = summary_writer.logdir
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
         self.density_param = density_param
+        self.brilho_param = brilho_param
         self.maximize = maximize
         self.dt = np.nan
     def assign_to_reactors(self, x):
@@ -215,18 +255,28 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
 
         This method iterates over the tensor values and fitness scores and logs them using the writer object.
         """
-        print(bcolors.BOLD,"[INFO]","LOGGING",datetime.now().strftime("%c"), bcolors.ENDC)
+        logging.info(f"LOGGING {datetime.now().strftime('%c')}")
+        data = self.F_get()
+        additional_parameters = {}
+        if PATHS.TENSORBOARD is not None and "additional_parameters" in PATHS.TENSORBOARD:
+            additional_parameters_source = PATHS.TENSORBOARD["additional_parameters"]
+            for param in additional_parameters_source:
+                additional_parameters[param] = get_param(data, param, self.reactors.keys())
+
+        logging.debug(f"ADDITIONAL PARAMETERS {additional_parameters}")
+        
         P = self.view_g()
+        #Log main parameters
         for k,(rid, ry) in enumerate(self.y.items()):
             self.writer.add_scalar(f'reactor_{rid}/y', float(ry), i)
             for r_param_id, rparam in enumerate(self.parameters):
                 self.writer.add_scalar(f'reactor_{rid}/{rparam}', float(P[k][r_param_id]), i)
+            for param, value in additional_parameters.items():
+                self.writer.add_scalar(f'reactor_{rid}/{param}', float(value[rid]), i)
         if self.maximize:
             self.writer.add_scalar('optima', max(self.y), i)
         else:
             self.writer.add_scalar('optima', min(self.y), i)
-
-        data = self.F_get()
 
         # Log the DataFrame as a table in text format
         self.writer.add_text("reactor_state", text_string=to_markdown_table(data), global_step=i)
@@ -236,10 +286,10 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
     def gotod(self):
         self.t_gotod_1 = datetime.now()
         self.send("gotod",await_response=False)
-        print("[INFO] gotod sent")
+        logging.debug(f"gotod sent")
         time.sleep(self.deltaTgotod)
         self.dt = (datetime.now()-self.t_gotod_1).total_seconds()
-        print("[INFO] gotod DT", self.dt)
+        logging.debug(f"gotod DT {self.dt}")
 
     # === Optimizer methods ===
     def ask_oracle(self, X) -> np.ndarray:
@@ -263,7 +313,8 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             self.payload = self.assign_to_reactors(partition)
             reactors = self.payload.keys()
 
-            self.gotod()
+            if self.deltaTgotod is not None and isinstance(self.deltaTgotod, int):
+                self.gotod()
             data0 = self.F_get()
             f0 = get_param(data0, self.density_param, reactors)
 
@@ -301,8 +352,14 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
             - If mode is 'free', the number of rows in X must be equal to the number of reactors.
 
         """
+        if hasattr(self, 'thread') and self.thread.is_alive():
+            self.thread.kill()
+        self.thread = threading.Thread(target=self._run, args=(deltaT, mode, deltaTgotod))
+        self.thread.start()
+    
+    def _run(self, deltaT: float, mode: str = 'optimize', deltaTgotod: int = None):
         # Checking if gotod time is at least five minutes
-        if mode == "optimize" and deltaTgotod <= 300:
+        if mode == "optimize" and isinstance(deltaTgotod, int) and deltaTgotod <= 300:
             warnings.warn("deltaTgotod should be at least 5 minutes.")
 
         if mode == "free":
@@ -315,23 +372,29 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
         with open("error_traceback.log", "w") as log_file:
             log_file.write(datetime_to_str(self.log.timestamp) + '\n')
             try:
-                print("START")
+                logging.debug("START")
                 while True:
                     # growing
                     self.t_grow_1 = datetime.now()
                     time.sleep(max(2, deltaT))
                     self.dt = (datetime.now() - self.t_grow_1).total_seconds()
-                    print("[INFO]", "DT", self.dt)
+                    logging.debug(f"DT {self.dt}")
                     # Optimizer
                     if mode == "optimize":
-                        self.step()
-                        if isinstance(self.deltaTgotod, int):
+                        if self.brilho_param is None:
+                            self.step()
+                        else:
+                            brilhos = np.array(list(get_param(self.F_get(), self.brilho_param, self.reactors)))
+                            if np.all(brilhos > 0):
+                                self.step()
+                            else:
+                                logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
+                        if self.deltaTgotod is not None and isinstance(self.deltaTgotod, int):
                             self.gotod()
                     elif mode == "free":
                         data = self.F_get()
                         self.y = get_param(data, self.density_param, self.reactors)
-                    print("[INFO]", "SET", datetime.now().strftime("%c"))
-                    print("[DEBUG]", "Y-VALUES")
+                    logging.debug(f"SET {datetime.now().strftime('%c')}")
                     print(y_to_table(self.y))
                     self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
@@ -339,5 +402,78 @@ class Spectra(RangeParser,ReactorManager,NelderMead):
                 traceback.print_exc(file=log_file)
                 raise(e)
 
+class SpectraManager():
+    """
+    A class that manages multiple Spectra instances.
+
+    Attributes:
+        g (dict): A dictionary containing Spectra instances.
+
+    Methods:
+        call_method: Calls a method on all Spectra instances.
+        get_attr: Retrieves an attribute from all Spectra instances.
+        run: Runs the Spectra instances with specified parameters.
+        reactors: Returns a dictionary of all reactors from Spectra instances.
+    """
+
+    def __init__(self, g:dict):
+        self.g = g
+
+    def call_method(self, method, *args, **kwargs):
+        """
+        Calls a method on all Spectra instances.
+
+        Args:
+            method (str): The name of the method to call.
+            *args: Variable length argument list for the method.
+            **kwargs: Arbitrary keyword arguments for the method.
+        """
+        for s in self.g.values():
+            getattr(s, method)(*args, **kwargs)
+    
+    def get_attr(self, attr):
+        """
+        Retrieves an attribute from all Spectra instances.
+
+        Args:
+            attr (str): The name of the attribute to retrieve.
+
+        Returns:
+            dict: A dictionary containing the attribute values for each Spectra instance.
+        """
+        return {k:getattr(v, attr) for k,v in self.g.items()}
+    
+    def run(self, deltaT, mode, deltaTgotod):
+        """
+        Runs the Spectra instances with specified parameters.
+
+        Args:
+            deltaT (float): The time step for the simulation.
+            mode (str): The mode of operation for the Spectra instances.
+            deltaTgotod (float): The time step for the go-to-deltaT operation.
+        """
+        for s in self.g.values():
+            s.run(deltaT, mode, deltaTgotod)
+    
+    @property
+    def reactors(self):
+        """
+        Returns a dictionary of all reactors from Spectra instances.
+
+        Returns:
+            dict: A dictionary containing all reactors from Spectra instances.
+        """
+        reactors = {}
+        for s in self.g.values():
+            reactors.update(s.reactors)
+        return reactors
+
+    def __repr__(self) -> str:
+        rstr = bcolors.BOLD + bcolors.OKGREEN + "Main Manager\n" + bcolors.ENDC
+        for v in self.g.values():
+            rstr += f"├── {repr(v)}" + "\n"
+        return rstr
+
+
 if __name__ == "__main__":
-    g = Spectra(**hyperparameters)
+    g = Spectra(**PATHS.HYPERPARAMETERS)
