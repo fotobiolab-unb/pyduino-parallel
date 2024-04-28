@@ -90,6 +90,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         maximize=True,
         log_name=None,
         reset_density=False,
+        summary_writer=None,
         **kwargs
         ):
         """
@@ -141,8 +142,12 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         )
         self.sorted_ids = sorted(self.ids)
         self.log_init(name=log_name)
-        self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
-        self.writer = SummaryWriter(self.tensorboard_path)
+        if summary_writer is None:
+            self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+            self.writer = SummaryWriter(self.tensorboard_path)
+        else:
+            self.writer = summary_writer
+            self.tensorboard_path = summary_writer.logdir
         logging.info(f"{bcolors.OKGREEN}Created tensorboard log at {self.tensorboard_path}{bcolors.ENDC}")
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
