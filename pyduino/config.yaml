@@ -1,6 +1,6 @@
 hyperparameters:
   reset_density: true #Whether or not to use gotod
-  log_name: "parallelism_test" #Log folder name (delete to use the default)
+  log_name: "logging_test" #Log folder name (delete to use the default)
   density_param: DensidadeAtual #Parameter name for density counts.
   brilho_param: Brilho #When Brilho = 0, optimization is turned off.
   maximize: false

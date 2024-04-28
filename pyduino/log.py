@@ -80,9 +80,6 @@ class log:
         self.data_frames = {}
 
         self.paths = list(map(lambda x: os.path.join(self.prefix,x),self.subdir))
-
-        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp.replace('/','-')}-{str(uuid1())}.yaml"),'w') as wfile:
-            wfile.write(cfile.read())
         self.log_name = name
         Path(os.path.join(self.path,self.start_timestamp)).mkdir(parents=True,exist_ok=True)
         if isinstance(subdir,str):
@@ -97,9 +94,11 @@ class log:
 
         self.paths = list(map(lambda x: os.path.join(self.prefix,x),self.subdir))
 
-        with open(config_file) as cfile, open(os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp.replace('/','-')}-{str(uuid1())}.yaml"),'w') as wfile:
-            wfile.write(cfile.read())
-
+    def backup_config_file(self):
+        filename = os.path.join(self.path,self.start_timestamp,f"{self.start_timestamp.replace('/','-')}.yaml")
+        if not os.path.exists(filename):
+            with open(config_file) as cfile, open(filename,'w') as wfile:
+                wfile.write(cfile.read())
 
     def log_rows(self,rows,subdir,add_timestamp=True,tags=None,**kwargs):
         """
