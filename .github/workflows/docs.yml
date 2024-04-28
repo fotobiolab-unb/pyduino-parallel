@@ -26,6 +26,7 @@ jobs:
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: pip install pdoc3 pip
       - run: pip install -r requirements.txt
+      - run: sudo chmod 777 /var/log
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
       - run: pdoc -o docs/ pyduino
