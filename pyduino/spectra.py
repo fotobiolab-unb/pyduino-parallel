@@ -145,10 +145,10 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         if summary_writer is None:
             self.tensorboard_path = os.path.join(self.log.prefix, "runs", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
             self.writer = SummaryWriter(self.tensorboard_path)
+            logging.info(f"{bcolors.OKGREEN}Created tensorboard log at {self.tensorboard_path}{bcolors.ENDC}")
         else:
             self.writer = summary_writer
             self.tensorboard_path = summary_writer.logdir
-        logging.info(f"{bcolors.OKGREEN}Created tensorboard log at {self.tensorboard_path}{bcolors.ENDC}")
         self.payload = self.population_as_dict if self.payload is None else self.payload
         self.data = None
         self.do_gotod = reset_density
