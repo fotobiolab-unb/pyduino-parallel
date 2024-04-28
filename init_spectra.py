@@ -8,7 +8,6 @@ import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str, help="Path to config YAML file. If none, uses default path.")
-
 args = parser.parse_args()
 
 if args.config:
