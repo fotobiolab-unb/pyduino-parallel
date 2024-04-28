@@ -4,7 +4,7 @@ name: Spectra Documentation
 on:
   push:
     branches:
-      - main
+      - master
     # Alternative: only build for tags.
     # tags:
     #   - '*'
