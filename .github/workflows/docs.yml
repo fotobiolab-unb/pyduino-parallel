@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
 
       # ADJUST THIS: install all dependencies (including pdoc)
-      - run: pip install pdoc3 pip
+      - run: pip install pdoc3 pip urllib3 six
       - run: pip install -r requirements.txt
       - run: sudo chmod 777 /var/log
       # ADJUST THIS: build your documentation into docs/.
