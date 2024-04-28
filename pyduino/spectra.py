@@ -403,22 +403,66 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                 raise(e)
 
 class SpectraManager():
+    """
+    A class that manages multiple Spectra instances.
+
+    Attributes:
+        g (dict): A dictionary containing Spectra instances.
+
+    Methods:
+        call_method: Calls a method on all Spectra instances.
+        get_attr: Retrieves an attribute from all Spectra instances.
+        run: Runs the Spectra instances with specified parameters.
+        reactors: Returns a dictionary of all reactors from Spectra instances.
+    """
+
     def __init__(self, g:dict):
         self.g = g
 
     def call_method(self, method, *args, **kwargs):
+        """
+        Calls a method on all Spectra instances.
+
+        Args:
+            method (str): The name of the method to call.
+            *args: Variable length argument list for the method.
+            **kwargs: Arbitrary keyword arguments for the method.
+        """
         for s in self.g.values():
             getattr(s, method)(*args, **kwargs)
     
     def get_attr(self, attr):
+        """
+        Retrieves an attribute from all Spectra instances.
+
+        Args:
+            attr (str): The name of the attribute to retrieve.
+
+        Returns:
+            dict: A dictionary containing the attribute values for each Spectra instance.
+        """
         return {k:getattr(v, attr) for k,v in self.g.items()}
     
     def run(self, deltaT, mode, deltaTgotod):
+        """
+        Runs the Spectra instances with specified parameters.
+
+        Args:
+            deltaT (float): The time step for the simulation.
+            mode (str): The mode of operation for the Spectra instances.
+            deltaTgotod (float): The time step for the go-to-deltaT operation.
+        """
         for s in self.g.values():
             s.run(deltaT, mode, deltaTgotod)
     
     @property
     def reactors(self):
+        """
+        Returns a dictionary of all reactors from Spectra instances.
+
+        Returns:
+            dict: A dictionary containing all reactors from Spectra instances.
+        """
         reactors = {}
         for s in self.g.values():
             reactors.update(s.reactors)
