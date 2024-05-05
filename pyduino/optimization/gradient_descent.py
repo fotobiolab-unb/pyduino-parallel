@@ -10,15 +10,12 @@ class GradientDescent(Optimizer):
 
         Where $\frac{\partial f}{\partial t}$ is assumed to be zero.
 
-        ranges list of pairs:
-            Maxima and minima that each parameter can cover.
-            Example: [(0, 10), (0, 10)] for two parameters ranging from 0 to 10.
-        population_size int:
-            Number of individuals in the population.
-        damping float:
-            Damping factor to avoid oscillations. Default is 0.01.
-        rng_seed int:
-            Seed for the random number generator. Default is 0.
+        Args:
+            ranges (list of pairs): Maxima and minima that each parameter can cover.
+                Example: [(0, 10), (0, 10)] for two parameters ranging from 0 to 10.
+            population_size (int): Number of individuals in the population.
+            damping (float, optional): Damping factor to avoid oscillations. Defaults to 0.01.
+            rng_seed (int, optional): Seed for the random number generator. Defaults to 0.
         """
         self.population_size = population_size
         self.ranges = np.array(ranges)
