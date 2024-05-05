@@ -3,7 +3,7 @@ from . import Optimizer, linmap
 
 class GradientDescent(Optimizer):
     def __init__(self, population_size: int, ranges: list[float], damping: float = 0.01, rng_seed: int = 0):
-        """
+        r"""
         This gradient descent algorithm assumes that the optimization function 'f' is to be minimized, differentiable, and time independent.
 
         $$\frac{\mathrm{d} f}{\mathrm{d} t} = \frac{\partial f}{\partial \vec{x}}\frac{\mathrm{d} \vec{x}}{\mathrm{d} t}$$
