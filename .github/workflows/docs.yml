@@ -29,7 +29,7 @@ jobs:
       - run: sudo chmod 777 /var/log
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
-      - run: pdoc -d google --math --search -o docs pyduino
+      - run: pdoc -d google --math --search -o docs pyduino/*
 
       - uses: actions/upload-pages-artifact@v3
         with:
