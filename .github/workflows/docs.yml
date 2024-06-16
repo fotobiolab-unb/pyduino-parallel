@@ -24,12 +24,12 @@ jobs:
           python-version: '3.12'
 
       # ADJUST THIS: install all dependencies (including pdoc)
-      - run: pip install pdoc3
+      - run: pip install pdoc==14.4.0
       - run: pip install -r requirements.txt
       - run: sudo chmod 777 /var/log
       # ADJUST THIS: build your documentation into docs/.
       # We use a custom build script for pdoc itself, ideally you just run `pdoc -o docs/ ...` here.
-      - run: pdoc -o docs/ pyduino
+      - run: pdoc -d google --math --search -o docs pyduino/*
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -47,5 +47,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
