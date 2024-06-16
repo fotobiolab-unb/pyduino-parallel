@@ -257,6 +257,9 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         """
         logging.info(f"LOGGING {datetime.now().strftime('%c')}")
         data = self.F_get()
+        logging.debug(f"DATA {data}")
+        y = get_param(data, self.density_param, self.reactors)
+        y = {k:float(v) for k,v in y.items()}
         additional_parameters = {}
         if PATHS.TENSORBOARD is not None and "additional_parameters" in PATHS.TENSORBOARD:
             additional_parameters_source = PATHS.TENSORBOARD["additional_parameters"]
@@ -267,20 +270,19 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         
         P = self.view_g()
         #Log main parameters
-        for k,(rid, ry) in enumerate(self.y.items()):
+        for k,(rid, ry) in enumerate(y.items()):
             self.writer.add_scalar(f'reactor_{rid}/y', float(ry), i)
             for r_param_id, rparam in enumerate(self.parameters):
                 self.writer.add_scalar(f'reactor_{rid}/{rparam}', float(P[k][r_param_id]), i)
             for param, value in additional_parameters.items():
                 self.writer.add_scalar(f'reactor_{rid}/{param}', float(value[rid]), i)
         if self.maximize:
-            self.writer.add_scalar('optima', max(self.y), i)
+            self.writer.add_scalar('optima', max(y.values()), i)
         else:
-            self.writer.add_scalar('optima', min(self.y), i)
+            self.writer.add_scalar('optima', min(y.values()), i)
 
         # Log the DataFrame as a table in text format
         self.writer.add_text("reactor_state", text_string=to_markdown_table(data), global_step=i)
-
         self.log.log_many_rows(data,tags=tags)
 
     def gotod(self):
@@ -418,6 +420,18 @@ class SpectraManager():
 
     def __init__(self, g:dict):
         self.g = g
+
+    def __getitem__(self, key):
+        """
+        Allows the SpectraManager class to be indexable.
+
+        Args:
+            key: The key to access the Spectra instance.
+
+        Returns:
+            Spectra: The Spectra instance corresponding to the key.
+        """
+        return self.g[key]
 
     def call_method(self, method, *args, **kwargs):
         """
