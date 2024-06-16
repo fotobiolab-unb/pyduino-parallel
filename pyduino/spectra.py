@@ -428,8 +428,11 @@ class SpectraManager():
             *args: Variable length argument list for the method.
             **kwargs: Arbitrary keyword arguments for the method.
         """
+        returns = {}
         for s in self.g.values():
-            getattr(s, method)(*args, **kwargs)
+            r = getattr(s, method)(*args, **kwargs)
+            returns.update({s:r})
+        return returns
     
     def get_attr(self, attr):
         """
