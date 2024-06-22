@@ -3,7 +3,7 @@ import logging
 from time import sleep, time
 import pandas as pd
 from collections import OrderedDict
-from pyduino.log import log
+from pyduino.log import Log
 import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial
@@ -268,7 +268,7 @@ class ReactorManager:
         Args:
             name (str): Name of the subdirectory in the log folder where the files will be saved.
         """
-        self.log = log(subdir=list(self.reactors.keys()),**kwargs)
+        self.log = Log(subdir=list(self.reactors.keys()),**kwargs)
         print(f"Log will be saved on: {bcolors.OKGREEN}{self.log.prefix}{bcolors.ENDC}")
     
     def dados(self,save_cache=True):

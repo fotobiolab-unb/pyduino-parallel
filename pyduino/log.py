@@ -36,7 +36,7 @@ def to_markdown_table(data: OrderedDict) -> str:
 def y_to_table(y):
     return tabulate(list(y.items()), tablefmt="pipe")
 
-class log:
+class Log:
     @property
     def timestamp(self):
         """str: Current date."""
@@ -99,7 +99,7 @@ class log:
             with open(config_file) as cfile, open(filename,'w') as wfile:
                 wfile.write(cfile.read())
 
-    def log_rows(self,rows,subdir,add_timestamp=True,tags=None,**kwargs):
+    def log_rows(self,rows,subdir,add_timestamp=True,tags=None):
         """
         Logs rows into jsonl format.
 
@@ -108,7 +108,6 @@ class log:
             subdir (str): Subdirectory name. Intended to be an element of `self.subdir`.
             add_timestamp (bool,optional): Whether or not to include a timestamp column.
             tags (:obj:`dict` of :obj:`str`): Dictionary of strings to be inserted as constant columns.
-            **kwargs: Additional arguments passed to `pandas.to_json`.
         """
         t = self.timestamp
         path = os.path.join(self.path,self.start_timestamp,f"{subdir}.jsonl")
@@ -124,7 +123,7 @@ class log:
         if os.path.exists(path):
             if self.first_timestamp is None:
                 with open(path) as file:
-                    head = pd.read_json(io.StringIO(file.readline()+file.readline()), orient="records", lines=True,**kwargs)
+                    head = pd.read_json(io.StringIO(file.readline()+file.readline()), orient="records", lines=True)
                     self.first_timestamp = datetime_from_str(head.log_timestamp[0])
         else:
             self.first_timestamp = t
@@ -135,13 +134,9 @@ class log:
             for key,value in tags.items():
                 df.loc[:,key] = value
 
-        df.to_json(
-            path,
-            mode="a",
-            orient="records",
-            lines=True,
-            **kwargs
-            )
+        with open(path, mode="a") as log_file:
+            log_file.write(df.to_json(orient="records", lines=True))
+
         return df
     def log_many_rows(self,data,**kwargs):
         """
