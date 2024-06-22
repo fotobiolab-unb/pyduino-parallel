@@ -304,7 +304,6 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         Returns:
         np.ndarray: The fitness value calculated by the oracle.
         """
-        y = np.array([])
 
         assert X.shape[1] == len(self.parameters)
         assert len(X.shape) == 2, "X must be a 2D array."
@@ -329,9 +328,9 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             
             fitness = np.array([self.power[id] for id in reactors]).astype(float)
 
-            y = np.append(y,((-1)**(self.maximize))*(fitness))
+            y = np.array(((-1)**(self.maximize))*(fitness))
 
-        self.y = y
+        self.y = OrderedDict(zip(reactors, y))
         return y   
     # === * ===
 
