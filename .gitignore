@@ -171,3 +171,4 @@ experiment.py
 nohup.out
 quick_test.py
 *.jsonl
+**/config.yaml
