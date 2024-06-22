@@ -331,6 +331,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             y = np.array(((-1)**(self.maximize))*(fitness))
 
         self.y = OrderedDict(zip(reactors, y))
+        logging.debug(f"self.y {self.y} is of type {type(self.y)}")
         return y   
     # === * ===
 
