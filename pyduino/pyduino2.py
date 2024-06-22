@@ -305,7 +305,7 @@ class ReactorManager:
 
         rows = dict(map(lambda x: (x[0],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:
-            self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
+            self.log.cache_data(rows,index=False) #Index set to False because ID already exists in rows.
         return rows
 
     def log_dados(self,save_cache=True):
@@ -322,10 +322,10 @@ class ReactorManager:
         rows = list(map(lambda x: (x[0],OrderedDict(zip(header,x[1].split(" ")))),rows))
 
         for _id,row in rows:
-            self.log.log_rows(rows=[row],subdir=_id,sep='\t')
+            self.log.log_rows(rows=[row],subdir=_id)
         rows = dict(rows)
         if save_cache:
-            self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
+            self.log.cache_data(rows,index=False) #Index set to False because ID already exists in rows.
         return rows
     
     def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4, params=PATHS.REACTOR_PARAMETERS, **kwargs):
