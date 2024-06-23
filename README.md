@@ -1,4 +1,7 @@
 # Getting started
+
+API documentation: [pyduino-parallel](https://fotobiolab-unb.github.io/pyduino-parallel/pyduino.html)
+
 ## Reactor Manager
 ### Basic usage
 
