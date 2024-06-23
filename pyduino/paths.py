@@ -1,5 +1,6 @@
 import os
 import yaml
+import warnings
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -25,4 +26,8 @@ class Paths():
         self.TENSORBOARD = self.SYSTEM_PARAMETERS.get("tensorboard", None)
 
 PATHS = Paths()
-PATHS.read(os.path.join(__location__,"config.yaml"))
+if os.path.exists(os.path.join(__location__,"config.yaml")):
+    PATHS.read(os.path.join(__location__,"config.yaml"))
+else:
+    warnings.warn("No config.yaml file found in the current directory. Please create one.")
+    PATHS.read(os.path.join(__location__,"config.template.yaml"))
