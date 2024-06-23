@@ -227,11 +227,10 @@ class ReactorManager:
                 r._send(command)
         return out
     
-    def send_parallel(self,command,delay,await_response=True):
-        out = []
+    def send_parallel(self,command,await_response=True):
         with Pool(7) as p:
             out = p.map(partial(send_wrapper,command=command,await_response=await_response),list(self.reactors.items()))
-        return out
+        return dict(out)
 
     def set(self, data=None, **kwargs):
         for k,r in self.reactors.items():
@@ -271,6 +270,15 @@ class ReactorManager:
         self.log = Log(subdir=list(self.reactors.keys()),**kwargs)
         print(f"Log will be saved on: {bcolors.OKGREEN}{self.log.prefix}{bcolors.ENDC}")
     
+    @property
+    def brilho(self):
+        """
+        Convenience method to get brilho from reactors.
+        """
+        out = self.send_parallel(f"get({self.brilho_param.lower()})")
+        out = {k: float(v.strip()) for k,v in out.items()}
+        return out
+
     def dados(self,save_cache=True):
         """
         Get data from Arduinos.
@@ -284,7 +292,7 @@ class ReactorManager:
 
         len_empty = None
         while len_empty!=0:
-            rows = self.send_parallel("dados",delay=20,await_response=True)
+            rows = self.send_parallel("dados",await_response=True).items()
             #Checking if any reactor didn't respond.
             empty = list(filter(lambda x: x[1] is None,rows))
             len_empty = len(empty)

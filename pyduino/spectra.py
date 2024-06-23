@@ -382,8 +382,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                         if self.brilho_param is None:
                             self.step()
                         else:
-                            brilhos = get_param(self.F_get(), self.brilho_param, self.reactors)
-                            brilhos = np.array(list(brilhos.values())).astype(float)
+                            brilhos = np.array(list(self.brilho.values()))
                             if np.all(brilhos > 0):
                                 self.step()
                             else:
