@@ -169,3 +169,5 @@ log/
 calibrate/
 experiment.py
 nohup.out
+cache.jsonl
+quick_test.py
