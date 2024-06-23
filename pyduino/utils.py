@@ -132,3 +132,24 @@ class TriangleWave:
     
     def y(self,x: int):
         return self.Q(x + self.a)
+
+def partition(X: np.ndarray, n: int) -> list:
+    """
+    Partitions the array `X` in blocks of size `n` except the last.
+
+    Args:
+        X (numpy.array): Input 2D array
+        n (int): Number of partitions
+    
+    Returns:
+        list: A list containing the array partitions.
+    """
+    assert X.ndim == 2, "X must be a matrix"
+    #Number of partitions
+    r = X.shape[0] % n
+    m = X.shape[0] // n + (r > 0)
+    X_enlarged = np.pad(X, ((0, n*m - X.shape[0]), (0,0)), constant_values=0)
+    X_split = np.array_split(X_enlarged, m)
+    if r > 0:
+        X_split[-1] = X_split[-1][:r,:]
+    return X_split

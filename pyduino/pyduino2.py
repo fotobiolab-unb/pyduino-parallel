@@ -3,7 +3,7 @@ import logging
 from time import sleep, time
 import pandas as pd
 from collections import OrderedDict
-from pyduino.log import log
+from pyduino.log import Log
 import pandas as pd
 from multiprocessing import Pool, Process
 from functools import partial
@@ -227,11 +227,10 @@ class ReactorManager:
                 r._send(command)
         return out
     
-    def send_parallel(self,command,delay,await_response=True):
-        out = []
+    def send_parallel(self,command,await_response=True):
         with Pool(7) as p:
             out = p.map(partial(send_wrapper,command=command,await_response=await_response),list(self.reactors.items()))
-        return out
+        return dict(out)
 
     def set(self, data=None, **kwargs):
         for k,r in self.reactors.items():
@@ -268,9 +267,18 @@ class ReactorManager:
         Args:
             name (str): Name of the subdirectory in the log folder where the files will be saved.
         """
-        self.log = log(subdir=list(self.reactors.keys()),**kwargs)
+        self.log = Log(subdir=list(self.reactors.keys()),**kwargs)
         print(f"Log will be saved on: {bcolors.OKGREEN}{self.log.prefix}{bcolors.ENDC}")
     
+    @property
+    def brilho(self):
+        """
+        Convenience method to get brilho from reactors.
+        """
+        out = self.send_parallel(f"get({self.brilho_param.lower()})")
+        out = {k: float(v.strip()) for k,v in out.items()}
+        return out
+
     def dados(self,save_cache=True):
         """
         Get data from Arduinos.
@@ -284,7 +292,7 @@ class ReactorManager:
 
         len_empty = None
         while len_empty!=0:
-            rows = self.send_parallel("dados",delay=20,await_response=True)
+            rows = self.send_parallel("dados",await_response=True).items()
             #Checking if any reactor didn't respond.
             empty = list(filter(lambda x: x[1] is None,rows))
             len_empty = len(empty)
@@ -305,7 +313,7 @@ class ReactorManager:
 
         rows = dict(map(lambda x: (x[0],OrderedDict(zip(self.header,x[1].split(" ")))),rows))
         if save_cache:
-            self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
+            self.log.cache_data(rows) #Index set to False because ID already exists in rows.
         return rows
 
     def log_dados(self,save_cache=True):
@@ -322,10 +330,10 @@ class ReactorManager:
         rows = list(map(lambda x: (x[0],OrderedDict(zip(header,x[1].split(" ")))),rows))
 
         for _id,row in rows:
-            self.log.log_rows(rows=[row],subdir=_id,sep='\t')
+            self.log.log_rows(rows=[row],subdir=_id)
         rows = dict(rows)
         if save_cache:
-            self.log.cache_data(rows,sep='\t',index=False) #Index set to False because ID already exists in rows.
+            self.log.cache_data(rows) #Index set to False because ID already exists in rows.
         return rows
     
     def set_preset_state(self,path="preset_state.csv",sep="\t",chunksize=4, params=PATHS.REACTOR_PARAMETERS, **kwargs):

@@ -10,7 +10,7 @@ from tensorboardX import SummaryWriter
 from datetime import date, datetime
 from pyduino.data_parser import RangeParser
 from collections import OrderedDict
-from pyduino.utils import bcolors, get_param
+from pyduino.utils import bcolors, get_param, partition
 from pyduino.paths import PATHS
 from pyduino.log import datetime_to_str, y_to_table, to_markdown_table
 import traceback
@@ -200,12 +200,6 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                 [[self.D[i].get(u,np.nan) for u in self.parameters] for i in self.ids]
                 ).astype(float)
             )
-    def pretty_print_dict(self,D):
-        df = pd.DataFrame(D)
-        df.index = df.index.str.lower()
-        df = df.loc[self.parameters,:]
-        df.loc['fitness'] = self.y
-        return df.round(decimals=2)
     def F_get(self):
         """
         Extracts relevant data from Arduinos.
@@ -257,7 +251,7 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         """
         logging.info(f"LOGGING {datetime.now().strftime('%c')}")
         data = self.F_get()
-        logging.debug(f"DATA {data}")
+        logging.debug(f"DATA\n{pd.DataFrame(data)}")
         y = get_param(data, self.density_param, self.reactors)
         y = {k:float(v) for k,v in y.items()}
         additional_parameters = {}
@@ -304,12 +298,12 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
         Returns:
         np.ndarray: The fitness value calculated by the oracle.
         """
-        y = np.array([])
 
         assert X.shape[1] == len(self.parameters)
-        assert len(X.shape) == 2, "X must be a 2D array."
-        n_partitions = len(X) // len(self.reactors) + (len(X) % len(self.reactors) > 0)
-        partitions = np.array_split(X, n_partitions)
+        assert X.ndim == 2, "X must be a 2D array."
+        partitions = partition(X, len(self.reactors))
+
+        y = pd.Series([])
 
         for partition in partitions:
             self.payload = self.assign_to_reactors(partition)
@@ -318,21 +312,23 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
             if self.deltaTgotod is not None and isinstance(self.deltaTgotod, int):
                 self.gotod()
             data0 = self.F_get()
-            f0 = get_param(data0, self.density_param, reactors)
+            f0 = pd.Series(get_param(data0, self.density_param, reactors))
 
             self.F_set(self.payload)
             time.sleep(self.deltaT)
             data = self.F_get()
-            f = get_param(data, self.density_param, reactors)
+            f = pd.Series(get_param(data, self.density_param, reactors))
 
             #yield_rate = np.array([(float(f[id])/float(f[id]) - 1)/self.deltaT/self.power[id] for id in reactors]).astype(float)
             
-            fitness = np.array([self.power[id] for id in reactors]).astype(float)
+            fitness = pd.Series(dict([(id, float(self.power[id])) for id in reactors]))
 
-            y = np.append(y,((-1)**(self.maximize))*(fitness))
-
-        self.y = y
-        return y   
+            partial_y = np.array(((-1)**(self.maximize))*(fitness))
+            y = y.append(partial_y)
+        
+        assert len(y) == len(self.parameters), f"Got different shapes for y: {len(y)} and n params: {len(self.parameters)}"
+        
+        return np.array([y[id] for id in reactors]) 
     # === * ===
 
     def run(
@@ -386,18 +382,13 @@ class Spectra(RangeParser,ReactorManager,NelderMeadBounded):
                         if self.brilho_param is None:
                             self.step()
                         else:
-                            brilhos = np.array(list(get_param(self.F_get(), self.brilho_param, self.reactors)))
+                            brilhos = np.array(list(self.brilho.values()))
                             if np.all(brilhos > 0):
                                 self.step()
                             else:
                                 logging.info(f"{self.brilho_param} is off. No optimization steps are being performed.")
                         if self.deltaTgotod is not None and isinstance(self.deltaTgotod, int):
                             self.gotod()
-                    elif mode == "free":
-                        data = self.F_get()
-                        self.y = get_param(data, self.density_param, self.reactors)
-                    logging.debug(f"SET {datetime.now().strftime('%c')}")
-                    print(y_to_table(self.y))
                     self.log_data(self.iteration_counter)
                     self.iteration_counter += 1
             except Exception as e:

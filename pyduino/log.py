@@ -4,7 +4,6 @@ from pathlib import Path
 from datetime import datetime
 import io
 from glob import glob
-from uuid import uuid1
 from tabulate import tabulate
 from collections import OrderedDict
 from datetime import datetime
@@ -37,7 +36,7 @@ def to_markdown_table(data: OrderedDict) -> str:
 def y_to_table(y):
     return tabulate(list(y.items()), tablefmt="pipe")
 
-class log:
+class Log:
     @property
     def timestamp(self):
         """str: Current date."""
@@ -49,15 +48,15 @@ class log:
 
     def __init__(self,subdir,path="./log",name=None):
         """
-        Logs data into csvs with timestamps.
+        Logs data into jsonls with timestamps.
 
         Example:
             log_obj = log(['reactor_0','reactor_1'],path='./log',name='experiment_0')
 
             log/YEAR/MONTH/
             ├─ experiment_0/
-            │  ├─ reactor_0.csv
-            │  ├─ reactor_1.csv
+            │  ├─ reactor_0.jsonl
+            │  ├─ reactor_1.jsonl
 
         Args:
             subdir (:obj:`list` of :obj:`str`): List of the names for the subdirectories of `path`.
@@ -75,7 +74,7 @@ class log:
             self.subdir = subdir
         else:
             raise ValueError("Invalid type for subdir. Must be either a list of strings or a glob string.")
-        self.subdir = list(map(lambda x: str(x)+".csv" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
+        self.subdir = list(map(lambda x: str(x)+".jsonl" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
         self.first_timestamp = None
         self.data_frames = {}
 
@@ -88,7 +87,7 @@ class log:
             self.subdir = subdir
         else:
             raise ValueError("Invalid type for subdir. Must be either a list of strings or a glob string.")
-        self.subdir = list(map(lambda x: str(x)+".csv" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
+        self.subdir = list(map(lambda x: str(x)+".jsonl" if len(os.path.splitext(str(x))[1])==0 else str(x),self.subdir))
         self.first_timestamp = None
         self.data_frames = {}
 
@@ -100,19 +99,18 @@ class log:
             with open(config_file) as cfile, open(filename,'w') as wfile:
                 wfile.write(cfile.read())
 
-    def log_rows(self,rows,subdir,add_timestamp=True,tags=None,**kwargs):
+    def log_rows(self,rows,subdir,add_timestamp=True,tags=None):
         """
-        Logs rows into csv format.
+        Logs rows into jsonl format.
 
         Args:
             rows (:obj:`list` of :obj:`dict`): List of dictionary-encoded rows or pandas dataframe.
             subdir (str): Subdirectory name. Intended to be an element of `self.subdir`.
             add_timestamp (bool,optional): Whether or not to include a timestamp column.
             tags (:obj:`dict` of :obj:`str`): Dictionary of strings to be inserted as constant columns.
-            **kwargs: Additional arguments passed to `pandas.to_csv`.
         """
         t = self.timestamp
-        path = os.path.join(self.path,self.start_timestamp,f"{subdir}.csv")
+        path = os.path.join(self.path,self.start_timestamp,f"{subdir}.jsonl")
 
         df = pd.DataFrame()
         if isinstance(rows,list):
@@ -125,7 +123,7 @@ class log:
         if os.path.exists(path):
             if self.first_timestamp is None:
                 with open(path) as file:
-                    head = pd.read_csv(io.StringIO(file.readline()+file.readline()),index_col=False,**kwargs)
+                    head = pd.read_json(io.StringIO(file.readline()+file.readline()), orient="records", lines=True)
                     self.first_timestamp = datetime_from_str(head.log_timestamp[0])
         else:
             self.first_timestamp = t
@@ -136,17 +134,13 @@ class log:
             for key,value in tags.items():
                 df.loc[:,key] = value
 
-        df.to_csv(
-            path,
-            mode="a",
-            header=not os.path.exists(path),
-            index=False,
-            **kwargs
-            )
+        with open(path, mode="a") as log_file:
+            log_file.write(df.to_json(orient="records", lines=True))
+
         return df
     def log_many_rows(self,data,**kwargs):
         """
-        Logs rows into csv format.
+        Logs rows into jsonl format.
 
         Args:
             data (:obj:`dict` of :obj:`dict`): Dictionary encoded data frame.
@@ -154,7 +148,7 @@ class log:
         """
         self.data_frames = {}
         for _id,row in data.items():
-            df = self.log_rows(rows=[row],subdir=_id,sep='\t',**kwargs)
+            df = self.log_rows(rows=[row],subdir=_id,**kwargs)
             self.data_frames[_id] = df
         self.data_frames = pd.concat(list(self.data_frames.values()))
     
@@ -164,7 +158,7 @@ class log:
         """
         i=self.data_frames.loc[:,column].astype(float).argmax() if maximum else self.data_frames.loc[:,column].astype(float).argmin()
         self.df_opt = self.data_frames.iloc[i,:]
-        self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',sep='\t',**kwargs)
+        self.log_rows(rows=[self.df_opt.to_dict()],subdir='opt',**kwargs)
     
     def log_average(self, cols: list, **kwargs):
         """
@@ -178,38 +172,38 @@ class log:
         df.loc[:, cols] = df.loc[:, cols].astype(float)
         df.elapsed_time_hours = df.elapsed_time_hours.round(decimals=2)
         self.df_avg = df.loc[:, cols + ['elapsed_time_hours']].groupby("elapsed_time_hours").mean().reset_index()
-        self.log_rows(rows=self.df_avg, subdir='avg', sep='\t', **kwargs)
+        self.log_rows(rows=self.df_avg, subdir='avg',  **kwargs)
 
-    def cache_data(self,rows,path="./cache.csv",**kwargs):
+    def cache_data(self,rows,path="./cache.jsonl",**kwargs):
         """
-        Dumps rows into a single csv.
+        Dumps rows into a single jsonl.
 
         Args:
             rows (:obj:`list` of :obj:`dict`): List of dictionary-encoded rows.
-            path (str): Path to the csv file.
+            path (str): Path to the jsonl file.
         """
-        pd.DataFrame(rows).T.to_csv(path,**kwargs)
+        pd.DataFrame(rows).T.to_json(path, orient="records", lines=True, **kwargs)
 
-    def transpose(self,columns,destination,sep='\t',skip=1,**kwargs):
+    def transpose(self,columns,destination,skip=1,**kwargs):
         """
-        Maps reactor csv to column csvs with columns given by columns.
+        Maps reactor jsonl to column jsonls with columns given by columns.
 
         Args:
             columns (:obj:list of :obj:str): List of columns to extract.
             destination (str): Destination path. Creates directories as needed and overwrites any existing files.
-            sep (str, optional): Column separator. Defaults to '\t'.
+
             skip (int, optional): How many rows to jump while reading the input files. Defaults to 1.
         """
         dfs = []
         for file in self.paths:
-            df = pd.read_csv(file,index_col=False,sep=sep,**kwargs)
+            df = pd.read_json(file, orient="records", lines=True, **kwargs)
             df['FILE'] = file
             dfs.append(df.iloc[::skip,:])
         df = pd.concat(dfs)
 
         for column in columns:
             Path(destination).mkdir(parents=True,exist_ok=True)
-            df.loc[:,['ID','FILE',column,'elapsed_time_hours']].to_csv(os.path.join(destination,f"{column}.csv"),sep=sep)
+            df.loc[:,['ID','FILE',column,'elapsed_time_hours']].to_json(os.path.join(destination,f"{column}.jsonl"), orient="records", lines=True)
 
 
 class LogAggregator:
@@ -225,20 +219,19 @@ class LogAggregator:
         self.glob_list = log_paths
         self.timestamp_col = timestamp_col
         self.elapsed_time_col = elapsed_time_col
-    def agg(self,destination,skip=1,sep='\t',**kwargs):
+    def agg(self,destination,skip=1,**kwargs):
         """
         Aggregator
 
         Args:
             destination (str): Destination path. Creates directories as needed and overwrites any existing files.
             skip (int, optional): How many rows to jump while reading the input files. Defaults to 1.
-            sep (str, optional): Column separator. Defaults to '\t'.
         """
         dfs = {}
         for path in self.glob_list:
             for file in glob(path):
                 basename = os.path.basename(file)
-                df = pd.read_csv(file,index_col=False,sep=sep,dtype={self.elapsed_time_col:float},**kwargs)
+                df = pd.read_json(file, orient="records", lines=True, dtype={self.elapsed_time_col:float},**kwargs)
                 df = df.iloc[::skip,:]
                 df['FILE'] = file
                 if dfs.get(basename,None) is not None:
@@ -256,5 +249,5 @@ class LogAggregator:
         for filename, df in dfs.items():
             Path(destination).mkdir(parents=True,exist_ok=True)
             path = os.path.join(destination,filename)
-            df.to_csv(path,sep=sep,index=False)
+            df.to_json(path, orient="records", lines=True)
 

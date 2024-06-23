@@ -1,0 +1,84 @@
+hyperparameters:
+  reset_density: true #Whether or not to use gotod
+  log_name: #Log folder name (delete to use the default)
+  density_param: DensidadeAtual #Parameter name for density counts.
+  brilho_param: Brilho #When Brilho = 0, optimization is turned off.
+  maximize: false
+  rng_seed: 2 #Random seed parameter initialization
+  ranges:
+    branco:
+      - 1
+      - 100                                     
+    others:
+      - 0
+      - 100
+slave:
+  port: "5000" #Must be a string
+  network: "192.168.1.1/24"
+  exclude: #Leave blank if there are none to exclude
+system:
+  #About the partition system (This is done at `init_spectra.py`)
+  #`all` will create a single manager for all reactors.
+  #`single` will create a manager for each reactor.
+  partition: all
+  log_level: "DEBUG" #DEBUG, INFO, WARNING, ERROR, CRITICAL
+  sync_clocks: false #Whether or not to sync the clocks of the slaves.
+  initial_state: "preset_state.d/all.csv"
+  reboot_wait_time: 5 #Time in seconds to wait after a reboot.
+  relevant_parameters:
+    # - brilho
+    - branco
+    - full
+    - "440"
+    - "470"
+    - "495"
+    - "530"
+    - "595"
+    - "634"
+    - "660"
+    - "684"
+  irradiance:
+    #brilho: 12
+    "branco": 10.35
+    "full": 11.50
+    "440": 7.72
+    "470": 8.50
+    "495": 8.30
+    "530": 8.56
+    "595": 2.17
+    "634": 3.44
+    "660": 4.52
+    "684": 5.74
+  standard_parameters:
+    #brilho: float
+    branco: float
+    full: float
+    "440": float
+    "470": float
+    "495": float
+    "530": float
+    "595": float
+    "634": float
+    "660": float
+    "684": float
+    cor: int
+    modopainel: int
+    brilho: float
+    bomdia: int
+    boanoite: int
+    tau: int
+    step: int
+    modotemp: int
+    temp: int
+    densidade: float
+    mododil: int
+    ar: int
+    ima: int
+    modoco2: int
+    co2: int
+    dtco2: int
+tensorboard:
+  additional_parameters:
+    - Brilho
+    - Temp
+    - pH
